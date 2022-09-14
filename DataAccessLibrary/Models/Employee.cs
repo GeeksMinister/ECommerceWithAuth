@@ -15,6 +15,7 @@ public class Employee
     public string LastName { get; set; } = string.Empty;
 
     [Required]
+    [ValidAge]
     public DateTime Birthdate { get; set; }
 
     [StringLength(50)]

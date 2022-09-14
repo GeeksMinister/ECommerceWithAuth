@@ -8,7 +8,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLibrary", "DataAccessLibrary\DataAccessLibrary.csproj", "{A2916137-59A7-45D4-838A-51A2E170AF76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "DataAccessLibrary\DataAccessLibrary.csproj", "{A2916137-59A7-45D4-838A-51A2E170AF76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceWithAuth.API", "ECommerceWithAuth.API\ECommerceWithAuth.API.csproj", "{486428D8-2FE1-4CAB-87B0-1799792AE869}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +22,10 @@ Global
 		{A2916137-59A7-45D4-838A-51A2E170AF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2916137-59A7-45D4-838A-51A2E170AF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2916137-59A7-45D4-838A-51A2E170AF76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{486428D8-2FE1-4CAB-87B0-1799792AE869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{486428D8-2FE1-4CAB-87B0-1799792AE869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{486428D8-2FE1-4CAB-87B0-1799792AE869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{486428D8-2FE1-4CAB-87B0-1799792AE869}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

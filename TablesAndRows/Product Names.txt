@@ -1,0 +1,52 @@
+'10CB0559-5F64-4B37-9313-6CECBE7A22FF', 'Bread');
+
+Bond Bread
+Davidovich Bagels
+Boudin Bakery
+Alvarado Street Bakery
+EarthGrains Bread
+
+
+'DD631C62-A58D-4675-B314-11BBE3324920', 'Vegetables & Fruit');
+
+Lettuce - Green Leaf
+Red Currants
+Grapes - Black	
+Apples - Spartan
+Coconut The Forest Path
+
+
+'4256C7B9-C5BA-4C07-8C3E-49326AE4655F', 'Meat');
+		
+Shrimp - Black Tiger		
+Lamb - Loin, Trimmed, Boneless
+Sausage - Blood Pudding
+Pork - Liver
+Salmon - Aqua Star
+
+
+'DC9E248E-F1A8-4BE4-85B7-85905FC435FC', 'Dried Goods');
+
+Mace Ground
+Soup - Campbells Tomato Ravioli	
+Pate Pans Yellow
+Flour - Rye
+Rice - Ica
+
+
+'F3D88DF2-8C24-4138-A9E2-1ADE9D7A89E2', 'Dairy');
+
+Milk - Happy Farm
+Cheese - Happy Farm
+Greek Yoghurt - Ica
+Yoplait - Strawbrasp Peac
+Mozzarella Cheese 
+
+
+'7D71425B-64BA-4657-9ECE-399B113FAE4C', 'Liquids');
+
+Sambuca Cream
+Wine - Casillero Del Diablo
+Coca-Cola 2L
+Guinness Can 24x500ml
+Honey - The Hungry Bear

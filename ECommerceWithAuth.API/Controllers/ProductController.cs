@@ -1,4 +1,6 @@
-﻿namespace ECommerceWithAuth.API.Controllers;
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace ECommerceWithAuth.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -12,6 +14,7 @@ public class ProductController : ControllerBase
 	}
 
 	[HttpGet]
+	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> GetAllProducts()
 	{
 		var result = await _productRepository.GetAllProducts();

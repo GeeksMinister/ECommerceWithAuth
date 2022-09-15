@@ -10,16 +10,20 @@ global using System.Collections.Generic;
 global using System.ComponentModel.DataAnnotations;
 
 global using AutoMapper;
+global using System.Security.Claims;
 global using DataAccessLibrary.Data;
 global using DataAccessLibrary.Models;
-global using DataAccessLibrary.Helpers;
+global using Microsoft.OpenApi.Models;
 global using Microsoft.AspNetCore.Mvc;
+global using DataAccessLibrary.Helpers;
+global using DataAccessLibrary.Services;
+global using System.Security.Cryptography;
 global using DataAccessLibrary.Models.DTOs;
 global using Microsoft.EntityFrameworkCore;
+global using Swashbuckle.AspNetCore.Filters;
+global using Microsoft.IdentityModel.Tokens;
+global using DataAccessLibrary.Data.Repositories;
 global using DataAccessLibrary.Data.Repositories.Contracts;
-
-//global using MVC_Razor.MVC.DataAccess.Data;
-//global using MVC_Razor.MVC.DataAccess.Repositories;
-//global using MVC_Razor.MVC.DataAccess.Repositories.Contracts;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 

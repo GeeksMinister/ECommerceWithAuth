@@ -16,7 +16,9 @@ public class Employee
 
     [Required]
     [ValidAge]
-    public DateTime Birthdate { get; set; }
+    [DataType(DataType.Date)]
+    //[StringLength(10)]
+    public string Birthdate { get; set; } = string.Empty;
 
     [StringLength(50)]
     [Phone]
@@ -31,12 +33,15 @@ public class Employee
     public string? City { get; set; }
 
     [Required]
+    [StringLength(50, ErrorMessage = "Max characters (50)")]
     public string Role { get; set; } = "Admin";
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [StringLength(150, ErrorMessage = "Too long Password-Hash detected")]
     public byte[]? PasswordHash { get; set; }
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public byte[]? PasswordSalt { get; set; }
+
     [StringLength(512)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? RefreshToken { get; set; }

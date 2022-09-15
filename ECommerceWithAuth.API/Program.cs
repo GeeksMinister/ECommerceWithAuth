@@ -1,8 +1,12 @@
+using DataAccessLibrary.Data.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
+builder.Services.AddDbContext<ECommerceDbContext>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

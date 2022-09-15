@@ -11,4 +11,5 @@ global using System.Collections.Generic;
 global using Refit;
 global using AutoMapper;
 global using AutoMapper.Configuration.Annotations;
+global using DataAccessLibrary.Models;
 

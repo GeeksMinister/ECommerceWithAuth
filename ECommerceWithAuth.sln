@@ -10,7 +10,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "DataAccessLibrary\DataAccessLibrary.csproj", "{A2916137-59A7-45D4-838A-51A2E170AF76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceWithAuth.API", "ECommerceWithAuth.API\ECommerceWithAuth.API.csproj", "{486428D8-2FE1-4CAB-87B0-1799792AE869}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceWithAuth.API", "ECommerceWithAuth.API\ECommerceWithAuth.API.csproj", "{486428D8-2FE1-4CAB-87B0-1799792AE869}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TablesAndRows", "TablesAndRows", "{906DBC41-F2D9-4C2F-A802-6813541E2D5B}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Desktop\Belongings\Category.sql = ..\..\..\Desktop\Belongings\Category.sql
+		..\..\..\Desktop\Belongings\Employee.sql = ..\..\..\Desktop\Belongings\Employee.sql
+		..\..\..\Desktop\Belongings\Product Names.txt = ..\..\..\Desktop\Belongings\Product Names.txt
+		..\..\..\Desktop\Belongings\Product.sql = ..\..\..\Desktop\Belongings\Product.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +37,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{906DBC41-F2D9-4C2F-A802-6813541E2D5B} = {294B6FA1-8258-47B3-A51D-CAE3EFE646BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B215B017-0E99-42B7-B9B5-8223C338827D}

@@ -1,4 +1,6 @@
-﻿namespace DataAccessLibrary.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DataAccessLibrary.Models;
 
 public class Order
 {
@@ -25,16 +27,20 @@ public class Order
 
     [Required]
     [DisplayName("Postal Code")]
+    [StringLength(10, ErrorMessage = "Postal code is too long. Check your input")]
     [DataType(DataType.PostalCode)]
     public string PostalCode { get; set; } = string.Empty;
 
+    [Required]
     [Phone]
     [StringLength(20, MinimumLength = 6, ErrorMessage = "Enter a valid phone number")]
     [Range(0, Int64.MaxValue, ErrorMessage = "Contact number should not contain characters")]
     public string Phone { get; set; } = string.Empty;
-    
+
+    [Required]
+    [MaxLength(10)]
     [DataType(DataType.Date)]
-    public DateTime OrderPlaced { get; set; } = DateTime.Now;
+    public string OrderPlaced { get; set; } = DateTime.Now.ToShortDateString();
 
     public decimal TotalToPay { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿namespace DataAccessLibrary.Models;
+
 public class Order
 {
     public Guid OrderId { get; set; } = Guid.NewGuid();

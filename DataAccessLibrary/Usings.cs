@@ -10,4 +10,5 @@ global using System.ComponentModel.DataAnnotations;
 global using System.Collections.Generic;
 global using Refit;
 global using AutoMapper;
+global using AutoMapper.Configuration.Annotations;
 

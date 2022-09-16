@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataAccessLibrary.Data.Repositories.Contracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLibrary.Data.Repositories;
 
@@ -13,14 +14,15 @@ public class EmployeeRepository : IEmployeeRepository
 
 	public async Task<Employee?> GetEmployeeById(Guid employeeId)
 	{
-		var result = await _dbContext.Employee.FirstOrDefaultAsync(emp => emp.Guid == employeeId);
+		var result = await _dbContext.Employee.FirstOrDefaultAsync(emp => emp.Guid.Equals(employeeId));
 		return result;
 	}
 
 	public async Task<Employee?> GetEmployeeByIdOrEmail(string loginInfo)
 	{
 		var result = await _dbContext.Employee.FirstOrDefaultAsync(
-			emp => emp.Guid.ToString() == loginInfo || emp.Email == loginInfo);
+			emp => emp.Guid.ToString().Equals(loginInfo) || emp.Email.Equals(loginInfo));
+
 		return result;
 	}
 

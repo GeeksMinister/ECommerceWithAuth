@@ -1,4 +1,4 @@
-﻿namespace DataAccessLibrary.Data.Repositories;
+﻿namespace DataAccessLibrary.Data.Repositories.Contracts;
 
 public interface IEmployeeRepository
 {

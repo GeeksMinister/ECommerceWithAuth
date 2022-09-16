@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-
-namespace ECommerceWithAuth.API.Controllers;
+﻿namespace ECommerceWithAuth.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -30,7 +26,7 @@ public class EmployeeController : ControllerBase
         }
         var authenticatedUser = new AuthenticatedUserModel
         {
-            Username = $"{employee.FirstName} {employee.LastName}",
+            Username = employee.FirstName + ' ' + employee.LastName,
             Email = employee.Email,
             Access_Token = CreateToken(employee)
         };
@@ -38,10 +34,7 @@ public class EmployeeController : ControllerBase
         return Ok(authenticatedUser);
     }
 
-
-
-
-    private (byte[], byte[]) CreatePasswordHash(string password)
+    private (byte[] passwordHash, byte[] passwordSalt) CreatePasswordHash(string password)
     {
         using var hmac = new HMACSHA512();
         var passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));

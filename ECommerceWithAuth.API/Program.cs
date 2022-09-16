@@ -1,12 +1,11 @@
-using DataAccessLibrary.Data.Repositories;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ECommerceDbContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
 builder.Services.AddAutoMapper(typeof(MapperInitializer));
+
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthorization();

@@ -36,18 +36,13 @@ public class Employee
     [StringLength(50, ErrorMessage = "Max characters (50)")]
     public string Role { get; set; } = "Admin";
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [StringLength(150, ErrorMessage = "Too long Password-Hash detected")]
     public byte[]? PasswordHash { get; set; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public byte[]? PasswordSalt { get; set; }
 
     [StringLength(512)]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? RefreshToken { get; set; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public DateTime? TokenCreated { get; set; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public DateTime? TokenExpires { get; set; }
 
     public Employee() { }

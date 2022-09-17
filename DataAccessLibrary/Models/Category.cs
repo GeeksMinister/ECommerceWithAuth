@@ -8,6 +8,6 @@ public class Category
     [StringLength(150, ErrorMessage = "Name is too long")]
     public string Name { get; set; } = string.Empty;
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+    [JsonIgnore]
     public List<Product> Products { get; set; } = new();
 }

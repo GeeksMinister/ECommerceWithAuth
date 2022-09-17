@@ -10,6 +10,7 @@ public class ProductDto
 
     public int Quantity { get; set; }
 
+    [DataType(DataType.Date)]
     public DateTime DiscountUntil { get; set; }
 
     public decimal DiscountRate { get; set; }

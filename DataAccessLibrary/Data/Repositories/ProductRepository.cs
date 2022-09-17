@@ -1,8 +1,4 @@
-﻿using DataAccessLibrary.Data.Repositories.Contracts;
-using DataAccessLibrary.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace DataAccessLibrary.Data.Repositories;
+﻿namespace DataAccessLibrary.Data.Repositories;
 
 public class ProductRepository : IProductRepository
 {
@@ -50,7 +46,18 @@ public class ProductRepository : IProductRepository
 		return product;
 	}
 
-	public async Task DeleteProduct(Guid productId)
+	public async Task<Product> UpdateProductPatch(Guid productId, JsonPatchDocument patch)
+	{
+        var product = await _dbContext.Product.FirstOrDefaultAsync(prod => prod.Guid.Equals(productId));
+        if (product == null) return null!;
+		patch.ApplyTo(product);
+		await _dbContext.SaveChangesAsync();
+
+		return product;
+    }
+
+
+    public async Task DeleteProduct(Guid productId)
 	{
 		var result = await _dbContext.Product.FirstOrDefaultAsync(prod => prod.Guid.Equals(productId));
 		if (result == null) return;

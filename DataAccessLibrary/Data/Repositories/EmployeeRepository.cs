@@ -1,7 +1,4 @@
-﻿using DataAccessLibrary.Data.Repositories.Contracts;
-using Microsoft.EntityFrameworkCore;
-
-namespace DataAccessLibrary.Data.Repositories;
+﻿namespace DataAccessLibrary.Data.Repositories;
 
 public class EmployeeRepository : IEmployeeRepository
 {

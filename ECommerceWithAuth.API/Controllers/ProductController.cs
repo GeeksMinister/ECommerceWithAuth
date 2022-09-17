@@ -1,4 +1,6 @@
-﻿namespace ECommerceWithAuth.API.Controllers;
+﻿using Microsoft.AspNetCore.JsonPatch;
+
+namespace ECommerceWithAuth.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -51,13 +53,25 @@ public class ProductController : ControllerBase
 		return Ok(product);
 	}
 
-	[HttpDelete]
+
+	[HttpPatch("Product/{guid}")]
+	public async Task<IActionResult> PatchProductPrice(Guid guid, JsonPatchDocument patch)
+	{
+		var product = await _productRepository.GetProductById(guid);
+		if (product is null) return NotFound();
+		product = await _productRepository.UpdateProductPatch(product.Guid, patch);
+		if (product is null) return NotFound();
+
+		return Ok(product);
+	}
+
+    [HttpDelete]
 	public async Task<IActionResult> DeleteProduct(Guid guid)
 	{
 		var result = await _productRepository.GetProductById(guid);
 		if (result is null) return NotFound();
 		await _productRepository.DeleteProduct(guid);
-		return Ok($"Product with Id: {guid} Was Not Found!");
+		return Ok($"Product with Id: {guid} Was Successfully Removed.");
 	}
 
 

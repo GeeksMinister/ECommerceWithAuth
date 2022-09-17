@@ -19,6 +19,7 @@ public class Product
     [Ignore]
     public bool OnSale { get => DiscountUntil.Subtract(DateTime.Now).TotalDays > 0 ; }
 
+    [DataType(DataType.Date)]
     public DateTime DiscountUntil { get; set; }
 
     public decimal DiscountRate { get; set; }

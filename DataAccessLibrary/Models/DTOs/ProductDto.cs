@@ -10,10 +10,6 @@ public class ProductDto
 
     public int Quantity { get; set; }
 
-    public bool InStock { get => Quantity > 0; }
-
-    public bool OnSale { get => DiscountUntil.Subtract(DateTime.Now).TotalDays > 0; }
-
     public DateTime DiscountUntil { get; set; }
 
     public decimal DiscountRate { get; set; }

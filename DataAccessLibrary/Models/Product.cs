@@ -17,7 +17,7 @@ public class Product
     public bool InStock { get => Quantity > 0; }
 
     [Ignore]
-    public bool OnSale { get => DiscountUntil.Subtract(DateTime.Now).TotalDays > 0; }
+    public bool OnSale { get => DiscountUntil.Subtract(DateTime.Now).TotalDays > 0 ; }
 
     public DateTime DiscountUntil { get; set; }
 
@@ -30,13 +30,20 @@ public class Product
     {
         get
         {
-            if (!OnSale) return _price;
-            return  _price - (_price * DiscountRate / 100);
+            if (OnSale) return _price - (_price * DiscountRate / 100);
+            return _price;
         }
         set
         {
-            if (!OnSale) _price = value;
-            _price /= (1 - (DiscountRate * 0.01m));
+            if (OnSale == false)
+            {
+                _price = value;
+                _price /= (1 - (DiscountRate * 0.01m));
+            }
+            else
+            {
+                _price = value;
+            }
         } 
     }
 

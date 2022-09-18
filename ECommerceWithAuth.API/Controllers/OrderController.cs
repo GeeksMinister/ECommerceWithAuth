@@ -28,4 +28,11 @@ public class OrderController : ControllerBase
 		return Ok(result);
 	}
 
+	[HttpGet("TopSold")]
+	public async Task<IActionResult> TopSold()
+	{
+		var result = await _orderRepository.GetSalesSummary();
+		return Ok(result);
+	}
+
 }

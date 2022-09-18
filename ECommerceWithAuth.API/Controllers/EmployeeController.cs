@@ -13,7 +13,7 @@ public class EmployeeController : ControllerBase
         _config = config;
     }
 
-    [HttpPost]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login(AuthenticationUserModel authentication)
     {
         var employee = await _employeeRepository.GetEmployeeByIdOrEmail(authentication.LoginInfo);

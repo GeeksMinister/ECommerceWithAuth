@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
-
-namespace DataAccessLibrary.Data.Repositories.Contracts;
+﻿namespace DataAccessLibrary.Data.Repositories.Contracts;
 
 public interface IProductRepository
 {

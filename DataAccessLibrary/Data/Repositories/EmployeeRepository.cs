@@ -11,8 +11,7 @@ public class EmployeeRepository : IEmployeeRepository
 
 	public async Task<Employee?> GetEmployeeById(Guid employeeId)
 	{
-		var result = await _dbContext.Employee.FirstOrDefaultAsync(emp => emp.Guid.Equals(employeeId));
-		return result;
+		return await _dbContext.Employee.FirstOrDefaultAsync(emp => emp.Guid.Equals(employeeId));
 	}
 
 	public async Task<Employee?> GetEmployeeByIdOrEmail(string loginInfo)

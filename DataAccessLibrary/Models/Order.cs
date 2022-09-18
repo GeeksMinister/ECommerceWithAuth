@@ -21,7 +21,7 @@ public class Order
     public string Address { get; set; } = string.Empty;
 
     [Required]
-    [Display(Name = "City")]
+    [DisplayName("City")]
     [StringLength(50)]
     public string City { get; set; } = string.Empty;
 
@@ -42,7 +42,14 @@ public class Order
     [DataType(DataType.Date)]
     public string OrderPlaced { get; set; } = DateTime.Now.ToShortDateString();
 
-    public decimal TotalToPay { get; set; }
+    [Ignore]
+    private decimal _totalToPay;
+    public decimal TotalToPay { private set => OrderItems.ForEach(item => _totalToPay += item.Price); get => _totalToPay; }
 
     public List<OrderItems> OrderItems { get; set; } = new();
+
+    public Order()
+    {
+
+    }
 }

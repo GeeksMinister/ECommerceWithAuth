@@ -15,7 +15,7 @@ public class ProductController : ControllerBase
 		_mapper = mapper;
 	}
 
-	[HttpGet]
+	[HttpGet("Product")]
 	//[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> GetAllProducts()
 	{
@@ -65,7 +65,7 @@ public class ProductController : ControllerBase
 		return Ok(product);
 	}
 
-    [HttpDelete]
+    [HttpDelete("Product")]
 	public async Task<IActionResult> DeleteProduct(Guid guid)
 	{
 		var result = await _productRepository.GetProductById(guid);

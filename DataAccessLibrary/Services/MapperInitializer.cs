@@ -1,8 +1,4 @@
-﻿using DataAccessLibrary.DTOs;
-using DataAccessLibrary.Models;
-using DataAccessLibrary.Models.DTOs;
-
-namespace DataAccessLibrary.Services;
+﻿namespace DataAccessLibrary.Services;
 
 public class MapperInitializer : Profile
 {
@@ -10,5 +6,7 @@ public class MapperInitializer : Profile
 	{
 		CreateMap<Employee, EmployeeDto>().ReverseMap();
 		CreateMap<Product, ProductDto>().ReverseMap();
+		CreateMap<Order, OrderDto>().ReverseMap();
+		CreateMap<OrderItems, OrderItemsDto>().ReverseMap();
 	}   
 }

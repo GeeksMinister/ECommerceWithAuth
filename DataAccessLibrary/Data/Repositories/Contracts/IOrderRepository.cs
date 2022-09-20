@@ -5,5 +5,9 @@ namespace DataAccessLibrary.Data.Repositories.Contracts;
 public interface IOrderRepository
 {
     Task<List<Order>> GetAllOrders();
-    Task<List<SalesAndWeatherRelation>> GetSalesSummary();
+    Task<object> GetDistance(string destination);
+    Task<List<Product>> GetProductShortages();
+    Task<object> GetSellsSummary();
+    Task<object> GetTopSold();
+    Task<List<SellsAndWeatherRelation>> GetWeatherAndSellsRelation();
 }

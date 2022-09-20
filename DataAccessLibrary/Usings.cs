@@ -14,8 +14,10 @@ global using AutoMapper.Configuration.Annotations;
 global using System.ComponentModel.DataAnnotations;
 
 
+
 global using DataAccessLibrary.Models;
 global using DataAccessLibrary.Helpers;
+global using DataAccessLibrary.Models.DTOs;
 global using DataAccessLibrary.Data.Repositories.Contracts;
 
 

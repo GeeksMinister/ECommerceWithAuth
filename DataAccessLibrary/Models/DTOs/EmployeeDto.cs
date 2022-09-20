@@ -1,4 +1,4 @@
-﻿namespace DataAccessLibrary.DTOs;
+﻿namespace DataAccessLibrary.Models.DTOs;
 
 public class EmployeeDto
 {

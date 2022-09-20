@@ -1,6 +1,6 @@
-﻿namespace DataAccessLibrary.Models;
+﻿namespace DataAccessLibrary.Models.DTOs;
 
-public class Order
+public class OrderDto
 {
     public Guid OrderId { get; set; } = Guid.NewGuid();
 
@@ -40,13 +40,12 @@ public class Order
     [DataType(DataType.Date)]
     public string OrderPlaced { get; set; } = DateTime.Now.ToShortDateString();
 
-    [Ignore]
-    private decimal _totalToPay;
-    public decimal TotalToPay { private set => OrderItems.ForEach(item => _totalToPay += item.Price); get => _totalToPay; }
+    [Ignore]    
+    public decimal TotalToPay { get; set; }
 
-    public List<OrderItems> OrderItems { get; set; } = new();
+    public List<OrderItemsDto> OrderItems { get; set; } = new();
 
-    public Order()
+    public OrderDto()
     {
 
     }

@@ -8,5 +8,7 @@ public class MapperInitializer : Profile
 		CreateMap<Product, ProductDto>().ReverseMap();
 		CreateMap<Order, OrderDto>().ReverseMap();
 		CreateMap<OrderItems, OrderItemsDto>().ReverseMap();
+
+		//CreateMap<Currency, >().ReverseMap();
 	}   
 }

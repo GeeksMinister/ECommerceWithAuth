@@ -68,6 +68,22 @@ public class OrderController : ControllerBase
         {
             return Problem(ex.Message);
         }
+    }
 
+
+    [HttpGet("ExchangeRates")]
+    public async Task<IActionResult> GetExchangeRates(Currency code)
+    {
+        try
+        {
+            var result =  await _orderRepository.GetExchangeRates(code);
+            if (result is null) return Problem("No data was received!");
+            Response.Headers.Append("Total_Requested", result.Count.ToString());
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 }

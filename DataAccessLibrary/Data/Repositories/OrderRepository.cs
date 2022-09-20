@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DataAccessLibrary.Data.Repositories;
 
@@ -58,7 +58,6 @@ public class OrderRepository : IOrderRepository
         return products;
     }
 
-
     public async Task<List<SellsAndWeatherRelation>> GetWeatherAndSellsRelation()
     {
         var orders = await GetAllOrders();
@@ -105,7 +104,6 @@ public class OrderRepository : IOrderRepository
         {
             return new Weather(ex.Message, "Error", "Error");
         }
-
     }
 
     public record SellsAndWeatherRelation(string Date, int TotalOrders, Weather Weather);
@@ -129,11 +127,68 @@ public class OrderRepository : IOrderRepository
             var duration = respnse.rows[0].elements[0].duration.text;
             return new { Distance = distance, Duration = duration };
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return new { Error = ex.Message };
+            return new { Error = "Error occurred! Please check your input" };
         }
-
     }
+
+    public async Task<Dictionary<string, decimal>> GetExchangeRates(Currency code)
+    {
+        if (code == Currency.SEK) return await GetOriginalCurrency();
+        
+        var orders = await _dbContext.Order.ToListAsync();
+        var dates = orders.OrderBy(order => order.OrderPlaced)
+                          .GroupBy(order => order.OrderPlaced)
+           .Select(date => new
+           {
+               Date = date.Key,
+               Value = date.Select(order => order.TotalToPay)
+                      .FirstOrDefault() / RequestValue(code, date.Key ).Result
+           }).ToDictionary(date => date.Date, date => date.Value);
+
+        return dates;
+    }
+
+    private async Task<Dictionary<string, decimal>> GetOriginalCurrency()
+    {
+        var orders = await _dbContext.Order.ToListAsync();
+        var dates = orders.OrderBy(order => order.OrderPlaced)
+                          .GroupBy(order => order.OrderPlaced)
+           .Select(date => new
+           {
+               Date = date.Key,
+               Value = date.Select(order => order.TotalToPay).FirstOrDefault()
+           }).ToDictionary(date => date.Date, date =>  date.Value);
+        
+        return dates;
+    }
+
+    private async Task<decimal> RequestValue(Currency code, string date)
+    {
+        try
+        {
+            string apiLocation = _config["CurrencyExchangeApi:Location"];
+            string key = _config["CurrencyExchangeApi:Key"];
+            apiLocation = apiLocation.Replace("[Currency]", code.ToString());
+            apiLocation = apiLocation.Replace("[Date]", date);
+            apiLocation += key;
+
+            using HttpClient client = new HttpClient();
+            var response = await client.GetStringAsync(apiLocation);
+            int startIndex = response.IndexOf(date) + 12;
+            decimal value = decimal.Parse(response.Substring(startIndex).Replace("}", ""));
+
+            return value;
+        }
+        catch (Exception)
+        {
+            return 1;
+        }
+    }
+
+
+
+
 
 }

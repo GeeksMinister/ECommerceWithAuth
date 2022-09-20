@@ -6,6 +6,7 @@ public interface IOrderRepository
 {
     Task<List<Order>> GetAllOrders();
     Task<object> GetDistance(string destination);
+    Task<Dictionary<string, decimal>> GetExchangeRates(Currency code);
     Task<List<Product>> GetProductShortages();
     Task<object> GetSellsSummary();
     Task<object> GetTopSold();

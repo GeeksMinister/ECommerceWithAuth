@@ -1,13 +1,9 @@
-using Newtonsoft.Json;
-using System.Text.Json.Serialization;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ECommerceDbContext>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-//builder.Services.AddScoped<OrderItems>();
 builder.Services.AddAutoMapper(typeof(MapperInitializer));
 
 
@@ -20,7 +16,6 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthorization();
-builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme

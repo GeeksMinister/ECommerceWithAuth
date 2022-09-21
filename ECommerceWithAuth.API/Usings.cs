@@ -3,6 +3,7 @@ global using System.IO;
 global using AutoMapper;
 global using System.Linq;
 global using System.Text;
+global using Newtonsoft.Json;
 global using System.Threading;
 global using System.Collections;
 global using System.ComponentModel;
@@ -17,7 +18,6 @@ global using Swashbuckle.AspNetCore.Filters;
 global using System.IdentityModel.Tokens.Jwt;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
-
 
 global using DataAccessLibrary.Data;
 global using DataAccessLibrary.Models;

@@ -26,7 +26,7 @@ public class OrderController : ControllerBase
 	public async Task<IActionResult> GetSellsSummary()
 	{
 		var result = await _orderRepository.GetSellsSummary();
-        if (result is null) return Problem("No data was received!");
+        if (result is null) return Problem("No Data was Received From the Provider");
         return Ok(result);
 	}
 
@@ -34,7 +34,7 @@ public class OrderController : ControllerBase
     public async Task<IActionResult> GetTopSold()
     {
         var result = await _orderRepository.GetTopSold();
-        if (result is null) return Problem("No data was received!");
+        if (result is null) return Problem("No Data was received From the Provider");
         return Ok(result);
     }
 
@@ -42,7 +42,7 @@ public class OrderController : ControllerBase
     public async Task<IActionResult> GetProductShortages()
     {
         var result = await _orderRepository.GetProductShortages();
-        if (result is null) return Problem("No data was received!");
+        if (result is null) return Problem("No Data was received From the Provider");
 		var resultDto = _mapper.Map<List<ProductDto>>(result);
         return Ok(resultDto);
     }
@@ -51,7 +51,7 @@ public class OrderController : ControllerBase
 	public async Task<IActionResult> WeatherAndSellsRelation()
 	{
 		var result = await _orderRepository.GetWeatherAndSellsRelation();
-        if (result is null) return Problem("No data was received!");
+        if (result is null) return Problem("No Data was received From the Provider");
         return Ok(result);
 	}
 
@@ -61,7 +61,7 @@ public class OrderController : ControllerBase
 		try
 		{
             var result = await _orderRepository.GetDistance(destination);
-            if (result is null) return Problem("No data was received!");
+            if (result is null) return Problem("No Data was received From the Provider");
             return Ok(result);
         }
         catch (Exception ex)
@@ -70,15 +70,14 @@ public class OrderController : ControllerBase
         }
     }
 
-
     [HttpGet("ExchangeRates")]
     public async Task<IActionResult> GetExchangeRates(Currency code)
     {
         try
         {
             var result =  await _orderRepository.GetExchangeRates(code);
-            if (result is null) return Problem("No data was received!");
-            Response.Headers.Append("Total_Requested", result.Count.ToString());
+            if (result is null) return Problem("No Data was received From the Provider");
+            Response.Headers.Append("Total-dates-Requested", result.Count.ToString());
             return Ok(result);
         }
         catch (Exception ex)

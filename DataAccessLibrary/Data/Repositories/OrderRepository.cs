@@ -48,7 +48,7 @@ public class OrderRepository : IOrderRepository
                 ProductId = selected.Key,
                 ProductName = selected.Select(item => item.Product.Name).FirstOrDefault(),
                 TotalSold = selected.Sum(item => item.Quantity)
-            }).OrderByDescending(selected => selected.TotalSold);
+            }).OrderByDescending(selected => selected.TotalSold).Take(5);
         return summary;
     }
 

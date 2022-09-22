@@ -15,7 +15,6 @@ public class Employee
     public string LastName { get; set; } = string.Empty;
 
     [Required]
-    [ValidAge]
     [DataType(DataType.Date)]
     //[StringLength(10)]
     public string Birthdate { get; set; } = string.Empty;

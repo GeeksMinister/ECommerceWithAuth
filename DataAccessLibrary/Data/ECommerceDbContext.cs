@@ -1,10 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using DataAccessLibrary.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-
-namespace DataAccessLibrary.Data;
+﻿namespace DataAccessLibrary.Data;
 
 public class ECommerceDbContext : DbContext
 {

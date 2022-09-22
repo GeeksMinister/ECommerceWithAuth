@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace DataAccessLibrary.Data.Repositories;
+﻿namespace DataAccessLibrary.Data.Repositories;
 
 public class OrderRepository : IOrderRepository
 {
@@ -186,9 +183,6 @@ public class OrderRepository : IOrderRepository
             return 1;
         }
     }
-
-
-
 
 
 }

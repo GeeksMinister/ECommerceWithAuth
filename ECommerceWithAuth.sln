@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "DataAc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceWithAuth.API", "ECommerceWithAuth.API\ECommerceWithAuth.API.csproj", "{486428D8-2FE1-4CAB-87B0-1799792AE869}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceWithAuth.MVC", "ECommerceWithAuth.MVC\ECommerceWithAuth.MVC.csproj", "{CCE4826D-0EFA-470A-89B2-EECD4143E699}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{486428D8-2FE1-4CAB-87B0-1799792AE869}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{486428D8-2FE1-4CAB-87B0-1799792AE869}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{486428D8-2FE1-4CAB-87B0-1799792AE869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCE4826D-0EFA-470A-89B2-EECD4143E699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCE4826D-0EFA-470A-89B2-EECD4143E699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCE4826D-0EFA-470A-89B2-EECD4143E699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCE4826D-0EFA-470A-89B2-EECD4143E699}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

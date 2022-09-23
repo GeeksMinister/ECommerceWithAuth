@@ -9,6 +9,5 @@ public class MapperInitializer : Profile
 		CreateMap<Order, OrderDto>().ReverseMap();
 		CreateMap<OrderItems, OrderItemsDto>().ReverseMap();
 
-		//CreateMap<Currency, >().ReverseMap();
 	}   
 }

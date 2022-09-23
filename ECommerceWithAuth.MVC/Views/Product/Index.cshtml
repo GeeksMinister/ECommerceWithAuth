@@ -1,0 +1,68 @@
+﻿@model List<Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="row pt-5">
+    <h3 class="text-secondary font-monospace fw-bold col-6">Products 
+    (<span class="text-primary opacity-75 small">@Model?.Count</span>)</h3>
+    <div class=" text-end">
+        <a asp-action="Addproduct" class="btn btn-success mb-4 fw-bold">Add Product</a>
+    </div>
+</div>
+
+@if (Model is null)
+{
+    <em>Loading ......</em>
+}
+else if (Model.Any() is false)
+{
+    <h4>No Registered product Was Returned From the Database</h4>
+}
+else
+{
+    <div class="container-fluid overflow-auto m-0 p-1 ">
+        <table class="table table-bordered table-striped text-center align-middle ">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Available</th>
+                    <th>Price</th>
+                    <th>On Sale</th>
+                    <th>Changes</th>
+                </tr>
+            </thead>
+            <tbody class="border-1 border-dark">
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td class="col-3 fw-bold link-primary ">
+                            <a class="text-decoration-none btn-outline-info link-primary rounded-pill p-1"
+                               asp-action="productDetails" asp-route-Id="@product.Guid">@product.Name</a>
+                        </td>
+                        <td class="col-2">@product.Category.Name</td>
+                        <td class="col-1">@product.Quantity</td>
+                        <td class="col-1">@($"{product.Price:#.##}")</td>
+                        <td class="col-1">
+                            <a class="btn btn-primary btn-outline-info rounded-3 text-white"
+                               asp-controller="Book" asp-action="GetBorrowedBooks" asp-route-Id="@product.Guid">
+                                @product.OnSale
+                            </a>
+                        </td>
+                        <td class="col-1">
+                            <div class="row justify-content-center">
+                                <a asp-action="Updateproduct" asp-route-Id="@product.Guid" 
+                                   class="btn btn-warning rounded-pill w-auto p-1 m-1">Update</a>
+                                <a asp-action="Deleteproduct" asp-route-Id="@product.Guid" 
+                                   class="btn btn-danger rounded-pill w-auto p-1 m-1">Delete&nbsp;</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+}

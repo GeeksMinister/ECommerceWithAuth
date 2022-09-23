@@ -1,4 +1,6 @@
-﻿namespace ECommerceWithAuth.API.Controllers;
+﻿using static System.Net.WebRequestMethods;
+
+namespace ECommerceWithAuth.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -32,6 +34,18 @@ public class EmployeeController : ControllerBase
         };
 
         return Ok(authenticatedUser);
+    }
+    
+    [HttpPost("RequestToken")]
+    public async Task<IActionResult> RequestToken(string loginInfo, string employeeId)
+    {
+        var employee = await _employeeRepository.GetEmployeeByIdOrEmail(loginInfo);
+
+        if (employee == null) return NotFound("Login Info Wasn't Found");
+        if (employee.Guid.ToString() != employeeId) return BadRequest("Wrong employeeId");
+        
+
+        return Ok(CreateToken(employee));
     }
 
     private (byte[] passwordHash, byte[] passwordSalt) CreatePasswordHash(string password)

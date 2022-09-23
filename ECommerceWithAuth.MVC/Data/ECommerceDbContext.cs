@@ -2,9 +2,18 @@
 
 public class ECommerceDbContext : ECommerceWithAuthMVCContext
 {
-    public ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : base(options)
+    private readonly IConfiguration _config;
+    public ECommerceDbContext(DbContextOptions<ECommerceDbContext> options, IConfiguration config) : base(options)
     {
+        _config = config;
+    }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    {
+        if (options.IsConfigured == false)
+        {
+            options.UseSqlServer(_config.GetConnectionString("Default"));
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

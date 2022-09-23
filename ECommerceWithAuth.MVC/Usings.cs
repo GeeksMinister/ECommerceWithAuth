@@ -17,15 +17,13 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.IdentityModel.Tokens;
 global using System.IdentityModel.Tokens.Jwt;
-global using Microsoft.AspNetCore.Authorization;
+//global using Microsoft.AspNetCore.Authorization;
  
-
 global using ECommerceWithAuth.MVC.Data;
 
 global using DataAccessLibrary.Models;
 global using DataAccessLibrary.Services;
 global using DataAccessLibrary.Models.DTOs;
-global using DataAccessLibrary.Data.Repositories;
 global using DataAccessLibrary.Services.RefitClient;
 global using DataAccessLibrary.Data.Repositories.Contracts;
 

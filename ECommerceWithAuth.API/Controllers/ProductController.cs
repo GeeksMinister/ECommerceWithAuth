@@ -2,7 +2,7 @@
 
 namespace ECommerceWithAuth.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/")]
 [ApiController]
 public class ProductController : ControllerBase
 {
@@ -14,9 +14,8 @@ public class ProductController : ControllerBase
 		_productRepository = productRepository;
 		_mapper = mapper;
 	}
-
-	[HttpGet("Product")]
-	//[Authorize(Roles = "Admin")]
+    [HttpGet("Product")]
+	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> GetAllProducts()
 	{
 		var result = await _productRepository.GetAllProducts();

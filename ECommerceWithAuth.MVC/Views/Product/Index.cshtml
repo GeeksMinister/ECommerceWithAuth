@@ -29,7 +29,8 @@ else
                     <th>Name</th>
                     <th>Category</th>
                     <th>Available</th>
-                    <th>On Sale Until</th>
+                    <th>Discount</th>
+                    <th>On Sale</th>
                     <th>Price</th>
                     <th>Changes</th>
                 </tr>
@@ -44,7 +45,8 @@ else
                         </td>
                         <td class="col-2">@product.Category.Name</td>
                         <td class="col-1 @(product.Quantity <= 10 ? "bg-warning" : "") bg-opacity-25">@product.Quantity</td>
-                        <td class="col-1 fw-bold @(product.OnSale ? "bg-success bg-opacity-25" : "")">
+                        <td class="col-1 fw-bold text-danger text-opacity-75">@($"{product.DiscountRate:#.}%")</td>
+                        <td class="col-1 fw-bold small @(product.OnSale ? "bg-success bg-opacity-25" : "")">
                             <a class=" text-decoration-none btn-outline-warning link-primary rounded-pill p-1 "
                                asp-controller="Book" asp-action="GetBorrowedBooks" asp-route-Id="@product.Guid">
                                 @product.DiscountUntil.ToShortDateString()

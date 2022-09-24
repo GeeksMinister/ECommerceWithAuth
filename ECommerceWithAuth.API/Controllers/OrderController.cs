@@ -75,9 +75,27 @@ public class OrderController : ControllerBase
     {
         try
         {
+            if (code is Currency.SEK) return BadRequest("Server doesn't convert from SEK to SEK");
             var result =  await _orderRepository.GetExchangeRates(code);
             if (result is null) return Problem("No Data was received From the Provider");
             Response.Headers.Append("Total-dates-Requested", result.Count.ToString());
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
+    }
+
+    [HttpGet("RequestExchangeRate")]
+    public async Task<IActionResult> RequestExchangeRate(Currency code)
+    {
+        try
+        {
+            if (code is Currency.SEK) return BadRequest("Server doesn't convert from SEK to SEK");
+            var result =  await _orderRepository.RequestLiveExchangeRate(code);
+            if (result is 0) return Problem("No Data was received From the Provider");
+
             return Ok(result);
         }
         catch (Exception ex)

@@ -8,38 +8,36 @@ public class ExchangeRate
 
     [Required]
     [DataType(DataType.Date)]
-    [StringLength(10)]
-    [Column(TypeName = "money")]
-    public string Date { get; set; } = string.Empty;
+    public string Date { get; set; } = DateTime.Now.ToShortDateString();
 
-    [Column(TypeName="money")]
+    [Column(TypeName = "money")]
     public decimal USD { get; set; }
 
-    [Column(TypeName="money")]
+    [Column(TypeName = "money")]
     public decimal EUR { get; set; }
 
-    [Column(TypeName="money")]
+    [Column(TypeName = "money")]
     public decimal GBP { get; set; }
 
-    [Column(TypeName="money")]
+    [Column(TypeName = "money")]
     public decimal CAD { get; set; }
 
-    [Column(TypeName="money")]
+    [Column(TypeName = "money")]
     public decimal CHF { get; set; }
 
-    [Column(TypeName="money")]
+    [Column(TypeName = "money")]
     public decimal JPY { get; set; }
 
-    [Column(TypeName="money")]
+    [Column(TypeName = "money")]
     public decimal NOK { get; set; }
 
-    [Column(TypeName="money")]
+    [Column(TypeName = "money")]
     public decimal DKK { get; set; }
 
     public ExchangeRate()
-	{
+    {
 
-	}
+    }
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]

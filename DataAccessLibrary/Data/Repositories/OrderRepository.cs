@@ -1,4 +1,7 @@
-﻿namespace DataAccessLibrary.Data.Repositories;
+﻿
+using System.Reflection;
+
+namespace DataAccessLibrary.Data.Repositories;
 
 public class OrderRepository : IOrderRepository
 {
@@ -130,67 +133,69 @@ public class OrderRepository : IOrderRepository
         }
     }
 
-    //public async Task<Dictionary<string, decimal>> GetExchangeRates(Currency code)
-    //{
-    //    if (code == Currency.SEK) return await GetOriginalCurrency();
-
-    //    var orders = await _dbContext.Order.ToListAsync();
-    //    var dates = orders.OrderBy(order => order.OrderPlaced)
-    //                      .GroupBy(order => order.OrderPlaced)
-    //       .Select(date => new
-    //       {
-    //           Date = date.Key,
-    //           Value = date.Select(order => order.TotalToPay)
-    //                  .FirstOrDefault() / RequestValue(code, date.Key ).Result
-    //       }).ToDictionary(date => date.Date, date => date.Value);
-
-    //    return dates;
-    //}
-
-    public async Task<Dictionary<string, decimal>> GetExchangeRates(Currency code)
+    public async Task<Dictionary<string, object>> GetExchangeRates(Currency code)
     {
-        
-        if (code == Currency.SEK) return await GetOriginalCurrency();
-        var rates = await _dbContext.ExchangeRate.ToListAsync();
+        if (code is Currency.SEK) return null!;
 
-        var orders = await _dbContext.Order.ToListAsync();
-        var dates = orders.OrderBy(order => order.OrderPlaced)
-                          .GroupBy(order => order.OrderPlaced)
-           .Select(date => new
-           {
-               Date = date.Key,               
-               Value = RequestValue(code, date.Key).Result
-           }).ToDictionary(date => date.Date, date => date.Value);
-        foreach (var item in dates)
+        await UpdateExchangeRateRecords();
+        return await GetSelectedCurrency(code);
+    }
+
+    private async Task<Dictionary<string, object>> GetSelectedCurrency(Currency code)
+    {
+        var targetProperty = new ExchangeRate().GetType().GetProperty(code.ToString());
+        var rates = await _dbContext.ExchangeRate.ToListAsync();
+        
+        var values = rates.Select(rate => new
         {
-            if (rates.Exists(r => r.Date == item.Key))
+            Date = rate.Date,
+            Value =  targetProperty!.GetValue(rate)
+        }).ToDictionary(date => date.Date, date => date.Value);
+
+        return values!;
+    }
+
+    private async Task UpdateExchangeRateRecords()
+    {
+        var rateDates = await _dbContext.ExchangeRate.Select(rates => rates.Date).ToListAsync();
+        var orderDates = await CheckOrderDates();
+        foreach (var orderDate in orderDates)
+        {
+            if (rateDates.Exists(rateDate => rateDate == orderDate) == false)
             {
-                var date = _dbContext.ExchangeRate.FirstOrDefault(r => r.Date == item.Key);
-                date.JPY = item.Value;
+                _dbContext.ExchangeRate.Add(new ExchangeRate { Date = orderDate });
             }
-            else
-             _dbContext.ExchangeRate.Add(new ExchangeRate { Date = item.Key, JPY = item.Value});
         }
         await _dbContext.SaveChangesAsync();
-        return dates;
+        await UpdateRatesIfNull();
     }
 
-
-    private async Task<Dictionary<string, decimal>> GetOriginalCurrency()
+    private async Task<List<string>> CheckOrderDates()
     {
-        var orders = await _dbContext.Order.ToListAsync();
-        var dates = orders.OrderBy(order => order.OrderPlaced)
-                          .GroupBy(order => order.OrderPlaced)
-           .Select(date => new
-           {
-               Date = date.Key,
-               Value = date.Select(order => order.TotalToPay).FirstOrDefault()
-           }).ToDictionary(date => date.Date, date =>  date.Value);
+        List<string> exchangeRateRecords = new List<string>();
+        var orders = await _dbContext.Order.Select(order => order.OrderPlaced).Distinct()
+            .OrderBy(date => date).ToListAsync();
         
-        return dates;
+        return orders;
     }
 
-    private async Task<decimal> RequestValue(Currency code, string date)
+    private async Task UpdateRatesIfNull()
+    {                                       //Remove Take() after a October 
+        var exchangeRates = await _dbContext.ExchangeRate.Take(5).ToListAsync();
+        foreach (var rate in exchangeRates)
+        {
+            if (rate.USD == 0) rate.USD = await RequestOldExchangeRate(Currency.USD, rate.Date);
+            if (rate.EUR == 0) rate.EUR = await RequestOldExchangeRate(Currency.EUR, rate.Date);
+            if (rate.GBP == 0) rate.GBP = await RequestOldExchangeRate(Currency.GBP, rate.Date);
+            if (rate.CHF == 0) rate.CHF = await RequestOldExchangeRate(Currency.CHF, rate.Date);
+            if (rate.CAD == 0) rate.CAD = await RequestOldExchangeRate(Currency.CAD, rate.Date);
+            if (rate.NOK == 0) rate.NOK = await RequestOldExchangeRate(Currency.NOK, rate.Date);
+            if (rate.DKK == 0) rate.DKK = await RequestOldExchangeRate(Currency.DKK, rate.Date);
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<decimal> RequestOldExchangeRate(Currency code, string date)
     {
         try
         {
@@ -209,9 +214,32 @@ public class OrderRepository : IOrderRepository
         }
         catch (Exception)
         {
-            return 1;
+            return 0;
         }
     }
 
+    public async Task<decimal> RequestLiveExchangeRate(Currency code)
+    {
+        try
+        {
+            var date = DateTime.Now.ToShortDateString();
+            string apiLocation = _config["CurrencyExchangeApi:Location"];
+            string key = _config["CurrencyExchangeApi:Key"];
+            apiLocation = apiLocation.Replace("[Currency]", code.ToString());
+            apiLocation = apiLocation.Replace("[Date]", date);
+            apiLocation += key;
+
+            using HttpClient client = new HttpClient();
+            var response = await client.GetStringAsync(apiLocation);
+            int startIndex = response.IndexOf(date) + 12;
+            decimal value = decimal.Parse(response.Substring(startIndex).Replace("}", ""));
+
+            return value;
+        }
+        catch (Exception)
+        {
+            return 0;
+        }
+    }
 
 }

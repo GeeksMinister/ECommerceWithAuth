@@ -16,7 +16,7 @@ public class Employee
 
     [Required]
     [DataType(DataType.Date)]
-    //[StringLength(10)]
+    [StringLength(10)]
     public string Birthdate { get; set; } = string.Empty;
 
     [StringLength(50)]

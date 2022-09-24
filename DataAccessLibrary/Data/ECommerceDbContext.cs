@@ -35,5 +35,6 @@ public class ECommerceDbContext : DbContext
     public DbSet<Employee> Employee { get; set; } = null!;
     public DbSet<Product> Product { get; set; } = null!;
     public DbSet<Category> Category { get; set; } = null!;
+    public DbSet<ExchangeRate> ExchangeRate { get; set; } = null!;
 
 }

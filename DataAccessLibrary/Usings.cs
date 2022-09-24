@@ -13,7 +13,7 @@ global using Microsoft.AspNetCore.JsonPatch;
 global using Microsoft.Extensions.Configuration;
 global using AutoMapper.Configuration.Annotations;
 global using System.ComponentModel.DataAnnotations;
-
+global using System.ComponentModel.DataAnnotations.Schema;
 
 global using DataAccessLibrary.Models;
 global using DataAccessLibrary.Models.DTOs;

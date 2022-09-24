@@ -11,17 +11,14 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly IEmployeeClientData _employeeData;
     private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
 
     public HomeController(ILogger<HomeController> logger,
                           IEmployeeClientData employeeData,
-                          UserManager<IdentityUser> userManager,
-                          SignInManager<IdentityUser> signInManager)
+                          UserManager<IdentityUser> userManager)
     {
         _logger = logger;
         _employeeData = employeeData;
         _userManager = userManager;
-        _signInManager = signInManager;
     }
 
     public IActionResult Index()
@@ -36,7 +33,6 @@ public class HomeController : Controller
         return View();
     }
 
-    //Request.Cookies["token"]
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

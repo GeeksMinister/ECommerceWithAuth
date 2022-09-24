@@ -130,22 +130,51 @@ public class OrderRepository : IOrderRepository
         }
     }
 
+    //public async Task<Dictionary<string, decimal>> GetExchangeRates(Currency code)
+    //{
+    //    if (code == Currency.SEK) return await GetOriginalCurrency();
+
+    //    var orders = await _dbContext.Order.ToListAsync();
+    //    var dates = orders.OrderBy(order => order.OrderPlaced)
+    //                      .GroupBy(order => order.OrderPlaced)
+    //       .Select(date => new
+    //       {
+    //           Date = date.Key,
+    //           Value = date.Select(order => order.TotalToPay)
+    //                  .FirstOrDefault() / RequestValue(code, date.Key ).Result
+    //       }).ToDictionary(date => date.Date, date => date.Value);
+
+    //    return dates;
+    //}
+
     public async Task<Dictionary<string, decimal>> GetExchangeRates(Currency code)
     {
-        if (code == Currency.SEK) return await GetOriginalCurrency();
         
+        if (code == Currency.SEK) return await GetOriginalCurrency();
+        var rates = await _dbContext.ExchangeRate.ToListAsync();
+
         var orders = await _dbContext.Order.ToListAsync();
         var dates = orders.OrderBy(order => order.OrderPlaced)
                           .GroupBy(order => order.OrderPlaced)
            .Select(date => new
            {
-               Date = date.Key,
-               Value = date.Select(order => order.TotalToPay)
-                      .FirstOrDefault() / RequestValue(code, date.Key ).Result
+               Date = date.Key,               
+               Value = RequestValue(code, date.Key).Result
            }).ToDictionary(date => date.Date, date => date.Value);
-
+        foreach (var item in dates)
+        {
+            if (rates.Exists(r => r.Date == item.Key))
+            {
+                var date = _dbContext.ExchangeRate.FirstOrDefault(r => r.Date == item.Key);
+                date.JPY = item.Value;
+            }
+            else
+             _dbContext.ExchangeRate.Add(new ExchangeRate { Date = item.Key, JPY = item.Value});
+        }
+        await _dbContext.SaveChangesAsync();
         return dates;
     }
+
 
     private async Task<Dictionary<string, decimal>> GetOriginalCurrency()
     {

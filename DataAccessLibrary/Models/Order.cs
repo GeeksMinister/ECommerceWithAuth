@@ -46,6 +46,8 @@ public class Order
 
     public List<OrderItems> OrderItems { get; set; } = new();
 
+    public string Customername() => FirstName + " " + LastName;
+
     public Order()
     {
 

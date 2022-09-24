@@ -5,8 +5,8 @@
 }
 
 <div class="row pt-5">
-    <h3 class="text-secondary font-monospace fw-bold col-6">Products 
-    (<span class="text-primary opacity-75 small">@Model?.Count</span>)</h3>
+    <h3 class="text-secondary font-monospace fw-bold col-6">Products [<span 
+                class="text-primary opacity-75 small">@Model?.Count</span>]</h3>
     <div class=" text-end">
         <a asp-action="Addproduct" class="btn btn-success mb-4 fw-bold">Add Product</a>
     </div>
@@ -24,13 +24,13 @@ else
 {
     <div class="container-fluid overflow-auto m-0 p-1 ">
         <table class="table table-bordered table-striped text-center align-middle ">
-            <thead class="table-dark">
+            <thead class="border-dark bg-success text-light">
                 <tr>
                     <th>Name</th>
                     <th>Category</th>
                     <th>Available</th>
+                    <th>On Sale Until</th>
                     <th>Price</th>
-                    <th>On Sale</th>
                     <th>Changes</th>
                 </tr>
             </thead>
@@ -43,14 +43,14 @@ else
                                asp-action="productDetails" asp-route-Id="@product.Guid">@product.Name</a>
                         </td>
                         <td class="col-2">@product.Category.Name</td>
-                        <td class="col-1">@product.Quantity</td>
-                        <td class="col-1">@($"{product.Price:#.##}")</td>
-                        <td class="col-1">
-                            <a class="btn btn-primary btn-outline-info rounded-3 text-white"
+                        <td class="col-1 @(product.Quantity <= 10 ? "bg-warning" : "") bg-opacity-25">@product.Quantity</td>
+                        <td class="col-1 fw-bold @(product.OnSale ? "bg-success bg-opacity-25" : "")">
+                            <a class=" text-decoration-none btn-outline-warning link-primary rounded-pill p-1 "
                                asp-controller="Book" asp-action="GetBorrowedBooks" asp-route-Id="@product.Guid">
-                                @product.OnSale
+                                @product.DiscountUntil.ToShortDateString()
                             </a>
                         </td>
+                        <td class="col-1">@($"{product.Price:#.##}")</td>
                         <td class="col-1">
                             <div class="row justify-content-center">
                                 <a asp-action="Updateproduct" asp-route-Id="@product.Guid" 

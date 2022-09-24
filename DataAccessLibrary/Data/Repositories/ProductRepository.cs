@@ -56,7 +56,6 @@ public class ProductRepository : IProductRepository
 		return product;
     }
 
-
     public async Task DeleteProduct(Guid productId)
 	{
 		var result = await _dbContext.Product.FirstOrDefaultAsync(prod => prod.Guid.Equals(productId));

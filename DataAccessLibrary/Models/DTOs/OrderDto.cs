@@ -45,6 +45,8 @@ public class OrderDto
 
     public List<OrderItemsDto> OrderItems { get; set; } = new();
 
+    public string Customername() => FirstName + " " + LastName;
+
     public OrderDto()
     {
 

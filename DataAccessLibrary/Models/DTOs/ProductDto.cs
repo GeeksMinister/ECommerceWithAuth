@@ -8,16 +8,18 @@ public class ProductDto
     //[StringLength(512, ErrorMessage = "Too long Image-URL")]
     //public string ImageURL { get; set; } = string.Empty;
 
+    [Range(1, int.MaxValue)]
     public int Quantity { get; set; }
 
-    //[DataType(DataType.Date)]
-    //public DateTime DiscountUntil { get; set; }
+    [DataType(DataType.Date)]
+    public DateTime DiscountUntil { get; set; } = DateTime.Now;
 
     //public decimal DiscountRate { get; set; }
 
+    [Range(1, int.MaxValue, ErrorMessage = "Invalid value!")]
     public decimal Price { get; set; }
 
-    //public Guid CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
 
     public ProductDto()
     {

@@ -8,8 +8,9 @@ public interface IProductClientData
     [Get("/Product/{guid}")]
     Task<Product> GetProductById(string guid);  // Might need to change back to Guid
 
+    [Post("/Product")]
+    Task<Product> AddNewProduct(ProductDto productDto);
 
-
-
-
+    [Get("/Categories")]
+    Task<string> GetCategories();
 }

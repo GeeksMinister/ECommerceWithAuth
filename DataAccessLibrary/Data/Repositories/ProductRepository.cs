@@ -11,7 +11,8 @@ public class ProductRepository : IProductRepository
 
 	public async Task<List<Product>> GetAllProducts()
 	{
-		return await _dbContext.Product.Include(prod => prod.Category).ToListAsync();
+		return await _dbContext.Product.Include(prod => prod.Category)
+			.OrderBy(prod => prod.Category.Name).ToListAsync();
 	}
 
 	public async Task<Product?> GetProductById(Guid productId)
@@ -19,6 +20,11 @@ public class ProductRepository : IProductRepository
 		var result = await _dbContext.Product.Include(prod => prod.Category)
 				   .FirstOrDefaultAsync(prod => prod.Guid.Equals(productId));
 		return result;
+	}
+
+	public async Task<object> GetCategories()
+	{
+		return await _dbContext.Category.Select(ca => new { Guid = ca.Guid, Name = ca.Name }).ToListAsync();
 	}
 
 	public async Task<Product> AddNewProduct(Product product)

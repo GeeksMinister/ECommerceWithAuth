@@ -20,7 +20,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        @if (true@*User?.Identity?.IsAuthenticated ?? false*@)
                         {
                             <li class="nav-item">
                                 <a class="nav-link navbar-brand text-white" asp-controller="Product" asp-action="Index">Products</a>

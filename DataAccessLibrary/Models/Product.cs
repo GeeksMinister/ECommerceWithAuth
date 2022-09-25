@@ -27,6 +27,7 @@ public class Product
     [Ignore]
     private decimal _price;
 
+    [Range(1, int.MaxValue, ErrorMessage = "Invalid value!")]
     public decimal Price
     {
         get
@@ -49,7 +50,7 @@ public class Product
     }
 
     public Guid CategoryId { get; set; }
-    public Category Category { get; set; } = new();
+    public Category? Category { get; set; }
 
     public Product()
     {

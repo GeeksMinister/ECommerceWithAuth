@@ -1,0 +1,61 @@
+﻿@model ProductDto
+
+@inject IProductClientData _productData
+
+@{
+    ViewData["Title"] = "New Product";
+}
+
+<h2 class="text-primary m-4 text-success">Add Product</h2>
+
+<form method="post" asp-action="AddProduct" class="mt-5 fw-bold">
+    <div class="row card card-body bg-light shadow-lg pb-3 ">
+        <div class="row-cols-1 mb-4 w-100">
+            <div class="col-md-4 col-lg-4 mb-3 m-auto">
+                <label asp-for="Name">Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class=" col-md-3 col-lg-2 mb-3 m-auto">
+                <label asp-for="Price">Price</label>
+                <input asp-for="Price" type="number" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class=" col-md-3 col-lg-2 mb-3 m-auto">
+                <label asp-for="Quantity">Quantity</label>
+                <input asp-for="Quantity" type="number" class="form-control" min="1" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+
+            <div class="row mt-4 mb-5 ">
+                <div class=" col-auto mb-2 m-auto">
+                    <label class="form-label" asp-for="CategoryId">Choose Category</label>
+                    <select asp-for="CategoryId" class="form-select">
+                        @{
+                            var categoriesObject = await _productData.GetCategories();
+                            var categories = JsonConvert.DeserializeObject<List<Category>>(categoriesObject);
+                        }
+                        @foreach (var category in categories!)
+                        {
+                            <option value="@category.Guid">@category.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-100 mt-5 mb-5  text-center row justify-content-center">
+            <button type="submit" class="btn btn-success fw-bold m-3 col  col-lg-2 col-xl-2">Add Product</button>
+            <button type="reset" class="btn btn-secondary m-3 col  col-lg-2 col-xl-2">Reset</button>
+            <a asp-action="Index" class="btn btn-primary m-3 col col-lg-2 col-xl-2">Cancel</a>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+}

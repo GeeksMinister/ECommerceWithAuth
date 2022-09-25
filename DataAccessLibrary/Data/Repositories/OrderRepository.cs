@@ -30,7 +30,7 @@ public class OrderRepository : IOrderRepository
                 SalesSum = sellDate.Sum(order => order.TotalToPay),
                 TotalOrders = sellDate.Count(),
                 TotalItems = sellDate.Sum(order => order.OrderItems.Sum(item => item.Quantity))
-            }).OrderBy(order => order.Date).ToList();
+            }).OrderBy(order => order.Date);
 
         return summary;
     }
@@ -180,14 +180,15 @@ public class OrderRepository : IOrderRepository
     }
 
     private async Task UpdateRatesIfNull()
-    {                                       //Remove Take() after a October 
-        var exchangeRates = await _dbContext.ExchangeRate.Take(5).ToListAsync();
+    {                                       //Remove Take() after October 
+        var exchangeRates = await _dbContext.ExchangeRate.Take(6).ToListAsync();
         foreach (var rate in exchangeRates)
         {
             if (rate.USD == 0) rate.USD = await RequestOldExchangeRate(Currency.USD, rate.Date);
             if (rate.EUR == 0) rate.EUR = await RequestOldExchangeRate(Currency.EUR, rate.Date);
             if (rate.GBP == 0) rate.GBP = await RequestOldExchangeRate(Currency.GBP, rate.Date);
             if (rate.CHF == 0) rate.CHF = await RequestOldExchangeRate(Currency.CHF, rate.Date);
+            if (rate.JPY == 0) rate.JPY = await RequestOldExchangeRate(Currency.JPY, rate.Date);
             if (rate.CAD == 0) rate.CAD = await RequestOldExchangeRate(Currency.CAD, rate.Date);
             if (rate.NOK == 0) rate.NOK = await RequestOldExchangeRate(Currency.NOK, rate.Date);
             if (rate.DKK == 0) rate.DKK = await RequestOldExchangeRate(Currency.DKK, rate.Date);

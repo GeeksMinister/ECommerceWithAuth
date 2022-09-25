@@ -8,7 +8,7 @@
     <h3 class="text-secondary font-monospace fw-bold col-6">Products [<span 
                 class="text-primary opacity-75 small">@Model?.Count</span>]</h3>
     <div class=" text-end">
-        <a asp-action="Addproduct" class="btn btn-success mb-4 fw-bold">Add Product</a>
+        <a asp-action="AddProduct" class="btn btn-success mb-4 fw-bold">Add Product</a>
     </div>
 </div>
 
@@ -39,13 +39,21 @@ else
                 @foreach (var product in Model)
                 {
                     <tr>
-                        <td class="col-3 fw-bold link-primary ">
+                        <td class="col-3 fw-bold link-primary">
                             <a class="text-decoration-none btn-outline-info link-primary rounded-pill p-1"
                                asp-action="productDetails" asp-route-Id="@product.Guid">@product.Name</a>
                         </td>
-                        <td class="col-2">@product.Category.Name</td>
+                        <td class="col-2">@product.Category!.Name</td>
                         <td class="col-1 @(product.Quantity <= 10 ? "bg-warning" : "") bg-opacity-25">@product.Quantity</td>
-                        <td class="col-1 fw-bold text-danger text-opacity-75">@($"{product.DiscountRate:#.}%")</td>
+                        @if (product.OnSale)
+                        {
+                            <td class="col-1 fw-bold text-danger text-opacity-75">@($"{product.DiscountRate.ToString():#.}%")</td>
+                        }
+                        else
+                        {
+                            <td class="col-1  text-opacity-75">Full Price</td>
+                        }
+
                         <td class="col-1 fw-bold small @(product.OnSale ? "bg-success bg-opacity-25" : "")">
                             <a class=" text-decoration-none btn-outline-warning link-primary rounded-pill p-1 "
                                asp-controller="Book" asp-action="GetBorrowedBooks" asp-route-Id="@product.Guid">
@@ -55,9 +63,9 @@ else
                         <td class="col-1">@($"{product.Price:#.##}")</td>
                         <td class="col-1">
                             <div class="row justify-content-center">
-                                <a asp-action="Updateproduct" asp-route-Id="@product.Guid" 
+                                <a asp-action="Updateproduct" asp-route-Id="@product.Guid"
                                    class="btn btn-warning rounded-pill w-auto p-1 m-1">Update</a>
-                                <a asp-action="Deleteproduct" asp-route-Id="@product.Guid" 
+                                <a asp-action="Deleteproduct" asp-route-Id="@product.Guid"
                                    class="btn btn-danger rounded-pill w-auto p-1 m-1">Delete&nbsp;</a>
                             </div>
                         </td>

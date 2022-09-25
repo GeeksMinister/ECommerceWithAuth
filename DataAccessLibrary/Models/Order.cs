@@ -41,8 +41,8 @@ public class Order
     public string OrderPlaced { get; set; } = DateTime.Now.ToShortDateString();
 
     [Ignore]
-    private decimal _totalToPay;
-    public decimal TotalToPay { private set => OrderItems.ForEach(item => _totalToPay += item.Price); get => _totalToPay; }
+    private decimal? _totalToPay;
+    public decimal? TotalToPay { private set => OrderItems.ForEach(item => _totalToPay += item.Price); get => _totalToPay; }
 
     public List<OrderItems> OrderItems { get; set; } = new();
 

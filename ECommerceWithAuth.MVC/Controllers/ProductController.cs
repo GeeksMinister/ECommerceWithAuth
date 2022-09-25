@@ -1,36 +1,67 @@
-﻿
-namespace ECommerceWithAuth.MVC.Controllers;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿namespace ECommerceWithAuth.MVC.Controllers;
 
+using Microsoft.AspNetCore.Authorization;
+
+//[Authorize(Roles = "Administration")]
 public class ProductController : Controller
 {
     private readonly IProductClientData _productData;
-    private readonly IEmployeeClientData _employeeData;
-    private readonly UserManager<IdentityUser> _userManager;
-    public ProductController(IProductClientData productData,
-                             IEmployeeClientData employeeData,
-                             UserManager<IdentityUser> userManager)
+    private readonly IMapper _mapper;
+
+    public ProductController(IProductClientData productData, IMapper mapper)
     {
         _productData = productData;
-        _employeeData = employeeData;
-        _userManager = userManager;
+        _mapper = mapper;
     }
-
-    [Authorize(Roles = "Administration")]
+    
     public async Task<IActionResult> Index()
     {
-        //if (string.IsNullOrEmpty(Request.Cookies["token"]) && (User?.Identity?.IsAuthenticated ?? false))
-        //{
-        //    var employeeId = _userManager.GetUserId(User);
-        //    var loginInfo = _userManager.GetUserName(User);
-        //    var newToken = _employeeData.RequestToken(loginInfo, employeeId).Result;
-        //    Response.Cookies.Append("token", newToken);
-        //}
-
         var token = Request.Cookies["token"]!;
         var result = await _productData.GetAllProducts("Bearer " + token);
         return View(result);
     }
+
+    public IActionResult AddProduct()
+    {
+        try
+        {            
+            return View();
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddProduct(ProductDto productDto)
+    {
+        try
+        {
+            if (ModelState.IsValid == false) return View(productDto);
+            await _productData.AddNewProduct(productDto);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

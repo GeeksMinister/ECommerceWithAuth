@@ -14,8 +14,9 @@ public class ProductController : ControllerBase
 		_productRepository = productRepository;
 		_mapper = mapper;
 	}
+
     [HttpGet("Product")]
-	[Authorize(Roles = "Admin")]
+	//[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> GetAllProducts()
 	{
 		var result = await _productRepository.GetAllProducts();
@@ -31,6 +32,14 @@ public class ProductController : ControllerBase
 		if (result is null) return NotFound();
 		return Ok(result);
 	}
+
+	[HttpGet("Categories")]
+	public async Task<IActionResult> GetCategories()
+	{
+		var result = await _productRepository.GetCategories();
+        if (result is null) return NotFound();
+        return Ok(result);
+    }
 
 	[HttpPost("Product")]
 	public async Task<IActionResult> AddNewProduct(ProductDto productDto)

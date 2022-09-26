@@ -106,23 +106,49 @@ public class ProductController : Controller
         }
     }
 
-
-    public IActionResult PatchProduct(Guid id, string discountRate)
+    public async Task<IActionResult> PatchProductDiscountRate(Guid id, string value, string path = "discountRate")
     {
+        var product = await _productData.GetProductById(id);
+        var productDto = _mapper.Map<ProductDto>(product);
+        productDto.DiscountRate = decimal.Parse(value);
+         await _productData.UpdateProduct(id, productDto);
 
-        PatchProduct_Post(id);
         return RedirectToAction(nameof(Index));
-
     }
 
-
-    public void PatchProduct_Post(Guid id)
+    public async Task<IActionResult> PatchProductDiscountUntil(Guid id, string value, string path = "discountUntil")
     {
-        string s = string.Empty;
-        //await _productData.PatchProduct(id, patchObj);
+        var product = await _productData.GetProductById(id);
+        var productDto = _mapper.Map<ProductDto>(product);
+        productDto.DiscountUntil = DateTime.Parse(value);
+        await _productData.UpdateProduct(id, productDto);
+
+        return RedirectToAction(nameof(Index));
     }
 
 
+    // Failed with the making a successful HttpPatch request  :(
+      // Nor RefitClient or HttpClient worked.
+    //public IActionResult PatchProductDiscountRate(Guid id, string value, string path = "discountRate")
+    //{
+
+    //    PatchProduct_Post(id, value, path);
+    //    return RedirectToAction(nameof(Index));
+    //}
+
+
+    //public IActionResult PatchProductDiscountUntil(Guid id, string value, string path = "discountUntil")
+    //{
+
+    //    PatchProduct_Post(id, path, value);
+    //    return RedirectToAction(nameof(Index));
+    //}
+
+    //public async void PatchProduct_Post(Guid guid, string value, string path)
+    //{
+    //    var patchObject =  new  { Path = path, Value = value, Op = "replace"}; 
+    //    await _productData.PatchProduct(guid, patchObject);        
+    //}
 
 
 

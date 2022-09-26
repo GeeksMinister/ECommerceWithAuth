@@ -1,4 +1,6 @@
-﻿namespace DataAccessLibrary.Services.RefitClient;
+﻿using Newtonsoft.Json.Linq;
+
+namespace DataAccessLibrary.Services.RefitClient;
 
 public interface IProductClientData
 {
@@ -21,5 +23,8 @@ public interface IProductClientData
     Task DeleteProduct(Guid guid);
 
     [Patch("/Product/{guid}")]
-    Task PatchProduct(Guid guid, PatchObj patchObj);
+    Task PatchProduct(Guid guid, object PatchObj);
 }
+
+record struct PatchObj(string Path, string Value, string Op = "replace");
+

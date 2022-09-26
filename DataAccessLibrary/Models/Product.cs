@@ -1,4 +1,6 @@
-﻿namespace DataAccessLibrary.Models;
+﻿using Newtonsoft.Json.Linq;
+
+namespace DataAccessLibrary.Models;
 
 public class Product
 {
@@ -9,7 +11,7 @@ public class Product
     public string Name { get; set; } = string.Empty;
     
     [StringLength(512, ErrorMessage = "Too long Image-URL")]
-    public string ImageURL { get; set; } = string.Empty;
+    public string ImageURL { get; set; } = "http://dummyimage.com/187x100.png/cc0000/aaaaaa";
 
     public int Quantity { get; set; }
 
@@ -24,37 +26,22 @@ public class Product
 
     public decimal DiscountRate { get; set; }
 
-    [Ignore]
-    private decimal _price;
 
     [Range(1, int.MaxValue, ErrorMessage = "Invalid value!")]
-    public decimal Price
-    {
-        get
-        {
-            if (OnSale) return _price - (_price * DiscountRate / 100);
-            return _price;
-        }
-        set
-        {
-            if (OnSale == false)
-            {
-                _price = value;
-                _price /= (1 - (DiscountRate * 0.01m));
-            }
-            else
-            {
-                _price = value;
-            }
-        } 
-    }
+    public decimal Price { get; set; }
 
     public Guid CategoryId { get; set; }
     public Category? Category { get; set; }
 
+    public decimal GetCurrentPrice()
+    {
+        if (OnSale) return Price - (Price * DiscountRate / 100);
+        return Price;
+    }
     public Product()
     {
 
     }
+
 }
 

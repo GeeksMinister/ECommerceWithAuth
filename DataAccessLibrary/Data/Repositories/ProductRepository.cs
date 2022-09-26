@@ -12,7 +12,7 @@ public class ProductRepository : IProductRepository
 	public async Task<List<Product>> GetAllProducts()
 	{
 		return await _dbContext.Product.Include(prod => prod.Category)
-			.OrderBy(prod => prod.Category.Name).ToListAsync();
+			.OrderBy(prod => prod.Category!.Name).ToListAsync();
 	}
 
 	public async Task<Product?> GetProductById(Guid productId)

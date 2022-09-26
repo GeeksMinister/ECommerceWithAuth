@@ -1,15 +1,18 @@
-﻿@model ProductDto
+﻿@model Product
 
 @inject IProductClientData _productData
 
 @{
-    ViewData["Title"] = "New Product";
+    ViewData["Title"] = "Update Product";
 }
 
 <div style="max-width: 70rem; margin: 0 auto;">
-<h2 class="text-primary m-4 text-success">Add Product</h2>
-
-    <form method="post" asp-action="AddProduct" class="mt-5 fw-bold">
+    <h2 class="text-primary m-4 text-warning">Update Product</h2>
+    <div class="col-md-6 col-lg-4 mb-1 mt-5  fw-bold small text-primary">
+        <label asp-for="Guid">Customer Id</label>
+        <input asp-for="Guid" class="form-control fw-bold" style="text-transform: uppercase;" disabled />
+    </div>
+    <form method="post" asp-action="UpdateProduct_Post" asp-route-id="@Model.Guid" class="fw-bold">
         <div class="row card card-body bg-light shadow-lg pb-3 ">
             <div class="row-cols-1 mb-4 w-100">
                 <div class="col-md-4 col-lg-4 mb-3 m-auto">
@@ -20,7 +23,7 @@
 
                 <div class=" col-md-3 col-lg-2 mb-3 m-auto">
                     <label asp-for="Price">Price</label>
-                    <input asp-for="Price" type="number" class="form-control text-primary fw-bold" min="1"/>
+                    <input asp-for="Price" type="number" class="form-control text-primary fw-bold" min="1" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
 
@@ -32,18 +35,18 @@
 
                 <div class=" col-md-3 col-lg-2 mb-3 m-auto">
                     <label asp-for="DiscountRate">Set Discount&nbsp;&nbsp;&nbsp;<span class="text-danger">%</span> </label>
-                    <input asp-for="DiscountRate" type="number" class="form-control text-danger fw-bold" min="1" max="99" />
+                    <input asp-for="DiscountRate" type="number" class="form-control text-danger fw-bold" min="1" max="99"/>
                     <span asp-validation-for="DiscountRate" class="text-danger"></span>
                 </div>
 
                 <div class=" col-md-3 col-lg-2 mb-3 m-auto">
                     <label asp-for="DiscountUntil">Discount until</label>
-                    <input asp-for="DiscountUntil" type="date" value="@DateTime.Now.ToShortDateString()" 
+                    <input asp-for="DiscountUntil" type="date"
                            class="form-control" min="1" max="99" />
                     <span asp-validation-for="DiscountUntil" class="text-danger"></span>
                 </div>
 
-                <div class="row mt-4 mb-5 me-0 ms-0" >
+                <div class="row mt-4 mb-5 me-0 ms-0">
                     <div class=" col-auto mb-2 m-auto">
                         <label class="form-label" asp-for="CategoryId">Choose Category</label>
                         <select asp-for="CategoryId" class="form-select text-success fw-bold">
@@ -61,7 +64,7 @@
             </div>
 
             <div class="w-100 mt-5 mb-5  text-center row justify-content-center">
-                <button type="submit" class="btn btn-success fw-bold m-3 col  col-lg-2 col-xl-2">Add Product</button>
+                <button type="submit" class="btn btn-warning fw-bold m-3 col col-lg-2 col-xl-2">Update Product</button>
                 <button type="reset" class="btn btn-secondary m-3 col  col-lg-2 col-xl-2">Reset</button>
                 <a asp-action="Index" class="btn btn-primary m-3 col col-lg-2 col-xl-2">Cancel</a>
             </div>

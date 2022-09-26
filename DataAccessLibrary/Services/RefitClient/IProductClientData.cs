@@ -6,11 +6,20 @@ public interface IProductClientData
     Task<List<Product>> GetAllProducts([Header("Authorization")] string authorization);
 
     [Get("/Product/{guid}")]
-    Task<Product> GetProductById(string guid);  // Might need to change back to Guid
+    Task<Product> GetProductById(Guid guid);
 
     [Post("/Product")]
-    Task<Product> AddNewProduct(ProductDto productDto);
+    Task AddNewProduct(ProductDto productDto);
 
     [Get("/Categories")]
     Task<string> GetCategories();
+
+    [Put("/Product/{guid}")]
+    Task<Product> UpdateProduct(Guid guid, ProductDto productDto);
+
+    [Delete("/Product/{guid}")]
+    Task DeleteProduct(Guid guid);
+
+    [Patch("/Product/{guid}")]
+    Task PatchProduct(Guid guid, PatchObj patchObj);
 }

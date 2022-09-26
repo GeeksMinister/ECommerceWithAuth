@@ -73,7 +73,7 @@ public class ProductController : ControllerBase
 		return Ok(product);
 	}
 
-    [HttpDelete("Product")]
+    [HttpDelete("Product/{guid}")]
 	public async Task<IActionResult> DeleteProduct(Guid guid)
 	{
 		var result = await _productRepository.GetProductById(guid);
@@ -81,6 +81,8 @@ public class ProductController : ControllerBase
 		await _productRepository.DeleteProduct(guid);
 		return Ok($"Product with Id: {guid} Was Successfully Removed.");
 	}
+
+
 
 
 }

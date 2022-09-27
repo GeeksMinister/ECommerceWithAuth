@@ -1,23 +1,46 @@
-﻿@model List<Product>
+﻿@model (List<Product> products, Currency currency)
 
 @{
     ViewData["Title"] = "Products";
 }
 
-<div class="row pt-5">
-    <h3 class="text-secondary font-monospace fw-bold col-6">
-        Products [<span class="text-primary opacity-75 small">@Model?.Count</span>]
-    </h3>
-    <div class=" text-end">
+<div class="row pt-5 gy-5">
+    <h3 class="text-secondary font-monospace fw-bold col-6">Products [<span class="text-primary opacity-75 small">@Model.products?.Count</span>]</h3>
+    <div class="start-0">
+
+        <script>
+            function sortOut() {
+                var select = document.getElementById('currency');
+                var currency = select.options[select.selectedIndex].value;
+                
+                window.location.href = "@Url.RouteUrl("/")" + `Product?currency=${currency}`
+            }
+        </script>
+
+        <select asp-for="@Model.currency" onchange="sortOut()" id="currency"
+                class="bg-white bg-opacity-100 text-success fw-bold border-2 rounded-pill form-select w-auto border-secondary">
+            <option value="SEK">SEK</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="CAD">CAD</option>
+            <option value="CHF">CHF</option>
+            <option value="JPY">JPY</option>
+            <option value="NOK">NOK</option>
+            <option value="DKK">DKK</option>
+        </select>
+    </div>
+    <div class="text-end">
         <a asp-action="AddProduct" class="btn btn-success mb-4 fw-bold">Add Product</a>
     </div>
 </div>
 
-@if (Model is null)
+
+@if (Model.products is null)
 {
     <em>Loading ......</em>
 }
-else if (Model.Any() is false)
+else if (Model.products.Any() is false)
 {
     <h4>No Registered product Was Returned From the Database</h4>
 }
@@ -37,7 +60,7 @@ else
                 </tr>
             </thead>
             <tbody class="border-1 border-dark">
-                @foreach (var product in Model)
+                @foreach (var product in Model.products)
                 {
 
                     <tr>
@@ -76,8 +99,11 @@ else
                             </span>
                         </td>
 
-                        <td class="col-1 text-secondary fw-bold font-monospace"> @($"{product.GetCurrentPrice():#.##}")</td>
+                        <td class="col-1  fw-bold font-monospace">
+                            <span class="text-center ms-2 ps-1">@($"{product.GetCurrentPrice():#.##}")</span>   
+                            <sub class="text-end m-0 p-0 text-success text-opacity-75" style="font-size:0.8rem;">@Model.currency</sub></td>
                         <td class="col-sm-2 col-lg-2 col-xxl-1">
+                            
                             <div class="row justify-content-center">
                                 <a asp-action="Updateproduct" asp-route-id="@product.Guid"
                                    class="btn btn-warning rounded-pill w-auto p-1 m-1">Update</a>
@@ -95,7 +121,7 @@ else
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
-    
+
     <script type="text/javascript">
         var id;
         var discountRate;
@@ -114,8 +140,11 @@ else
         }
 
         function patchDiscountRate() {
-        discountRate = document.getElementById("discountRate").value;
-        window.location.href = "@Url.RouteUrl("/")" + `Product/PatchProductDiscountRate/${id}?value=${discountRate}`
+            discountRate = document.getElementById("discountRate").value;
+            if (discountRate > 99 || discountRate < 0 || discountRate == null) {
+                return false;
+            }
+            window.location.href = "@Url.RouteUrl("/")" + `Product/PatchProductDiscountRate/${id}?value=${discountRate}`
         }
 
         function openDiscountUntilModal(obj) {
@@ -130,9 +159,14 @@ else
 
         function patchDiscountDate() {
             discountUntil = document.getElementById("discountUntil").value;
+            var d = new Date(discountUntil);
+            var year = d.getFullYear();
+            if (year > 2099 || year < 2022 || year == null) {
+                return false;
+            }
             window.location.href = "@Url.RouteUrl("/")" + `Product/PatchProductDiscountUntil/${id}?value=${discountUntil}`
         }
-            
+
 
         //$(".discountRateModal").click(function () {
         //    $('#discountRateModal').modal('show');
@@ -158,12 +192,11 @@ else
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form method="post" asp-action="PatchProduct" asp-route-id="@productToPatch.Id"
-                          style="max-width: 40rem;" class="fw-bold row-cols-1 p-3">
+                    <form method="post" style="max-width: 40rem;" class="fw-bold row-cols-1 p-3" onsubmit="return patchDiscountRate()">
 
-                        <input class="invisible" id="productId-rateModal" type="text" asp-for="@productToPatch.Id" disabled />
+                        <input class="d-none" id="productId-rateModal" type="text" asp-for="@productToPatch.Id" disabled />
 
-                        <div class="col-auto mb-3 pb-4 m-auto">
+                        <div class="col-auto mb-5 pb-4 m-auto">
                             <h5 class="text-center fw-bold text-primary" id="productName-rateModal" asp-for="@productToPatch.Name"></h5>
                         </div>
 
@@ -179,7 +212,7 @@ else
                 </div>
             </div>
             <div class="modal-footer border-top-0 row justify-content-evenly">
-                <button type="submit" onclick="patchDiscountRate()" id="patch"  class="btn btn-warning col-auto ">Patch Discount</button>
+                <button type="submit" onclick="patchDiscountRate()" id="patch" class="btn btn-warning col-auto ">Patch Discount</button>
                 <button type="button" class="btn btn-secondary col-auto " data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -197,22 +230,27 @@ else
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form method="post" asp-action="PatchProduct" asp-route-id="@productToPatch.Id"
-                          style="max-width: 40rem;" class="fw-bold row-cols-1 p-3">
+                    <form method="post" style="max-width: 40rem;" class="fw-bold row-cols-1 p-3" onsubmit="return patchDiscountDate()">
 
-                        <input class="invisible" id="productId-dateModal" type="text" asp-for="@productToPatch.Id" disabled />
+                        <input class="d-none" id="productId-dateModal" type="text" asp-for="@productToPatch.Id" disabled />
 
                         <div class="col-auto mb-3  pb-4 m-auto">
                             <h5 class="text-center fw-bold text-primary" id="productName-dateModal" asp-for="@productToPatch.Name"></h5>
                         </div>
 
-                        <div class="col-5 mb-3 m-auto">
-                            <label asp-for="@productToPatch.DiscountUntil" class="text-dark" >
-                                 Valid until:
-                            </label>
-                            <input id="discountUntil"  asp-for="@productToPatch.DiscountUntil" type="date"
-                                   min="2022-09-25" max="2100-09-13"
-                                   class="form-control text-danger fw-bold mt-2 text-center" required/>
+                        <div class="col mb-3 " >
+                            <span class="col-auto start-0">
+
+                                <label asp-for="@productToPatch.DiscountUntil" class="text-dark text-start">
+                                    Valid until:
+                                </label>
+                            </span>
+                            <div class="col-auto m-auto" style="max-width: 13rem;">
+
+                                <input id="discountUntil" asp-for="@productToPatch.DiscountUntil" type="date"
+                                       min="2022-09-25" max="2100-09-13"
+                                       class="form-control text-danger fw-bold mt-2 text-center" required />
+                            </div>
                             <span asp-validation-for="@productToPatch.DiscountUntil" class="text-danger small"></span>
                         </div>
                     </form>

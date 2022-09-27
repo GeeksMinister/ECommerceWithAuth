@@ -24,7 +24,10 @@ public interface IProductClientData
 
     [Patch("/Product/{guid}")]
     Task PatchProduct(Guid guid, object PatchObj);
+    
+    [Get("/Order/RequestExchangeRate?currency={currency}")]
+    Task<decimal> RequestExchangeRate(Currency currency);
 }
 
-record struct PatchObj(string Path, string Value, string Op = "replace");
+record PatchObj(string Path, string Value, string Op = "replace");
 

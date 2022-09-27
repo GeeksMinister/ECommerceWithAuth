@@ -63,7 +63,7 @@ public class ProductController : ControllerBase
 
 
 	[HttpPatch("Product/{guid}")]
-	public async Task<IActionResult> PatchProductPatch(Guid guid, JsonPatchDocument patch)
+	public async Task<IActionResult> PatchProductPatch(Guid guid, JsonPatchDocument<Product> patch)
 	{
 		var product = await _productRepository.GetProductById(guid);
 		if (product is null) return NotFound();

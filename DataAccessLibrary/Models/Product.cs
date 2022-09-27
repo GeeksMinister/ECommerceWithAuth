@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace DataAccessLibrary.Models;
+﻿namespace DataAccessLibrary.Models;
 
 public class Product
 {

@@ -1,4 +1,6 @@
-﻿namespace DataAccessLibrary.Data.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace DataAccessLibrary.Data.Repositories;
 
 public class ProductRepository : IProductRepository
 {
@@ -52,7 +54,7 @@ public class ProductRepository : IProductRepository
 		return product;
 	}
 
-	public async Task<Product> UpdateProductPatch(Guid productId, JsonPatchDocument patch)
+	public async Task<Product> UpdateProductPatch(Guid productId, [FromBody] JsonPatchDocument<Product> patch)
 	{
         var product = await _dbContext.Product.FirstOrDefaultAsync(prod => prod.Guid.Equals(productId));
         if (product == null) return null!;

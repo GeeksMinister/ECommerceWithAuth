@@ -14,12 +14,35 @@ public class ProductController : Controller
         _productData = productData;
         _mapper = mapper;
     }
-    
-    public async Task<IActionResult> Index()
+
+    public async Task<IActionResult> Index(Currency currency)
     {
         var token = Request.Cookies["token"]!;
-        var result = await _productData.GetAllProducts("Bearer " + token);
-        return View(result);
+        var products = await _productData.GetAllProducts("Bearer " + token);
+
+        decimal exchangeRate = 0;
+        exchangeRate = await SetUpPrice(currency, exchangeRate);
+        if (exchangeRate > 0) products.ForEach(prod => prod.Price /= exchangeRate);
+
+        return View((products, currency));
+    }
+
+    private async Task<decimal> SetUpPrice(Currency currency, decimal exchangeRate)
+    {
+        switch (currency)
+        {
+            case Currency.SEK: return 0;
+            case Currency.USD: exchangeRate = await _productData.RequestExchangeRate(Currency.USD); break;
+            case Currency.EUR: exchangeRate = await _productData.RequestExchangeRate(Currency.EUR); break;
+            case Currency.GBP: exchangeRate = await _productData.RequestExchangeRate(Currency.GBP); break;
+            case Currency.CAD: exchangeRate = await _productData.RequestExchangeRate(Currency.CAD); break;
+            case Currency.CHF: exchangeRate = await _productData.RequestExchangeRate(Currency.CHF); break;
+            case Currency.JPY: exchangeRate = await _productData.RequestExchangeRate(Currency.JPY); break;
+            case Currency.NOK: exchangeRate = await _productData.RequestExchangeRate(Currency.NOK); break;
+            case Currency.DKK: exchangeRate = await _productData.RequestExchangeRate(Currency.DKK); break;
+        }
+
+        return exchangeRate;
     }
 
     public IActionResult AddProduct()

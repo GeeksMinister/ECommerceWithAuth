@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace DataAccessLibrary.Services.RefitClient;
-using Newtonsoft.Json.Linq;
+﻿namespace DataAccessLibrary.Services.RefitClient;
 
 public interface IProductClientData
 {

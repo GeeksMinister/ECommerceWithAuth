@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Views\Order\Index.cshtml" />
     <None Include="Views\Product\Index.cshtml" />
   </ItemGroup>
 

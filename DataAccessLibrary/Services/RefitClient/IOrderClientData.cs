@@ -9,5 +9,5 @@ public interface IOrderClientData
     List<Order> GetOrderById(Guid guid);
 
     [Get("/Order/DistanceMatrix/{destination}")]
-    Task<object> GetDistanceMatrix(string destination);
+    Task<Destination> RequestDistanceMatrix(string destination);
 }

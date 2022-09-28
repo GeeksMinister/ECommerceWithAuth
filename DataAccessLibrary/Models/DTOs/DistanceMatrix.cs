@@ -33,3 +33,5 @@ public class Duration
     public int value { get; set; }
 }
 
+
+public record Destination(string Name, string Distance, string Duration);

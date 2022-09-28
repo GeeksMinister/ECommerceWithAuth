@@ -1,0 +1,148 @@
+﻿@model (List<OrderDto> orders, Currency currency)
+
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+
+<div class="row pt-5 gy-5">
+    <h3 class="text-secondary font-monospace fw-bold col-6">
+        Orders
+        [<span class="text-primary opacity-75 small">@Model.orders?.Count</span>]
+    </h3>
+    <div class="start-0">
+
+        <script>
+            function sortOut() {
+                var select = document.getElementById('currency');
+                var currency = select.options[select.selectedIndex].value;
+
+                window.location.href = "@Url.RouteUrl("/")" + `Order?currency=${currency}`
+            }
+        </script>
+
+        <select asp-for="@Model.currency" onchange="sortOut()" id="currency"
+                class="bg-white bg-opacity-100 text-success fw-bold border-2 rounded-pill form-select w-auto border-secondary shadow-sm">
+            <option value="SEK">SEK</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="CAD">CAD</option>
+            <option value="CHF">CHF</option>
+            <option value="JPY">JPY</option>
+            <option value="NOK">NOK</option>
+            <option value="DKK">DKK</option>
+        </select>
+    </div>
+
+</div>
+
+
+@if (Model.orders is null)
+{
+    <em>Loading ......</em>
+}
+else if (Model.orders.Any() is false)
+{
+    <h4>No Registered Order Was Returned From the Database</h4>
+}
+else
+{
+    <div class="container-fluid overflow-auto mt-4 mb-4 pt-3 p-1 pb-3">
+        <table class="table table-bordered table-striped text-center align-middle ">
+            <thead class="border-dark bg-success text-light">
+                <tr>
+                    <th>Customer</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody class="border-1 border-dark">
+                @foreach (var Order in Model.orders)
+                {
+                    <tr>
+                        <td class="col-3 fw-bold ">@Order.Customername()</td>
+                        <td class="col-3 fw-bold text-center">@Order.Address</td>
+                        <td class="col-2 text-secondary fw-bold bg-opacity-25">@Order.Phone</td>
+                        <td class="col-2 fw-bold">
+                            <span class="btn-outline-warning link-primary rounded-pill p-lg-1 p-xl-2 distanceMatrix"
+                                  title="Check delivery time" style="cursor: pointer;" 
+                                  data-bs-toggle="modal" data-bs-target="#distanceMatrixModal">
+                                @Order.City
+                            </span>
+                        </td>
+                        <td class="col text-center me-3 ms-3 p-3">
+                            <a class="text-light text-decoration-none btn btn-primary btn-outline-info m-2 p-2 pt-2 pb-2 rounded-3 fw-bold">
+                                @Order.OrderItems.Count
+                            </a>
+                        </td>
+                        <td class="col-1 ">
+                            <span class="ms-2 ps-2 font-monospace fw-bold">@($"{Order.TotalToPay:#.##}")</span>
+                            <sub class="text-end me-0 pe-0 text-success" style="font-size:0.8rem;">@Model.currency</sub>
+                        </td>
+                        <td class="col-1 fw-bold text-center">@Order.OrderPlaced</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section Scripts{ 
+
+    <script>
+
+        function openDiscountRateModal() {
+            document.getElementById('distanceMatrixModal').modal('show');
+            
+            $('#distanceMatrixModal').modal('show');
+
+    </script>
+}
+
+
+
+<div class="modal fade" id="distanceMatrixModal" tabindex="-1" aria-labelledby="distanceMatrixModal" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning m-auto fw-bold" id="distanceModalLabel">Do you want to remove this employee ?</h5>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <table class="table table-striped table-details m-0">
+                        <tbody class="border-2 border-secondary fw-bold text-center align-middle  ">
+                            <tr class="border-2">
+                                <th class="">Id</th>
+                                
+                            </tr>
+                            <tr class="border-2">
+                                <th class="">Name</th>
+                              
+                            </tr>
+
+                            <tr class="border-2">
+                                <th class="">Department</th>
+                             
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 row justify-content-evenly">
+                <button type="button" class="btn btn-secondary col-auto " data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger col-auto "
+                        >
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Click 'Get distance' to calculate distance distanceMatrix      Get distance*@

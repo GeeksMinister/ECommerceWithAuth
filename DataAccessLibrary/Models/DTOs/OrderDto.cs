@@ -2,7 +2,7 @@
 
 public class OrderDto
 {
-    public Guid OrderId { get; set; } = Guid.NewGuid();
+    public Guid OrderId { get; set; }
 
     [Required]
     [DisplayName("First Name")]
@@ -40,7 +40,7 @@ public class OrderDto
     [DataType(DataType.Date)]
     public string OrderPlaced { get; set; } = DateTime.Now.ToShortDateString();
 
-    [Ignore]    
+    //[Ignore]    
     public decimal TotalToPay { get; set; }
 
     public List<OrderItemsDto> OrderItems { get; set; } = new();

@@ -16,10 +16,33 @@ public class OrderController : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetAllOrders()
 	{
-		var result = await _orderRepository.GetAllOrders();
-		var resultDto = _mapper.Map<List<OrderDto>>(result);
-		Response.Headers.Append("Total_Orders", result.Count.ToString());
-		return Ok(resultDto);
+        try
+        {
+            var result = await _orderRepository.GetAllOrders();
+            if (result is null) return NotFound();
+            var resultDto = _mapper.Map<List<OrderDto>>(result);
+            Response.Headers.Append("Total_Orders", result.Count.ToString());
+            return Ok(resultDto);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
+	}
+
+	[HttpGet("{guid}")]
+	public async Task<IActionResult> GetOrderById(Guid guid)
+	{
+        try
+        {
+            var result = await _orderRepository.GetOrderById(guid);
+            if (result is null) return NotFound();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
 	}
 
 	[HttpGet("SellsSummary")]
@@ -55,7 +78,7 @@ public class OrderController : ControllerBase
         return Ok(result);
 	}
 
-    [HttpGet("DistanceMatrix")]
+    [HttpGet("DistanceMatrix/{destination}")]
     public async Task<IActionResult> GetDistance(string destination = "London")
     {
 		try

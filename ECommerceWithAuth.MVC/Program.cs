@@ -13,6 +13,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddAutoMapper(typeof(MapperInitializer));
 builder.Services.AddRefitClient<IProductClientData>().ConfigureHttpClient(client => client.BaseAddress = new Uri(apiLocation));
 builder.Services.AddRefitClient<IEmployeeClientData>().ConfigureHttpClient(client => client.BaseAddress = new Uri(apiLocation));
+builder.Services.AddRefitClient<IOrderClientData>().ConfigureHttpClient(client => client.BaseAddress = new Uri(apiLocation));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

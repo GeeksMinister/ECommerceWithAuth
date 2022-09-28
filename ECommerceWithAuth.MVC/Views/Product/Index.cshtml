@@ -4,6 +4,14 @@
     ViewData["Title"] = "Products";
 }
 
+
+<style>
+    .discountRateModal:hover, .discountUntilModal:hover {
+        cursor: pointer;
+    }
+</style>
+
+
 <div class="row pt-5 gy-5">
     <h3 class="text-secondary font-monospace fw-bold col-6">Products [<span class="text-primary opacity-75 small">@Model.products?.Count</span>]</h3>
     <div class="start-0">
@@ -12,13 +20,13 @@
             function sortOut() {
                 var select = document.getElementById('currency');
                 var currency = select.options[select.selectedIndex].value;
-                
+
                 window.location.href = "@Url.RouteUrl("/")" + `Product?currency=${currency}`
             }
         </script>
 
         <select asp-for="@Model.currency" onchange="sortOut()" id="currency"
-                class="bg-white bg-opacity-100 text-success fw-bold border-2 rounded-pill form-select w-auto border-secondary">
+                class="bg-white bg-opacity-100 text-success fw-bold border-2 rounded-pill form-select w-auto border-secondary shadow-sm">
             <option value="SEK">SEK</option>
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
@@ -31,7 +39,7 @@
         </select>
     </div>
     <div class="text-end">
-        <a asp-action="AddProduct" class="btn btn-success mb-4 fw-bold">Add Product</a>
+        <a asp-action="AddProduct" class="btn btn-success me-2 mb-4 fw-bold">Add Product</a>
     </div>
 </div>
 
@@ -46,7 +54,7 @@ else if (Model.products.Any() is false)
 }
 else
 {
-    <div class="container-fluid overflow-auto m-0 p-1 ">
+    <div class="container-fluid overflow-auto mb-3 m-0 pe-1 ps-1 pb-3">
         <table class="table table-bordered table-striped text-center align-middle ">
             <thead class="border-dark bg-success text-light">
                 <tr>
@@ -64,10 +72,7 @@ else
                 {
 
                     <tr>
-                        <td class="col-3 fw-bold link-primary">
-                            <a class="text-decoration-none btn-outline-info link-primary rounded-pill p-1"
-                               asp-action="productDetails" asp-route-id="@product.Guid">@product.Name</a>
-                        </td>
+                        <td class="col-3 fw-bold">@product.Name</td>
                         <td class="col-2 fw-bold  text-success">@product.Category!.Name</td>
                         <td class="col-1 text-secondary fw-bold  @(product.Quantity <= 10 ? "bg-warning" : "") bg-opacity-25">@product.Quantity</td>
 
@@ -92,18 +97,23 @@ else
                             </td>
                         }
 
-                        <td class="col-1 fw-bold small @(product.OnSale ? "bg-danger bg-opacity-10" : "")">
+                        <td class="col-2 fw-bold  @(product.OnSale ? "bg-danger bg-opacity-10" : "")">
                             <span class="text-decoration-none btn-outline-warning link-primary rounded-pill p-2
                                   discountUntilModal" title="Click to update" onclick="openDiscountUntilModal('@JsonConvert.SerializeObject(product)')">
                                 @product.DiscountUntil.ToShortDateString()
                             </span>
                         </td>
 
-                        <td class="col-1  fw-bold font-monospace">
-                            <span class="text-center ms-2 ps-1">@($"{product.GetCurrentPrice():#.##}")</span>   
-                            <sub class="text-end m-0 p-0 text-success text-opacity-75" style="font-size:0.8rem;">@Model.currency</sub></td>
-                        <td class="col-sm-2 col-lg-2 col-xxl-1">
-                            
+                        <td class="col-2">
+                            <span class="text-center ms-2 ps-2 font-monospace fw-bold" style="font-size:1.1rem;">
+                                @($"{product.GetCurrentPrice():#.##}")
+                            </span>
+                            <sub class="text-end m-0 p-0 text-success text-opacity-100 fw-bold" style="font-size:0.8rem;">
+                                @Model.currency
+                            </sub>
+                        </td>
+                        <td class=" col-sm-3 col-lg-2 col-xxl-1">
+
                             <div class="row justify-content-center">
                                 <a asp-action="Updateproduct" asp-route-id="@product.Guid"
                                    class="btn btn-warning rounded-pill w-auto p-1 m-1">Update</a>
@@ -168,25 +178,15 @@ else
         }
 
 
-        //$(".discountRateModal").click(function () {
-        //    $('#discountRateModal').modal('show');
-        //});
 
     </script>
 }
-
-
-<style>
-    .discountRateModal:hover, .discountUntilModal:hover {
-        cursor: pointer;
-    }
-</style>
 
 <div class="modal fade" id="discountRateModal" tabindex="-1" aria-labelledby="discountRateModal" aria-hidden="true">
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-warning m-auto fw-bold" id="deleteModalLabel">
+                <h5 class="modal-title text-warning m-auto fw-bold" id="discountModalLabel">
                     Set a discount rate for this product
                 </h5>
             </div>
@@ -205,7 +205,7 @@ else
                                 Set Discount&nbsp;&nbsp;&nbsp;<span class="text-danger form-label">%</span>
                             </label>
                             <input id="discountRate" asp-for="@productToPatch.DiscountRate" type="number"
-                                   class="form-control text-danger fw-bold mt-2 text-center" min="1" max="99" />
+                                   class="form-control text-danger fw-bold mt-2 text-center" min="0" max="99" />
                             <span asp-validation-for="@productToPatch.DiscountRate" class="text-danger small"></span>
                         </div>
                     </form>
@@ -224,7 +224,7 @@ else
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-warning m-auto fw-bold" id="deleteModalLabel">
+                <h5 class="modal-title text-warning m-auto fw-bold" id="discountModalLabel">
                     Set a date limit for the discount
                 </h5>
             </div>
@@ -238,7 +238,7 @@ else
                             <h5 class="text-center fw-bold text-primary" id="productName-dateModal" asp-for="@productToPatch.Name"></h5>
                         </div>
 
-                        <div class="col mb-3 " >
+                        <div class="col mb-3 ">
                             <span class="col-auto start-0">
 
                                 <label asp-for="@productToPatch.DiscountUntil" class="text-dark text-start">

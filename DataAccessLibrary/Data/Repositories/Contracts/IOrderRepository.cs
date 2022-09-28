@@ -12,4 +12,5 @@ public interface IOrderRepository
     Task<List<SellsAndWeatherRelation>> GetWeatherAndSellsRelation();
     Task<Dictionary<string, object>> GetExchangeRates(Currency code);
     Task<decimal> RequestLiveExchangeRate(Currency code);
+    Task<Order?> GetOrderById(Guid guid);
 }

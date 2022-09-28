@@ -42,7 +42,7 @@ public class Order
 
     [Ignore]
     private decimal? _totalToPay;
-    public decimal? TotalToPay { private set => OrderItems.ForEach(item => _totalToPay += item.Price); get => _totalToPay; }
+    public decimal? TotalToPay { set => OrderItems.ForEach(item => _totalToPay += item.Price); get => _totalToPay; }
 
     public List<OrderItems> OrderItems { get; set; } = new();
 

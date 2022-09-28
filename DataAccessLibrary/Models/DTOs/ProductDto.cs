@@ -16,7 +16,7 @@ public class ProductDto
     [DataType(DataType.Date)]
     public DateTime DiscountUntil { get; set; } = DateTime.Now;
 
-    [Range(1, 99, ErrorMessage = "Invalid Input!")]
+    [Range(0, 99, ErrorMessage = "Invalid Input!")]
     public decimal DiscountRate { get; set; }
 
     [Range(1, int.MaxValue, ErrorMessage = "Invalid value!")]

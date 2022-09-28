@@ -20,6 +20,11 @@ public class OrderRepository : IOrderRepository
                         ThenInclude(order => order.Product).ToListAsync();
     }
 
+    public async Task<Order?> GetOrderById(Guid guid)
+    {
+        return await _dbContext.Order.Include(order => order.OrderItems).FirstOrDefaultAsync(order => order.OrderId.Equals(guid));
+    }
+
     public async Task<object> GetSellsSummary()
     {
         var orders = await GetAllOrders();
@@ -46,7 +51,7 @@ public class OrderRepository : IOrderRepository
             .Select(selected => new
             {
                 ProductId = selected.Key,
-                ProductName = selected.Select(item => item.Product.Name).FirstOrDefault(),
+                ProductName = selected.Select(item => item.Product!.Name).FirstOrDefault(),
                 TotalSold = selected.Sum(item => item.Quantity)
             }).OrderByDescending(selected => selected.TotalSold).Take(5);
         return summary;
@@ -123,9 +128,9 @@ public class OrderRepository : IOrderRepository
 
             var respnse = await client.GetFromJsonAsync<DistanceMatrix>(requestLink);
 
-            var distance = respnse!.rows[0].elements[0].distance.text;
-            var duration = respnse.rows[0].elements[0].duration.text;
-            return new { Distance = distance, Duration = duration };
+            var distance = respnse?.rows![0]!.elements![0]!.distance!.text;
+            var duration = respnse?.rows![0]!.elements![0]!.duration!.text;
+            return new { Destination = destination, Distance = distance, Duration = duration };
         }
         catch (Exception)
         {

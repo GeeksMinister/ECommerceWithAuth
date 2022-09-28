@@ -6,43 +6,50 @@ using NuGet.Protocol.Core.Types;
 //[Authorize(Roles = "Administration")]
 public class ProductController : Controller
 {
-    private readonly IProductClientData _productData;
+    private readonly IProductClientData _productClientData;
     private readonly IMapper _mapper;
 
     public ProductController(IProductClientData productData, IMapper mapper)
     {
-        _productData = productData;
+        _productClientData = productData;
         _mapper = mapper;
     }
 
     public async Task<IActionResult> Index(Currency currency)
     {
         var token = Request.Cookies["token"]!;
-        var products = await _productData.GetAllProducts("Bearer " + token);
+        var products = await _productClientData.GetAllProducts("Bearer " + token);
 
         decimal exchangeRate = 0;
-        exchangeRate = await SetUpPrice(currency, exchangeRate);
+        exchangeRate = await SetUpPrice(currency);
         if (exchangeRate > 0) products.ForEach(prod => prod.Price /= exchangeRate);
+        if (exchangeRate == 0) currency = Currency.SEK;
 
         return View((products, currency));
     }
 
-    private async Task<decimal> SetUpPrice(Currency currency, decimal exchangeRate)
+    private async Task<decimal> SetUpPrice(Currency currency)
     {
-        switch (currency)
+        try
         {
-            case Currency.SEK: return 0;
-            case Currency.USD: exchangeRate = await _productData.RequestExchangeRate(Currency.USD); break;
-            case Currency.EUR: exchangeRate = await _productData.RequestExchangeRate(Currency.EUR); break;
-            case Currency.GBP: exchangeRate = await _productData.RequestExchangeRate(Currency.GBP); break;
-            case Currency.CAD: exchangeRate = await _productData.RequestExchangeRate(Currency.CAD); break;
-            case Currency.CHF: exchangeRate = await _productData.RequestExchangeRate(Currency.CHF); break;
-            case Currency.JPY: exchangeRate = await _productData.RequestExchangeRate(Currency.JPY); break;
-            case Currency.NOK: exchangeRate = await _productData.RequestExchangeRate(Currency.NOK); break;
-            case Currency.DKK: exchangeRate = await _productData.RequestExchangeRate(Currency.DKK); break;
+            switch (currency)
+            {
+                case Currency.SEK: return 0;
+                case Currency.USD: return await _productClientData.RequestExchangeRate(Currency.USD);
+                case Currency.EUR: return await _productClientData.RequestExchangeRate(Currency.EUR);
+                case Currency.GBP: return await _productClientData.RequestExchangeRate(Currency.GBP);
+                case Currency.CAD: return await _productClientData.RequestExchangeRate(Currency.CAD);
+                case Currency.CHF: return await _productClientData.RequestExchangeRate(Currency.CHF);
+                case Currency.JPY: return await _productClientData.RequestExchangeRate(Currency.JPY);
+                case Currency.NOK: return await _productClientData.RequestExchangeRate(Currency.NOK);
+                case Currency.DKK: return await _productClientData.RequestExchangeRate(Currency.DKK);
+                default: return 0;
+            }
         }
-
-        return exchangeRate;
+        catch (Exception)
+        {
+            return 0;
+        }
     }
 
     public IActionResult AddProduct()
@@ -63,7 +70,7 @@ public class ProductController : Controller
         try
         {
             if (ModelState.IsValid == false) return View(productDto);
-            await _productData.AddNewProduct(productDto);
+            await _productClientData.AddNewProduct(productDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
@@ -76,7 +83,7 @@ public class ProductController : Controller
     {
         try
         {
-            var Product = await _productData.GetProductById(id);
+            var Product = await _productClientData.GetProductById(id);
             if (Product == null) return NotFound();
             return View(Product);
         }
@@ -92,7 +99,7 @@ public class ProductController : Controller
         try
         {
             if (ModelState.IsValid == false) return View(ProductDto);
-            await _productData.UpdateProduct(id, ProductDto);
+            await _productClientData.UpdateProduct(id, ProductDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
@@ -105,7 +112,7 @@ public class ProductController : Controller
     {
         try
         {
-            var product = await _productData.GetProductById(id);
+            var product = await _productClientData.GetProductById(id);
             if (product == null) return NotFound();
             return View(product);
         }
@@ -120,7 +127,7 @@ public class ProductController : Controller
     {
         try
         {
-            await _productData.DeleteProduct(id);
+            await _productClientData.DeleteProduct(id);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
@@ -131,20 +138,20 @@ public class ProductController : Controller
 
     public async Task<IActionResult> PatchProductDiscountRate(Guid id, string value, string path = "discountRate")
     {
-        var product = await _productData.GetProductById(id);
+        var product = await _productClientData.GetProductById(id);
         var productDto = _mapper.Map<ProductDto>(product);
         productDto.DiscountRate = decimal.Parse(value);
-         await _productData.UpdateProduct(id, productDto);
+         await _productClientData.UpdateProduct(id, productDto);
 
         return RedirectToAction(nameof(Index));
     }
 
     public async Task<IActionResult> PatchProductDiscountUntil(Guid id, string value, string path = "discountUntil")
     {
-        var product = await _productData.GetProductById(id);
+        var product = await _productClientData.GetProductById(id);
         var productDto = _mapper.Map<ProductDto>(product);
         productDto.DiscountUntil = DateTime.Parse(value);
-        await _productData.UpdateProduct(id, productDto);
+        await _productClientData.UpdateProduct(id, productDto);
 
         return RedirectToAction(nameof(Index));
     }

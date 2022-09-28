@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace DataAccessLibrary.Services.RefitClient;
+using Newtonsoft.Json.Linq;
 
 public interface IProductClientData
 {
@@ -23,11 +24,11 @@ public interface IProductClientData
     Task DeleteProduct(Guid guid);
 
     [Patch("/Product/{guid}")]
-    Task PatchProduct(Guid guid, object PatchObj);
+    Task PatchProduct(Guid guid, PatchObj PatchObj);
     
     [Get("/Order/RequestExchangeRate?currency={currency}")]
     Task<decimal> RequestExchangeRate(Currency currency);
 }
 
-record PatchObj(string Path, string Value, string Op = "replace");
+public record PatchObj(string Path, string Value, string Op = "replace");
 

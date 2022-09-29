@@ -4,7 +4,6 @@
     ViewData["Title"] = "Products";
 }
 
-
 <style>
     .discountRateModal:hover, .discountUntilModal:hover {
         cursor: pointer;
@@ -15,16 +14,6 @@
 <div class="row pt-5 gy-5">
     <h3 class="text-secondary font-monospace fw-bold col-6">Products [<span class="text-primary opacity-75 small">@Model.products?.Count</span>]</h3>
     <div class="start-0">
-
-        <script>
-            function sortOut() {
-                var select = document.getElementById('currency');
-                var currency = select.options[select.selectedIndex].value;
-
-                window.location.href = "@Url.RouteUrl("/")" + `Product?currency=${currency}`
-            }
-        </script>
-
         <select asp-for="@Model.currency" onchange="sortOut()" id="currency"
                 class="bg-white bg-opacity-100 text-success fw-bold border-2 rounded-pill form-select w-auto border-secondary shadow-sm">
             <option value="SEK">SEK</option>
@@ -75,7 +64,8 @@ else
                         <td class="col-3 fw-bold">@product.Name</td>
                         <td class="col-2 fw-bold  text-success">@product.Category!.Name</td>
                         <td class="col-1 text-secondary fw-bold  @(product.Quantity <= 10 ? "bg-warning" : "")
-                            bg-opacity-25">@product.Quantity
+                            bg-opacity-25">
+                            @product.Quantity
                         </td>
 
                         @if (product.OnSale)
@@ -101,7 +91,7 @@ else
 
                         <td class="col-2 fw-bold  @(product.OnSale ? "bg-danger bg-opacity-10" : "")">
                             <span class="text-decoration-none btn-outline-warning link-primary rounded-pill p-2
-                                  discountUntilModal" title="Click to update" 
+                                  discountUntilModal" title="Click to update"
                                   onclick="openDiscountUntilModal('@JsonConvert.SerializeObject(product)')">
                                 @product.DiscountUntil.ToShortDateString()
                             </span>
@@ -136,6 +126,13 @@ else
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+
+        function sortOut() {
+            var select = document.getElementById('currency');
+            var currency = select.options[select.selectedIndex].value;
+
+            window.location.href = "@Url.RouteUrl("/")" + `Product?currency=${currency}`
+        }
 
         $("input[type='date']").keydown(function (event) { event.preventDefault(); });
 

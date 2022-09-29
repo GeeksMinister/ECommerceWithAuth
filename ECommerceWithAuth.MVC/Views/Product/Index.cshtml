@@ -74,7 +74,9 @@ else
                     <tr>
                         <td class="col-3 fw-bold">@product.Name</td>
                         <td class="col-2 fw-bold  text-success">@product.Category!.Name</td>
-                        <td class="col-1 text-secondary fw-bold  @(product.Quantity <= 10 ? "bg-warning" : "") bg-opacity-25">@product.Quantity</td>
+                        <td class="col-1 text-secondary fw-bold  @(product.Quantity <= 10 ? "bg-warning" : "")
+                            bg-opacity-25">@product.Quantity
+                        </td>
 
                         @if (product.OnSale)
                         {
@@ -99,7 +101,8 @@ else
 
                         <td class="col-2 fw-bold  @(product.OnSale ? "bg-danger bg-opacity-10" : "")">
                             <span class="text-decoration-none btn-outline-warning link-primary rounded-pill p-2
-                                  discountUntilModal" title="Click to update" onclick="openDiscountUntilModal('@JsonConvert.SerializeObject(product)')">
+                                  discountUntilModal" title="Click to update" 
+                                  onclick="openDiscountUntilModal('@JsonConvert.SerializeObject(product)')">
                                 @product.DiscountUntil.ToShortDateString()
                             </span>
                         </td>
@@ -133,6 +136,9 @@ else
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+
+        $("input[type='date']").keydown(function (event) { event.preventDefault(); });
+
         var id;
         var discountRate;
         var discountUntil;

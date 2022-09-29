@@ -1,6 +1,4 @@
-﻿using DataAccessLibrary.Models;
-
-namespace ECommerceWithAuth.MVC.Controllers;
+﻿namespace ECommerceWithAuth.MVC.Controllers;
 
 public class OrderController : Controller
 {
@@ -17,36 +15,33 @@ public class OrderController : Controller
     {
         var orders = await _orderClientData.GetAllOrder();
         if (orders == null) return NotFound();
+        if (currency == Currency.SEK) return View((orders, currency));
 
-        decimal exchangeRate = 0;
-        exchangeRate = await SetUpPrice(currency);
-        if (exchangeRate > 0)  orders.ForEach(order => order.TotalToPay /= exchangeRate);
-        if (exchangeRate == 0) currency = Currency.SEK;
-        
+        var exchangeRatesRecords = await _productClientData.ExchangeRates(currency);
+        orders = ExchangePrices(orders, exchangeRatesRecords);
+
         return View((orders, currency));
     }
 
-    private async Task<decimal> SetUpPrice(Currency currency)
+    private List<OrderDto> ExchangePrices(List<OrderDto> orders, Dictionary<string, decimal> records)
     {
-        try
+        foreach (var order in orders)
         {
-            switch (currency)
+            if (records.ContainsKey(order.OrderPlaced))
             {
-                case Currency.SEK: return 0;
-                case Currency.USD: return await _productClientData.RequestExchangeRate(Currency.USD);
-                case Currency.EUR: return await _productClientData.RequestExchangeRate(Currency.EUR);
-                case Currency.GBP: return await _productClientData.RequestExchangeRate(Currency.GBP);
-                case Currency.CAD: return await _productClientData.RequestExchangeRate(Currency.CAD);
-                case Currency.CHF: return await _productClientData.RequestExchangeRate(Currency.CHF);
-                case Currency.JPY: return await _productClientData.RequestExchangeRate(Currency.JPY);
-                case Currency.NOK: return await _productClientData.RequestExchangeRate(Currency.NOK);
-                case Currency.DKK: return await _productClientData.RequestExchangeRate(Currency.DKK);
-                default: return 0;
+                var value = records.Where(rate => rate.Key == order.OrderPlaced).Select(rate => rate.Value).First();
+                order.TotalToPay /= value;
             }
         }
-        catch (Exception)
-        {
-            return 0;
-        }
+
+        return orders;
+    }
+
+    public async Task<IActionResult> OrderItems(Guid id)
+    {
+        var order = await _orderClientData.GetOrderById(id);
+        if (order == null) return NotFound();
+        return View(order);
+
     }
 }

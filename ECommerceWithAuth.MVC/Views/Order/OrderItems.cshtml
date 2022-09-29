@@ -1,0 +1,59 @@
+﻿@model OrderDto
+
+@{
+    ViewData["Title"] = "Order Items";
+}
+<div class="container-md col-md-10 col-xl-8 overflow-auto">
+
+    <div class="row pt-3 mb-3 gy-4">
+        <h5 class="text-dark font-monospace fw-bold col text-center">
+            Order-Id
+            [<span class="text-primary opacity-10 small text-uppercase">@Model.OrderId</span>]
+        </h5>
+        <div class="text-start pt-3 pe-3">
+            <h5>
+                Order placed:
+                <span class="font-monospace text-primary">@Model.OrderPlaced</span>
+            </h5>
+        </div>
+        <div class="text-end pe-5 me-5">
+            <h5>
+                Paid Net Price:
+                <span class="text-primary fw-bold text-danger small">@Model.TotalToPay</span>
+            </h5>
+        </div>
+    </div>
+
+    @if (Model.OrderItems?.Any() is null)
+    {
+        <h4>No Registered Item Was Returned From the Database</h4>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped text-center align-middle">
+            <thead class="border-dark bg-success text-light">
+                <tr>
+                    <th>Item</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody class="border-1 border-dark fw-bold">
+                @foreach (var item in Model.OrderItems)
+                {
+                    <tr>
+                        <td class="col-1 font-monospace">@(Model.OrderItems.IndexOf(item) + 1)</td>
+                        <td class="col-3 text-center">@item.Product!.Name</td>
+                        <td class="col-1 text-success">@item.Quantity</td>
+                        <td class="col-2 text-primary small">@item.Price</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <div class="mt-5 text-end pe-3">
+        <a style="min-width:7rem;" asp-action="" class="btn btn-primary btn-outline-info text-white">Back</a>
+    </div>
+</div>
+

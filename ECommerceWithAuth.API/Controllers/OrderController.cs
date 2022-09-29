@@ -93,12 +93,12 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpGet("ExchangeRates")]
+    [HttpGet("ExchangeRates/{currency}")]
     public async Task<IActionResult> GetExchangeRates(Currency currency)
     {
         try
         {
-            if (currency is Currency.SEK) return BadRequest("Server doesn't convert from SEK to SEK");
+            if (currency is Currency.SEK) return Ok(1);
             var result =  await _orderRepository.GetExchangeRates(currency);
             if (result is null) return Problem("No Data was received From the Provider");
             Response.Headers.Append("Total-dates-Requested", result.Count.ToString());
@@ -110,14 +110,14 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpGet("RequestExchangeRate")]
+    [HttpGet("RequestExchangeRate/{currency}")]
     public async Task<IActionResult> RequestExchangeRate(Currency currency)
     {
         try
         {
-            if (currency is Currency.SEK) return Ok(1);
+            if (currency == Currency.SEK) return Ok(1);
             var result =  await _orderRepository.RequestLiveExchangeRate(currency);
-            if (result is 0) return Problem("No Data was received From the Provider");
+            if (result == 0) return Problem("No Data was received From the Provider");
 
             return Ok(result);
         }

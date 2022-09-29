@@ -23,8 +23,11 @@ public interface IProductClientData
     [Patch("/Product/{guid}")]
     Task PatchProduct(Guid guid, PatchObj PatchObj);
     
-    [Get("/Order/RequestExchangeRate?currency={currency}")]
-    Task<decimal> RequestExchangeRate(Currency currency);
+    [Get("/Order/RequestExchangeRate/{currency}")]
+    Task<decimal> RequestExchangeRate(Currency currency);    
+
+    [Get("/Order/ExchangeRates/{currency}")]
+    Task<Dictionary<string, decimal>> ExchangeRates(Currency currency);
 }
 
 public record PatchObj(string Path, string Value, string Op = "replace");

@@ -54,20 +54,22 @@ else
                 @foreach (var order in Model.orders!)
                 {
                     <tr>
-                        <td class="col-3 fw-bold" onclick="getCityValue('@order.City')">@order.Customername()</td>
+                        <td class="col-3 fw-bold">@order.Customername()</td>
                         <td class="col-3 fw-bold text-center">@order.Address</td>
                         <td class="col-2 text-secondary fw-bold bg-opacity-25">
                             @order.Phone
                         </td>
                         <td class="col-2 fw-bold">
                             <span class="btn-outline-warning link-primary rounded-pill p-lg-1 p-xl-2 distanceMatrix"
-                                  title="Check delivery time" style="cursor: pointer;" data-bs-toggle="modal"
+                                  title="Check delivery time" style="cursor: pointer; font-size:1.09rem;" data-bs-toggle="modal"
                                   data-bs-target="#distanceMatrixModal" onclick="requestDistanceMatrix('@order.City')">
                                 @order.City
                             </span>
                         </td>
                         <td class="col text-center me-3 ms-3 p-3">
-                            <a class="text-light text-decoration-none btn btn-primary btn-outline-info m-2 p-2 pt-2 pb-2 rounded-3 fw-bold">
+                            <a class="text-light text-decoration-none btn btn-primary btn-outline-info m-2 p-2 pt-2 pb-2 rounded-3 fw-bold"
+                               asp-action="OrderItems" asp-route-id="@order.OrderId">
+
                                 @order.OrderItems.Count
                             </a>
                         </td>
@@ -93,16 +95,26 @@ else
         }
 
         async function requestDistanceMatrix(city) {
-        var apiLocation = document.getElementById('apiLocation').innerHTML;
-        var response = await fetch(`${apiLocation}/Order/DistanceMatrix/${city}`);
-        var jsonObj = await response.json();
-        var destination = jsonObj.destination;
-        var distance = jsonObj.distance;
-        var duration = jsonObj.duration;
+            const matrixModalTitle = document.getElementById('distanceModalLabel');
+            matrixModalTitle.innerHTML = '';
+            document.getElementById('destination').innerHTML = 'Loading...';
+            document.getElementById('distance').innerHTML = 'Loading...';
+            document.getElementById('duration').innerHTML = 'Loading...';
+            matrixModalTitle.classList.add('spinner-border');
 
-        document.getElementById('destination').innerHTML = destination;
-        document.getElementById('distance').innerHTML = distance;
-        document.getElementById('duration').innerHTML = duration;
+            const apiLocation = document.getElementById('apiLocation').innerHTML;
+            const response = await fetch(`${apiLocation}/Order/DistanceMatrix/${city}`);
+            const jsonObj = await response.json();
+            const destination = jsonObj.destination;
+            const distance = jsonObj.distance;
+            const duration = jsonObj.duration;
+
+            document.getElementById('destination').innerHTML = destination;
+            document.getElementById('distance').innerHTML = distance;
+            document.getElementById('duration').innerHTML = duration;
+
+            matrixModalTitle.classList.remove('spinner-border');
+            matrixModalTitle.innerHTML = 'Details received from Google Maps';
         }
 
     </script>
@@ -113,7 +125,7 @@ else
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title text-primary m-auto text-center" id="distanceModalLabel">
-                    Details received from Google Maps
+                    
                 </h4>
             </div>
             <div class="modal-body mt-2 m-2 p-2" style="max-height:16vh;">

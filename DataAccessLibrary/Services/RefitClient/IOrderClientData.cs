@@ -6,8 +6,10 @@ public interface IOrderClientData
     Task<List<OrderDto>> GetAllOrder();
 
     [Get("/Order/{guid}")]
-    List<Order> GetOrderById(Guid guid);
+    Task<OrderDto> GetOrderById(Guid guid);
 
     [Get("/Order/DistanceMatrix/{destination}")]
     Task<Destination> RequestDistanceMatrix(string destination);
+
+
 }

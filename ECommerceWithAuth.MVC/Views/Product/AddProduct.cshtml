@@ -72,5 +72,8 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $("input[type='date']").keydown(function (event) { event.preventDefault(); });
 
+    </script>
 }

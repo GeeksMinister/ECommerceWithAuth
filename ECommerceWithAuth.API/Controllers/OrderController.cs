@@ -45,10 +45,10 @@ public class OrderController : ControllerBase
         }
 	}
 
-	[HttpGet("SellsSummary")]
-	public async Task<IActionResult> GetSellsSummary()
+	[HttpGet("SalesSummary")]
+	public async Task<IActionResult> GetSalesSummary()
 	{
-		var result = await _orderRepository.GetSellsSummary();
+		var result = await _orderRepository.GetSalesSummary();
         if (result is null) return Problem("No Data was Received From the Provider");
         return Ok(result);
 	}
@@ -66,14 +66,14 @@ public class OrderController : ControllerBase
     {
         var result = await _orderRepository.GetProductShortages();
         if (result is null) return Problem("No Data was received From the Provider");
-		var resultDto = _mapper.Map<List<ProductDto>>(result);
-        return Ok(resultDto);
+        Response.Headers.Append("Total-Products", result.Count.ToString());
+        return Ok(result);
     }
 
-    [HttpGet("WeatherAndSellsRelation")]
-	public async Task<IActionResult> WeatherAndSellsRelation()
+    [HttpGet("WeatherAndSalesRelation")]
+	public async Task<IActionResult> WeatherAndSalesRelation()
 	{
-		var result = await _orderRepository.GetWeatherAndSellsRelation();
+		var result = await _orderRepository.GetWeatherAndSalesRelation();
         if (result is null) return Problem("No Data was received From the Provider");
         return Ok(result);
 	}

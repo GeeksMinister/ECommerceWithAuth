@@ -27,16 +27,16 @@ public class OrderRepository : IOrderRepository
             .ThenInclude(item => item.Product).FirstOrDefaultAsync(order => order.OrderId.Equals(guid));
     }
 
-    public async Task<object> GetSellsSummary()
+    public async Task<object> GetSalesSummary()
     {
         var orders = await GetAllOrders();
         var summary = orders.GroupBy(order => order.OrderPlaced)
-            .Select(sellDate => new
+            .Select(salelDate => new
             {
-                Date = sellDate.Key,
-                SalesSum = sellDate.Sum(order => order.TotalToPay),
-                TotalOrders = sellDate.Count(),
-                TotalItems = sellDate.Sum(order => order.OrderItems.Sum(item => item.Quantity))
+                Date = salelDate.Key,
+                SalesSum = salelDate.Sum(order => order.TotalToPay),
+                TotalOrders = salelDate.Count(),
+                TotalItems = salelDate.Sum(order => order.OrderItems.Sum(item => item.Quantity))
             }).OrderBy(order => order.Date);
 
         return summary;
@@ -65,27 +65,27 @@ public class OrderRepository : IOrderRepository
         return products;
     }
 
-    public async Task<List<SellsAndWeatherRelation>> GetWeatherAndSellsRelation()
+    public async Task<List<SalesAndWeatherRelation>> GetWeatherAndSalesRelation()
     {
         var orders = await GetAllOrders();
-        List<SellsAndWeatherRelation> relation = new List<SellsAndWeatherRelation>();
+        List<SalesAndWeatherRelation> relation = new List<SalesAndWeatherRelation>();
 
         orders.GroupBy(order => order.OrderPlaced)
-            .Select(sellDate => new
+            .Select(saleDate => new
             {
-                Date = sellDate.Key,
-                TotalOrders = sellDate.Count(),
+                Date = saleDate.Key,
+                TotalOrders = saleDate.Count(),
             }).OrderByDescending(order => order.TotalOrders).Take(3).ToList()
-            .ForEach(date => relation.Add(new SellsAndWeatherRelation(
+            .ForEach(date => relation.Add(new SalesAndWeatherRelation(
                 date.Date, date.TotalOrders, GetWeatherByDate(date.Date).Result)));
 
         orders.GroupBy(order => order.OrderPlaced)
-            .Select(sellDate => new
+            .Select(saleDate => new
             {
-                Date = sellDate.Key,
-                TotalOrders = sellDate.Count(),
+                Date = saleDate.Key,
+                TotalOrders = saleDate.Count(),
             }).OrderBy(order => order.TotalOrders).Take(3).ToList()
-            .ForEach(date => relation.Add(new SellsAndWeatherRelation(
+            .ForEach(date => relation.Add(new SalesAndWeatherRelation(
             date.Date, date.TotalOrders, GetWeatherByDate(date.Date).Result)));
 
         return relation;
@@ -103,7 +103,7 @@ public class OrderRepository : IOrderRepository
 
             var response = await client.GetAsync(requestLink);
             var content = await response.Content.ReadAsStringAsync();
-            var weather = JsonConvert.DeserializeObject<ApiResponse>(content);
+            var weather = JsonConvert.DeserializeObject<WeatherApiResponse>(content);
 
             return weather!.Days.FirstOrDefault()!;
         }
@@ -112,10 +112,6 @@ public class OrderRepository : IOrderRepository
             return new Weather(ex.Message, "Error", "Error");
         }
     }
-
-    public record SellsAndWeatherRelation(string Date, int TotalOrders, Weather Weather);
-    public record Weather(string Temp, string Humidity, string Description);
-    public record ApiResponse(Weather[] Days);
 
     public async Task<object> GetDistance(string destination)
     {

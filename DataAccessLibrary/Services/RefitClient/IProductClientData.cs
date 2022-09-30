@@ -30,5 +30,3 @@ public interface IProductClientData
     Task<Dictionary<string, decimal>> ExchangeRates(Currency currency);
 }
 
-public record PatchObj(string Path, string Value, string Op = "replace");
-

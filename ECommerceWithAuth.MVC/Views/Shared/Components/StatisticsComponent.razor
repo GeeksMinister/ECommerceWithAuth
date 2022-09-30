@@ -1,6 +1,11 @@
-﻿<style>
-    .vertical-center {
+﻿@inject ISalesReport _reportData
 
+<style>
+    p {
+        letter-spacing: 1px;
+    }
+
+    .vertical-center {
         display: flex;
         align-items: center;
     }
@@ -8,46 +13,39 @@
     .container div .row {
         background-color: rgb(232, 245, 235) !important;
     }
-
-    p {
-        letter-spacing: 1px;        
-    }
 </style>
-
 
 <div class="vertical-center">
     <div class="container mt-3">
         <div class="row justify-content-center fw-bold gx-5">
 
-            <div class="row justify-content-between d-flex border border-2 
+            <div class="row justify-content-between d-flex border border-2
                  border-dark col-md-10 col-lg-7 p-3 list-group-item mt-3 mb-3">
-
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto card rounded-3 p-2 pe-3 ps-3 border-2 border-secondary">
-                    <p class="text-primary pt-3 mt-1" style="font-size: 1.2rem;">Sells Summary</p>
+                    <p class="text-primary pt-3 mt-1" style="font-size: 1.2rem;">Sales Summary</p>
                 </div>
 
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto mt-2 p-4 ">
-                    <button class="btn btn-secondary btn-outline-light border border-2 border-dark p-2 pe-4 ps-4 ">
+                    <button class="btn btn-secondary btn-outline-light border border-2 border-dark p-2 pe-4 ps-4 fw-bold"
+                            data-bs-toggle="modal" data-bs-target="#SalesSammaryModal" @onclick="@(async () => await RequestSalesSummary())">
                         Get Report
                     </button>
                 </div>
-
             </div>
-            <div class="row justify-content-between d-flex border border-2 
+            <div class="row justify-content-between d-flex border border-2
                  border-dark col-md-10 col-lg-7 p-3 list-group-item mt-3 mb-3">
-
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto card rounded-3 border-2 border-danger p-2 pe-3 ps-3 ">
                     <p class=" text-primary pt-3 mt-1" style="font-size: 1.1rem;">
-                        Top & least selling products
+                        Top sold products
                     </p>
                 </div>
 
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto mt-2 p-4 ">
-                    <button class="btn btn-danger btn-outline-light border border-2
-                            border-dark p-2 pe-4 ps-4 ">Get Report
+                    <button class="btn btn-danger btn-outline-light border border-2 border-dark p-2 pe-4 ps-4 fw-bold"
+                            data-bs-toggle="modal" data-bs-target="#topSoldProductModal" @onclick="@(async () => await RequestTopSoldProducts())">
+                        Get Report
                     </button>
                 </div>
-
             </div>
             <div class="row justify-content-between d-flex border border-2
                  border-dark col-md-10 col-lg-7 p-3 list-group-item mt-3 mb-3">
@@ -59,14 +57,13 @@
                 </div>
 
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto mt-2 p-4 ">
-                    <button class="btn btn-warning btn-outline-light border border-2 
-                            border-dark p-2 pe-4 ps-4 bold text-black">
+                    <button class="btn btn-warning btn-outline-light border border-2
+                            border-dark p-2 pe-4 ps-4 fw-bold text-black">
                         Get Report
                     </button>
                 </div>
-
             </div>
-            <div class="row justify-content-between d-flex border border-2 
+            <div class="row justify-content-between d-flex border border-2
                  border-dark col-md-10 col-lg-7 p-3 list-group-item mt-3 mb-3">
 
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-50 card rounded-3 p-2 pe-3 ps-3 border-2 border-success ">
@@ -74,9 +71,8 @@
                         Weather forecast on most and least selling days
                     </p>
                 </div>
-
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto mt-2 p-4 ">
-                    <button class="btn btn-success btn-outline-light border border-2 border-dark p-2 pe-4 ps-4 ">
+                    <button class="btn btn-success btn-outline-light border border-2 border-dark p-2 pe-4 ps-4 fw-bold">
                         Get Report
                     </button>
                 </div>
@@ -84,3 +80,154 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="SalesSammaryModal" tabindex="-1" aria-labelledby="SalesSammaryModal" aria-hidden="true">
+    <div class="modal-dialog-scrollable modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-primary m-auto text-center font-monospace fw-bold">Sales Summary</h3>
+            </div>
+            <div class="modal-body mt-2 m-2 p-2">
+                <div class="container-fluid">
+                    @if (summaryReports is null)
+                    {
+                        <div class="row justify-content-center m-5 p-5">
+                            <h4 class="spinner-grow modal-title text-primary m-auto text-center"></h4>
+                            <h4 class="spinner-grow modal-title text-warning m-auto text-center"></h4>
+                            <h4 class="spinner-grow modal-title text-danger m-auto text-center"></h4>
+                            <h4 class="spinner-grow modal-title text-success m-auto text-center"></h4>
+                        </div>
+                        @if (status != string.Empty)
+                        {<em class="text-danger h6 text-center w-100">@status</em>}
+                    }
+                    else
+                    {
+                        <table class="table table-striped table-bordered m-0 text-center">
+                            <thead class="table-dark border-2 table-bordered border-secondary">
+                                <tr><th>Date</th><th>Total Orders</th><th>Total Items</th><th>Sum</th></tr>
+                            </thead>
+                            <tbody class="border-2 border-secondary fw-bold text-center align-middle  ">
+                                @foreach (var report in summaryReports)
+                                {
+                                    <tr>
+                                        <td>@report.Date</td>
+                                        <td>@report.TotalOrders</td>
+                                        <td>@report.TotalItems</td>
+                                        <td>@($"{report.SalesSum:#.##}")<span class="small"> kr</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 row justify-content-center p2 m-2 m-auto w-100 ">
+                <button type="button" class="btn btn-secondary col-3 p-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="topSoldProductModal" tabindex="-1" aria-labelledby="topSoldProductModal" aria-hidden="true">
+    <div class="modal-dialog-scrollable modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-primary m-auto text-center font-monospace fw-bold">Sales Summary</h3>
+            </div>
+            <div class="modal-body mt-2 m-2 p-2">
+                <div class="container-fluid">
+                    @if (topSold is null)
+                    {
+                        <div class="row justify-content-center m-5 p-5">
+                            <h4 class="spinner-grow modal-title text-primary m-auto text-center"></h4>
+                            <h4 class="spinner-grow modal-title text-warning m-auto text-center"></h4>
+                            <h4 class="spinner-grow modal-title text-danger m-auto text-center"></h4>
+                            <h4 class="spinner-grow modal-title text-success m-auto text-center"></h4>
+                        </div>
+                        @if (status != string.Empty)
+                        {<em class="text-danger h6 text-center w-100">@status</em>}
+                    }
+                    else
+                    {
+                        @foreach (var report in topSold)
+                        {
+                            <div class="d-flex justify-content-center align-items-center ms-0 ps-0">
+                                <h5 class="fst-italic text-danger me-3">@(topSold.IndexOf(report) + 1)</h5>
+                                <ul class="list-group fw-bold text-center mb-2 mt-2 p-1 ">
+                                    <li class="list-group-item text-primary small text-uppercase">@report.ProductId</li>                                
+                                    <li class="list-group-item text-success">@report.ProductName</li>
+                                    <li class="list-group-item text-secondary fw-bolder">@report.TotalSold</li>                                
+                                </ul>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 row justify-content-center p2 m-2 m-auto w-100">
+                <button type="button" class="btn btn-secondary col-3 p-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code{
+    string status = string.Empty;
+    List<SalesSummary>? summaryReports;
+    List<TopSoldProducts>? topSold;
+    List<Product>? products;
+    List<SalesAndWeatherRelation>? salesAndWeather;
+
+    private async Task RequestSalesSummary()
+    {
+        try
+        {
+            summaryReports = await _reportData.GetSalesSummary();
+
+        }
+        catch (Exception ex)
+        {
+            status = ex.Message;
+        }
+    }
+
+    private async Task RequestTopSoldProducts()
+    {
+        try
+        {
+            topSold = await _reportData.GetTopSoldProducts();
+        }
+        catch (Exception ex)
+        {
+            status = ex.Message;
+        }
+    }
+
+    private async Task RequestProductShortages()
+    {
+        try
+        {
+            products = await _reportData.GetProductShortages();
+        }
+        catch (Exception ex)
+        {
+            status = ex.Message;
+        }
+    }
+    private async Task RequestSalesAndWeatherRelations()
+    {
+        try
+        {
+            salesAndWeather = await _reportData.GetSalesAndWeatherRelations();
+        }
+        catch (Exception ex)
+        {
+            status = ex.Message;
+        }
+    }
+
+
+}

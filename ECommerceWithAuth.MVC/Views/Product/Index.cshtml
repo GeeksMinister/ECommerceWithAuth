@@ -10,9 +10,10 @@
     }
 </style>
 
-
 <div class="row pt-5 gy-5">
-    <h3 class="text-secondary font-monospace fw-bold col-6">Products [<span class="text-primary opacity-75 small">@Model.products?.Count</span>]</h3>
+    <h3 class="text-secondary font-monospace fw-bold col-6">
+        Products [<span class="text-primary opacity-75 small">@Model.products?.Count</span>]
+    </h3>
     <div class="start-0">
         <select asp-for="@Model.currency" onchange="sortOut()" id="currency"
                 class="bg-white bg-opacity-100 text-success fw-bold border-2 rounded-pill form-select w-auto border-secondary shadow-sm">
@@ -32,12 +33,7 @@
     </div>
 </div>
 
-
-@if (Model.products is null)
-{
-    <em>Loading ......</em>
-}
-else if (Model.products.Any() is false)
+@if (Model.products!.Any() is false)
 {
     <h4>No Registered product Was Returned From the Database</h4>
 }
@@ -57,7 +53,7 @@ else
                 </tr>
             </thead>
             <tbody class="border-1 border-dark">
-                @foreach (var product in Model.products)
+                @foreach (var product in Model.products!)
                 {
 
                     <tr>
@@ -130,7 +126,6 @@ else
         function sortOut() {
             var select = document.getElementById('currency');
             var currency = select.options[select.selectedIndex].value;
-
             window.location.href = "@Url.RouteUrl("/")" + `Product?currency=${currency}`
         }
 
@@ -181,9 +176,9 @@ else
         }
 
 
-
     </script>
 }
+
 
 <div class="modal fade" id="discountRateModal" tabindex="-1" aria-labelledby="discountRateModal" aria-hidden="true">
     <div class="modal-dialog  modal-dialog-centered">

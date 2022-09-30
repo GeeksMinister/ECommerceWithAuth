@@ -9,7 +9,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ECommerceWithAuthMVCContext>();
 
-
+builder.Services.AddServerSideBlazor();
 builder.Services.AddAutoMapper(typeof(MapperInitializer));
 builder.Services.AddRefitClient<IProductClientData>().ConfigureHttpClient(client => client.BaseAddress = new Uri(apiLocation));
 builder.Services.AddRefitClient<IEmployeeClientData>().ConfigureHttpClient(client => client.BaseAddress = new Uri(apiLocation));
@@ -29,6 +29,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.MapRazorPages();
+app.MapBlazorHub();
 
 app.UseAuthentication();;
 app.UseAuthorization();

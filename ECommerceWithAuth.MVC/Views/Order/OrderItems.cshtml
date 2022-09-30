@@ -19,7 +19,15 @@
         <div class="text-end pe-5 me-5">
             <h5>
                 Paid Net Price:
-                <span class="text-primary fw-bold text-danger small">@Model.TotalToPay</span>
+                @if (Model.TotalToPay < Model.OrderItems.Sum(item => item.Price))
+                {
+                    <del class="ps-1 text-primary small">@(Model.OrderItems.Sum(item => item.Price))</del>
+                    <span class="text-primary fw-bold text-danger small">@Model.TotalToPay</span>
+                }
+                else
+                {
+                    <span class="fw-bold text-primary small">@Model.TotalToPay</span>
+                }
             </h5>
         </div>
     </div>

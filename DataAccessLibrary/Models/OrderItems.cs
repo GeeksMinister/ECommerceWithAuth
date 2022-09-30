@@ -7,7 +7,7 @@ public class OrderItems
     public Guid OrderId { get; set; }
     [JsonIgnore]    
     public Order Order { get; set; } = new();
-    public decimal? Price { get => Product?.Price * Quantity; }
+    public decimal? Price { get => Product?.GetCurrentPrice() * Quantity; }
     public int Quantity { get; set; }
     [JsonIgnore]
     public Guid ProductId { get; set; }

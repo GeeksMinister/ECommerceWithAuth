@@ -61,7 +61,8 @@ public class OrderRepository : IOrderRepository
 
     public async Task<List<Product>> GetProductShortages()
     {
-        var products = await _dbContext.Product.Where(prod => prod.Quantity <= 10).ToListAsync();
+        var products = await _dbContext.Product.Where(prod => prod.Quantity <= 10)
+            .Include(prod => prod.Category).ToListAsync();
         return products;
     }
 

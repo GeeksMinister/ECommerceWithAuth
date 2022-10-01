@@ -11,6 +11,6 @@ public interface ISalesReport
     [Get("/Order/ProductShortages")]
     Task<List<Product>> GetProductShortages();
 
-    [Get("/Order/WeatherAndSellsRelation")]
+    [Get("/Order/WeatherAndSalesRelation")]
     Task<List<SalesAndWeatherRelation>> GetSalesAndWeatherRelations();
 }

@@ -20,21 +20,23 @@
     <div class="container mt-3">
         <div class="row justify-content-center fw-bold gx-5">
 
-            <div class="row justify-content-between d-flex border border-2
+            <div class="row justify-content-between d-flex border border-2 shadow
                  border-dark col-md-10 col-lg-7 p-3 list-group-item mt-3 mb-3">
-                <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto card rounded-3 p-2 pe-3 ps-3 border-2 border-secondary">
+                <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto card rounded-3
+                     p-2 pe-3 ps-3 border-2 border-secondary">
                     <p class="text-primary pt-3 mt-1" style="font-size: 1.2rem;">Sales Summary</p>
                 </div>                
 
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto mt-2 p-4 ">
-                    <button class="btn btn-secondary btn-outline-light border border-2 border-dark p-2 pe-4 ps-4 fw-bold"
+                    <button class="btn btn-secondary btn-outline-light border border-2
+                            border-dark p-2 pe-4 ps-4 fw-bold rounded-pill"
                             data-bs-toggle="modal" data-bs-target="#SalesSammaryModal"
                             @onclick="@(async () => await RequestSalesSummary())">
                         Get Report
                     </button>
                 </div>
             </div>
-            <div class="row justify-content-between d-flex border border-2
+            <div class="row justify-content-between d-flex border border-2 shadow
                  border-dark col-md-10 col-lg-7 p-3 list-group-item mt-3 mb-3">
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto card rounded-3 border-2 border-danger p-2 pe-3 ps-3 ">
                     <p class=" text-primary pt-3 mt-1" style="font-size: 1.1rem;">
@@ -43,16 +45,16 @@
                 </div>
 
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto mt-2 p-4 ">
-                    <button class="btn btn-danger btn-outline-light border border-2 border-dark p-2 pe-4 ps-4 fw-bold"
+                    <button class="btn btn-danger btn-outline-light border border-2
+                            border-dark p-2 pe-4 ps-4 fw-bold rounded-pill"
                             data-bs-toggle="modal" data-bs-target="#topSoldProductModal"
                             @onclick="@(async () => await RequestTopSoldProducts())">
                         Get Report
                     </button>
                 </div>
             </div>
-            <div class="row justify-content-between d-flex border border-2
+            <div class="row justify-content-between d-flex border border-2 shadow
                  border-dark col-md-10 col-lg-7 p-3 list-group-item mt-3 mb-3">
-
                 <div class="col-sm-1 col-md-2 col-lg-2 w-50 card rounded-3 border-2 border-warning p-2 pe-3 ps-3 ">
                     <p class=" text-primary pt-3 mt-1" style="font-size: 1.1rem;">
                         Products that are running out of stock
@@ -61,14 +63,14 @@
 
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto mt-2 p-4 ">
                     <button class="btn btn-warning btn-outline-light border border-2
-                            border-dark p-2 pe-4 ps-4 fw-bold text-black"
+                            border-dark p-2 pe-4 ps-4 fw-bold text-black rounded-pill"
                             data-bs-toggle="modal" data-bs-target="#productShortagesModal"
                             @onclick="@(async () => await RequestProductShortages())">
                         Get Report
                     </button>
                 </div>
             </div>
-            <div class="row justify-content-between d-flex border border-2
+            <div class="row justify-content-between d-flex border border-2 shadow
                  border-dark col-md-10 col-lg-7 p-3 list-group-item mt-3 mb-3">
 
                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-50 card rounded-3 p-2 pe-3 ps-3 border-2 border-success ">
@@ -76,8 +78,9 @@
                         Weather forecast on most and least selling days
                     </p>
                 </div>
-                <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto mt-2 p-4 ">
-                    <button class="btn btn-success btn-outline-light border border-2 border-dark p-2 pe-4 ps-4 fw-bold"
+                <div class="col-3 col-sm-2 col-md-2 col-lg-2 w-auto mt-2 p-4">
+                    <button class="btn btn-success btn-outline-light border border-2
+                            border-dark p-2 pe-4 ps-4 fw-bold rounded-pill"
                             data-bs-toggle="modal" data-bs-target="#salesAndWeatherModal"
                             @onclick="@(async () => await RequestSalesAndWeatherRelations())">
                         Get Report
@@ -93,7 +96,7 @@
     <div class="modal-dialog-scrollable modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title text-primary m-auto text-center font-monospace fw-bold">- Sales Summary -</h3>
+                <h3 class="modal-title text-secondary m-auto text-center font-monospace fw-bold">- Sales Summary -</h3>
             </div>
             <div class="modal-body mt-2 m-2 p-2">
                 <div class="container-fluid">
@@ -144,7 +147,7 @@
     <div class="modal-dialog-scrollable modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title text-primary m-auto text-center font-monospace fw-bold">- Top Sold Products -</h3>
+                <h3 class="modal-title text-danger m-auto text-center font-monospace fw-bold">- Top Sold Products -</h3>
             </div>
             <div class="modal-body mt-2 m-2 p-2">
                 <div class="container-fluid">
@@ -166,7 +169,7 @@
                     {
                         @foreach (var report in topSold)
                         {
-                            <div class="d-flex justify-content-center align-items-center ms-0 ps-0">
+                            <div class="d-flex justify-content-center align-items-center ms-0 ps-0 pe-2 me-2">
                                 <h5 class="fw-bold text-danger me-1">@(topSold.IndexOf(report) + 1)-</h5>
                                 <ul class="list-group fw-bold text-center mb-2 mt-2 p-1">
                                     <li class="list-group-item text-secondary small text-uppercase">@report.ProductId</li>
@@ -190,7 +193,7 @@
     <div class="modal-dialog-scrollable modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title text-danger m-auto text-center font-monospace fw-bold">- Product shortages -</h3>
+                <h3 class="modal-title text-warning m-auto text-center font-monospace fw-bold">- Product shortages -</h3>
             </div>
             <div class="modal-body mt-2 m-2 p-2">
                 <div class="container-fluid">
@@ -243,7 +246,7 @@
     <div class="modal-dialog-scrollable modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title text-primary m-auto text-center font-monospace fw-bold">- Sales & Weather Relation -</h3>
+                <h3 class="modal-title text-success m-auto text-center font-monospace fw-bold">- Sales & Weather Relation -</h3>
             </div>
             <div class="modal-body mt-2 m-2 p-2">
                 <div class="container-fluid">

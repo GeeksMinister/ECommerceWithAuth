@@ -3,6 +3,7 @@
 public class ECommerceDbContext : ECommerceWithAuthMVCContext
 {
     private readonly IConfiguration _config;
+
     public ECommerceDbContext(DbContextOptions<ECommerceDbContext> options, IConfiguration config) : base(options)
     {
         _config = config;

@@ -1,5 +1,8 @@
 ﻿namespace ECommerceWithAuth.MVC.Controllers;
 
+using Microsoft.AspNetCore.Authorization;
+
+[Authorize(Roles = "Administration")]
 public class OrderController : Controller
 {
     private readonly IOrderClientData _orderClientData;
@@ -13,7 +16,8 @@ public class OrderController : Controller
 
     public async Task<IActionResult> Index(Currency currency)
     {
-        var orders = await _orderClientData.GetAllOrder();
+        var token = Request.Cookies["token"]!;
+        var orders = await _orderClientData.GetAllOrder("Bearer " + token);
         if (orders == null) return NotFound();
         if (currency == Currency.SEK) return View((orders, currency));
 

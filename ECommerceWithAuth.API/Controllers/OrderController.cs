@@ -14,7 +14,8 @@ public class OrderController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> GetAllOrders()
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetAllOrders()
 	{
         try
         {

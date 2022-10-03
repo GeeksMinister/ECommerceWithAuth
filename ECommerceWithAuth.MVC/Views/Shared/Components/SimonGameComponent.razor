@@ -2,8 +2,8 @@
 @*<PageTitle>Simon</PageTitle>*@
 
 <div class="row">
-    <h2 class="text-primary p-1 fw-bold ">Simon</h2>
-    <h3 class="text-warning text-end p-1 text-center @(Started ? "visible" : "invisible")">Game's On</h3>
+    <h2 class="display-4 text-primary p-1">Simon</h2>
+    <h3 class="text-warning text-end p-1  text-center @(Started ? "visible" : "invisible")">Game's On</h3>
     <strong class="text-danger p-0 mb-2 mt-0  h5 text-center @(GameOver ? "visible" : "invisible")">
         •&nbsp; Game Over &nbsp;• <br /><br />
         Press "Start New Game" to play again.
@@ -14,25 +14,25 @@
 <div class="form-check">
     <div class="row mb-5 w-100 justify-content-evenly">
 
-        <div class="col-sm-auto col-lg-2 m-2 ">
-            <button class="w-100  p-5 btn btn-danger fw-bold red shadow-lg @(IsLit[(int)Button.Red] ? "lit" : "")"
+        <div class="col-4 col-md-3 col-lg-2 m-2 box">
+            <button class="w-100 p-5 btn btn-danger fw-bold red shadow-lg @(IsLit[(int)Button.Red] ? "lit" : "")"
                     @onclick="() => { TryPress(Button.Red); }">
                 1
             </button>
         </div>
-        <div class="col-sm-auto col-lg-2 m-2 ">
+        <div class="col-4 col-md-3 col-lg-2 m-2 box">
             <button class="w-100 p-5 btn btn-success fw-bold green shadow-lg @(IsLit[(int)Button.Green] ? "lit" : "")"
                     @onclick="() => { TryPress(Button.Green); }">
                 2
             </button>
         </div>
-        <div class="col-sm-auto col-lg-2 m-2 ">
+        <div class="col-4 col-md-3 col-lg-2 m-2 box">
             <button class="w-100 p-5 btn btn-primary fw-bold blue shadow-lg @(IsLit[(int)Button.Blue] ? "lit" : "")"
                     @onclick="() => { TryPress(Button.Blue); }">
                 3
             </button>
         </div>
-        <div class="col-sm-auto col-lg-2 m-2 ">
+        <div class="col-4 col-md-3 col-lg-2 m-2 box">
             <button class="w-100 p-5 btn btn-warning fw-bold text-light yellow shadow-lg @(IsLit[(int)Button.Yellow] ? "lit" : "")"
                     @onclick="() => { TryPress(Button.Yellow); }">
                 4
@@ -45,7 +45,7 @@
 
 <div class="container">
     <div class="row justify-content-center p-5">
-        <button class="col-sm-auto col-lg-4 p-3 m-2 btn btn-dark btn-outline-light shadow-lg rounded-pill border-dark border-3"
+        <button class="col-8 col-lg-4 p-3 m-2 btn btn-dark btn-outline-light shadow-lg rounded-pill border-dark border-3"
                 @onclick="StartNewGame">
             Start New Game
         </button>
@@ -78,6 +78,10 @@
     .yellow.lit {
         background-color: hsl(50, 36%, 83%);
         border: 1px solid #7c5252;
+    }
+
+    .box {
+        max-width: 12rem !important;
     }
 </style>
 

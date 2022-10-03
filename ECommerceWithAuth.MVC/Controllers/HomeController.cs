@@ -1,7 +1,4 @@
 ﻿using ECommerceWithAuth.MVC.Models;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using NuGet.Common;
 using System.Diagnostics;
 
 namespace ECommerceWithAuth.MVC.Controllers;
@@ -23,16 +20,24 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        if (string.IsNullOrEmpty(Request.Cookies["token"]) && (User?.Identity?.IsAuthenticated ?? false))
+        try
         {
-            var employeeId = _userManager.GetUserId(User);
-            var loginInfo = _userManager.GetUserName(User);
-            var token = _employeeData.RequestToken(loginInfo, employeeId).Result;
-            Response.Cookies.Append("token", token);
+            if (string.IsNullOrEmpty(Request.Cookies["token"]) && (User?.Identity?.IsAuthenticated ?? false) 
+                && (User?.IsInRole("Administration") ?? false))
+            {
+                var employeeId = _userManager.GetUserId(User);
+                var loginInfo = _userManager.GetUserName(User);
+                var token = _employeeData.RequestToken(loginInfo, employeeId).Result;
+                Response.Cookies.Append("token", token);
+            }
+            return View();
         }
-        return View();
-    }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
 
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

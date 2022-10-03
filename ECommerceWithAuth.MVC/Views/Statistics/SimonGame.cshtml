@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Hiden Game :-)";
+}
+
+<div>
+    @(await Html.RenderComponentAsync<ECommerceWithAuth.MVC.Views.Shared.Components.
+    SimonGameComponent>(RenderMode.ServerPrerendered/*,new {  Data= " Hello World " }*/))
+</div>
+

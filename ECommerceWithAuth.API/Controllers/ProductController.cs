@@ -16,8 +16,8 @@ public class ProductController : ControllerBase
 	}
 
     [HttpGet("Product")]
-	//[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> GetAllProducts()
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetAllProducts()
 	{
 		var result = await _productRepository.GetAllProducts();
         if (result is null) return NoContent();

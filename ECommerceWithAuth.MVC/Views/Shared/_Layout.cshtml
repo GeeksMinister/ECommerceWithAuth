@@ -13,7 +13,7 @@
         <nav style="background-color: rgb(56, 156, 78) !important;"
              class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">E-Commerce</a>
+                <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
                         data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -21,19 +21,19 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (true@*User?.Identity?.IsAuthenticated ?? false*@)
+                        @if (((User?.Identity?.IsAuthenticated) ?? false) && (User?.IsInRole("Administration") ?? false))
                         {
-                        <li class="nav-item">
-                            <a class="nav-link navbar-brand text-white" asp-controller="Product" asp-action="Index">Products</a>
-                        </li>
-                        }
+                            <li class="nav-item">
+                                <a class="nav-link navbar-brand text-white" asp-controller="Product" asp-action="Index">Products</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link navbar-brand text-white" asp-controller="Order" asp-action="Index">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navbar-brand text-white" asp-controller="Statistics" asp-action="Index">Statistics</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link navbar-brand text-white" asp-controller="Order" asp-action="Index">Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link navbar-brand text-white" asp-controller="Statistics" asp-action="Index">Statistics</a>
+                            </li>
+                        }
                     </ul>
                     <span class="text-white"><partial name="_LoginPartial" /></span>
 
@@ -41,14 +41,14 @@
             </div>
         </nav>
     </header>
-    <div class="pe-4 ps-4 pb-3">
+    <div class="">
         <main role="main" style="max-width: 102rem; margin: 0 auto;">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted" style="background-color: rgb(36, 143, 60);">
-        <div class="container text-white  ">&copy; 2022 - E-Commerce By Nael</div>
+    <footer class="border-top footer" style="background-color: rgb(36, 143, 60);">
+        <div class="container text-white text-start" style="max-width:115rem !important;">&copy; 2022 - E-Commerce By Nael</div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

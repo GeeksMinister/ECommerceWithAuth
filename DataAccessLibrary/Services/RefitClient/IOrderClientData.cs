@@ -3,7 +3,7 @@
 public interface IOrderClientData
 {
     [Get("/Order")]
-    Task<List<OrderDto>> GetAllOrder();
+    Task<List<OrderDto>> GetAllOrder([Header("Authorization")] string authorization);
 
     [Get("/Order/{guid}")]
     Task<OrderDto> GetOrderById(Guid guid);

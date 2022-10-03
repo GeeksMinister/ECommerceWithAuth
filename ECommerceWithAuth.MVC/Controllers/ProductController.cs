@@ -1,9 +1,8 @@
 ﻿namespace ECommerceWithAuth.MVC.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
-using NuGet.Protocol.Core.Types;
 
-//[Authorize(Roles = "Administration")]
+[Authorize(Roles = "Administration")]
 public class ProductController : Controller
 {
     private readonly IProductClientData _productClientData;

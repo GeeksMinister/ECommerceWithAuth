@@ -11,8 +11,5 @@ public class StatisticsController : Controller
         return View();
     }
 
-    public IActionResult HiddenContent()
-    {
-        return View("SimonGame");
-    }
+
 }

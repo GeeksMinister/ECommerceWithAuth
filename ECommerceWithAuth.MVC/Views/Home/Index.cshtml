@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Home";
 }
 
@@ -10,4 +9,10 @@
     </h2>
      
 </div>
+
+@if ((User?.Identity?.IsAuthenticated) ?? false)
+{
+    <partial name="_ChatWindow" />    
+}
+
 

@@ -3,15 +3,14 @@
 <style>
     #chatSection {
         position: absolute;
-        left: 10px;
-        bottom:70px ;
-/*        background-color: transparent !important;*/
+        left: 13px;
+        bottom:80px ;
         z-index: 1;
         width: 23rem;
     }
 
     #chatWindow{
-        min-height: 32rem;
+        min-height: 25rem;
         z-index: 2;
         display: none;
         border-radius: 3%;
@@ -46,16 +45,16 @@
     }
 }
 
-
 <div id="chatSection">
-        <div id="chatButton" class="col-4">
-            <button onclick="openchat()" class="w-100 btn btn-light btn-outline-dark fw-bold">Chat</button>
+        <div id="chatButton" class="col-4 shadow">
+            <button onclick="openchat()" class="w-100 btn btn-light btn-outline-primary fw-bold
+                border border-4 border-success">Chat
+            </button>
         </div>
         
         <div id="chatWindow" class="row justify-content-center">
             <div class="">
-                @(await Html.RenderComponentAsync<ECommerceWithAuth.MVC.Views.Shared.Components.
-                ChatComponent>(RenderMode.ServerPrerendered, new { Name = GetName() }))
+                @(await Html.RenderComponentAsync<ChatComponent>(RenderMode.ServerPrerendered, new { Name = GetName() }))
             </div>
         </div>
 </div>

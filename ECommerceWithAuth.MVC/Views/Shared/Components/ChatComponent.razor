@@ -2,16 +2,16 @@
 @implements IAsyncDisposable
 
 <style>
-    .color-green {
-        /*background-color: red;*/
-    }
+
     textarea {
         resize: none;
         border-radius: 4%;
     }
+
     .container {
         border-radius: 2%;
     }
+
     .messages {
         min-height: 23rem;
         max-height: 30rem;
@@ -28,46 +28,51 @@
 
     @foreach (var userMessage in userMessages)
     {
-        <div class="row mb-3 d-flex me-0 @(userMessage.CurrentUser ? "justify-content-end" : "")">
-            <div class="card w-auto shadow p-0 @(userMessage.CurrentUser ? " me-5" : "ms-5")" style="width: 18rem;">
-                <ul class="list-group list-group-flush" style="max-width:17rem;">
-                    <li class="list-group-item @(userMessage.CurrentUser ? "bg-success bg-opacity-75" : "")">@userMessage.Message</li>
+        <div class="row mb-3 d-flex m-1 rounded-3 text-center @(userMessage.CurrentUser ? "justify-content-end" : "")">
+            <div class="card w-auto shadow p-1  @(userMessage.CurrentUser ? "bg-success bg-opacity-75" : "")" style="width: 18rem;">
+                @if (userMessage.CurrentUser == false)
+                {
+                    <span class="small  text-success">@userMessage.Sender</span>
+                }
+                <ul class="list-group list-group-flush h6" style="max-width:17rem;">
+                    <li class="list-group-item fw-normal p-2 @(userMessage.CurrentUser ? "bg-success bg-opacity-50 text-light" : "")">@userMessage.Message</li>
                 </ul>
-                <div class="card-footer @(userMessage.CurrentUser ? "bg-success bg-opacity-75" : "")">
-                    <span class="small">@userMessage.DateSent.ToString("HH:mm | MMM dd")</span>
+                <div class="card-footer p-0 @(userMessage.CurrentUser ? "bg-success bg-opacity-50 text-light" : "")">
+                    <span class="small fw-lighter">@userMessage.DateSent.ToString("HH:mm | yy MMM dd")</span>
                 </div>
             </div>
         </div>
     }
 </div>
 
-
-<textarea rows="2" cols="42" class="bg-light w-100 form-control border border-2 border-success rounded-3"
-          @bind="messageInput" placeholder="Write message">
+<textarea class="bg-light w-100 form-control border border-2 border-success rounded-3"
+          @bind="messageInput" placeholder="Write message" rows="2" cols="42">
 </textarea>
 
 <div class="row d-flex justify-content-around w-100 p-0 m-0 g-0">
 
     <div class="col-4 border border-1 border-dark rounded-3">
         <button class="btn btn-light btn-outline-success w-100 fw-bold" @onclick="Send"
-            disabled="@(!IsConnected)">Send
+                disabled="@(!IsConnected)">
+            Send
         </button>
     </div>
     <div class="col-4 border border-1 border-dark rounded-3">
-        <button class="btn btn-secondary btn-outline-dark text-white w-100 fw-bold" 
-            onclick="closechat()">Close
+        <button class="btn btn-secondary btn-outline-dark text-white w-100 fw-bold"
+                onclick="closechat()">
+            Close
         </button>
     </div>
 </div>
 
 @code {
+
     [Parameter]
-    public string Name { get; set; } = "name";
+    public string Name { get; set; } = string.Empty;
     private HubConnection? hubConnection;
-    private List<UserMessage> userMessages = new();
-    private string? usernameInput;
+    private List<ChatMessage> userMessages = new();
+
     private string? messageInput;
-    private bool isUserReadonly = false;
 
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
 
@@ -80,7 +85,14 @@
 
         hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
         {
-            userMessages.Add(new UserMessage { Username = user, Message = message, CurrentUser = user == usernameInput, DateSent = DateTime.Now });
+            userMessages.Add(new ChatMessage
+                {
+                    Sender = user,
+                    Message = message,
+                    CurrentUser = (user == Name),
+                    DateSent = DateTime.Now
+
+                });
 
             StateHasChanged();
         });
@@ -90,13 +102,11 @@
 
     private async Task Send()
     {
-        usernameInput = Name;
         if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(messageInput))
         {
             if (hubConnection is null) return;
             await hubConnection.SendAsync("SendMessage", Name, messageInput);
 
-            isUserReadonly = true;
             messageInput = string.Empty;
         }
     }
@@ -109,9 +119,9 @@
         }
     }
 
-    public class UserMessage
+    public class ChatMessage
     {
-        public string Username { get; set; } = string.Empty;
+        public string Sender { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
         public string Receiver { get; set; } = string.Empty;
         public bool CurrentUser { get; set; }

@@ -1,6 +1,4 @@
-﻿using static System.Net.WebRequestMethods;
-
-namespace ECommerceWithAuth.API.Controllers;
+﻿namespace ECommerceWithAuth.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

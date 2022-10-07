@@ -2,9 +2,8 @@
 
 public class CartItem
 {
-    public int Id { get; set; }
-    public int CartId { get; set; }
-    public Product Product { get; set; } = new();
+    public Guid ProductId { get; set; }
+    public string ProductName { get; set; } = string.Empty;
     public int Quantity { get; set; }
-
+    public decimal Price { get; set; }
 }

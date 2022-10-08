@@ -7,5 +7,8 @@ public interface IEmployeeClientData
 
     [Post("/Employee/RequestToken")]
     Task<string> RequestToken(string loginInfo, string employeeId);
+
+    [Post("/Employee/RequestCustomerToken?loginInfo={loginInfo}&cusotmerId={cusotmerId}")]
+    Task<string> RequestCustomerToken(string loginInfo, string cusotmerId);
     
 }

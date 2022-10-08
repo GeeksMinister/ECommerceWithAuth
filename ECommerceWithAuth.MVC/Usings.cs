@@ -19,11 +19,17 @@ global using Microsoft.IdentityModel.Tokens;
 global using System.IdentityModel.Tokens.Jwt;
 //global using Microsoft.AspNetCore.Authorization;
 
- 
+global using BlazorServer.Hubs;
+global using Microsoft.AspNetCore.ResponseCompression;
+global using Blazored.LocalStorage;
+global using Blazored.Toast;
+global using Blazored.Toast.Services;
+
 global using DataAccessLibrary.Models;
 global using ECommerceWithAuth.MVC.Data;
 global using DataAccessLibrary.Services;
 global using DataAccessLibrary.Models.DTOs;
+global using ECommerceWithAuth.MVC.CartService;
 global using DataAccessLibrary.Services.RefitClient;
 global using DataAccessLibrary.Data.Repositories.Contracts;
 

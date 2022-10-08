@@ -5,15 +5,12 @@ namespace ECommerceWithAuth.MVC.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly IEmployeeClientData _employeeData;
     private readonly UserManager<IdentityUser> _userManager;
 
-    public HomeController(ILogger<HomeController> logger,
-                          IEmployeeClientData employeeData,
+    public HomeController(IEmployeeClientData employeeData,
                           UserManager<IdentityUser> userManager)
     {
-        _logger = logger;
         _employeeData = employeeData;
         _userManager = userManager;
     }
@@ -22,12 +19,19 @@ public class HomeController : Controller
     {
         try
         {
-            if (string.IsNullOrEmpty(Request.Cookies["token"]) && (User?.Identity?.IsAuthenticated ?? false) 
-                && (User?.IsInRole("Administration") ?? false))
+            if (string.IsNullOrEmpty(Request.Cookies["token"]) && (User?.Identity?.IsAuthenticated ?? false))
             {
-                var employeeId = _userManager.GetUserId(User);
+                var userId = _userManager.GetUserId(User);
                 var loginInfo = _userManager.GetUserName(User);
-                var token = _employeeData.RequestToken(loginInfo, employeeId).Result;
+                var token = string.Empty;
+                if (User?.IsInRole("Administration") ?? false)
+                {
+                    token = _employeeData.RequestToken(loginInfo, userId).Result;
+                }
+                else if (User?.IsInRole("Customer") ?? false)
+                {
+                    token = _employeeData.RequestCustomerToken(loginInfo, userId).Result;
+                }
                 Response.Cookies.Append("token", token);
             }
             return View();

@@ -1,16 +1,73 @@
-﻿<h3>CartComponent</h3>
+﻿@inject ICartService CartService
 
-<h1>Counter</h1>
-
-<p>Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+@if (orderPlaced == false)
+{
+    <h3 class="m-3 ps-4 text-success">Your Shopping Cart</h3>
+    @if (cartItems == null || cartItems.Count <= 0)
+    {
+        <p class="display-6 m-3 mt-5 p-3 pt-5 align-middle text-center">
+            - You have no item in your cart -
+        </p>
+    }
+    else
+    {
+        <div>
+            @foreach (var item in cartItems)
+            {
+                <div class="item-container">
+                    <div class="item-name">@item.ProductName</div>
+                    <div class="item-price">$@(item.Price * item.Quantity)</div>
+                    <button class="btn-delete" @onclick="@(async () => await DeleteItem(item))">Delete</button>
+                    <EditForm Model="item">
+                        <InputNumber @bind-Value="item.Quantity" class="form-control" style="width: 70px" />
+                    </EditForm>
+                </div>
+            }
+            <div class="item-price">
+                Total (@cartItems.Count): $@cartItems.Sum(item => item.Price * item.Quantity)
+            </div>
+            <div style="text-align: center; margin-top: 10px;">
+                <button class="btn btn-primary btn-lg" @onclick="PlaceOrder">Place Order</button>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <h3>Thank you for your order!</h3>
+    <h4>Here's what you'll get:</h4>
+    <div>
+        @foreach (var item in cartItems)
+        {
+            <div class="item-container">
+                <div class="item-name">@item.ProductName</div>
+                <div class="item-price">$@(item.Price * item.Quantity)</div>
+            </div>
+        }
+        <div class="item-price">
+            Total (@cartItems.Count): $@cartItems.Sum(item => item.Price * item.Quantity)
+        </div>
+    </div>
+}
 
 @code {
-    private int currentCount = 0;
+    List<CartItem> cartItems = new List<CartItem>();
+    bool orderPlaced = false;
 
-    private void IncrementCount()
+    protected override async Task OnInitializedAsync()
     {
-        currentCount++;
+        cartItems = await CartService.GetCartItems();
+    }
+
+    private async Task DeleteItem(CartItem item)
+    {
+        await CartService.DeleteItem(item);
+        cartItems = await CartService.GetCartItems();
+    }
+
+    private async Task PlaceOrder()
+    {
+        orderPlaced = true;
+        await CartService.EmptyCart();
     }
 }

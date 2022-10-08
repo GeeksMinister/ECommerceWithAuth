@@ -13,7 +13,7 @@
         <nav style="background-color: rgb(56, 156, 78) !important;"
              class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
                         data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -33,9 +33,22 @@
                                 <a class="nav-link navbar-brand text-white" asp-controller="Statistics" asp-action="Index">Statistics</a>
                             </li>
                         }
+                        @if (((User?.Identity?.IsAuthenticated) ?? false) && (User?.IsInRole("Customer") ?? false))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link navbar-brand text-white" asp-controller="Shop" asp-action="Index">
+                                    Shop Now
+                                </a>
+                            </li>
+                        }
                     </ul>
-
-                    @*<span class="text-white"><partial name="_Cart" /></span>*@
+                    @if (((User?.Identity?.IsAuthenticated) ?? false) && (User?.IsInRole("Customer") ?? false))
+                    {
+                        <a class="nav-link navbar-brand text-white btn-outline-info rounded-pill" asp-controller="Cart" asp-action="Index">
+                            Cart <span class="h4 p-0 m-0 oi oi-cart fw-bold"></span>
+                        </a>
+                        <span class="fw-bold text-white">&nbsp;&nbsp;&nbsp;-&nbsp;</span>
+                    }
                     <span class="text-white"><partial name="_LoginPartial" /></span>
 
                 </div>
@@ -59,3 +72,7 @@
 
 <base href="~/" />
 <script src="_framework/blazor.server.js"></script>
+<div>
+    @(await Html.RenderComponentAsync<BlazoredToasts>(RenderMode.Server))
+</div>
+

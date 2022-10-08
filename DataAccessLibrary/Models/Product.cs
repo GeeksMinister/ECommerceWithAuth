@@ -17,13 +17,12 @@ public class Product
     public bool InStock { get => Quantity > 0; }
 
     [Ignore]
-    public bool OnSale { get => (DiscountUntil.Subtract(DateTime.Now).TotalDays > 0 && DiscountRate >= 1 ); }
+    public bool OnSale { get => (DiscountUntil - DateTime.Now).TotalDays > 0 && DiscountRate >= 1 ; }
 
     [DataType(DataType.Date)]
     public DateTime DiscountUntil { get; set; }
 
     public decimal DiscountRate { get; set; }
-
 
     [Range(1, int.MaxValue, ErrorMessage = "Invalid value!")]
     public decimal Price { get; set; }

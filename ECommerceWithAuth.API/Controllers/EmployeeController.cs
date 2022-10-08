@@ -40,10 +40,15 @@ public class EmployeeController : ControllerBase
         var employee = await _employeeRepository.GetEmployeeByIdOrEmail(loginInfo);
 
         if (employee == null) return NotFound("Login Info Wasn't Found");
-        if (employee.Guid.ToString() != employeeId) return BadRequest("Wrong employeeId");
-        
+        if (employee.Guid.ToString() != employeeId) return BadRequest("Wrong employeeId");        
 
         return Ok(CreateToken(employee));
+    }    
+
+    [HttpPost("RequestCustomerToken")]
+    public async Task<IActionResult> RequestCustomerToken(string loginInfo, string cusotmerId)
+    {
+        return Ok(await Task.Run (() => CreateCustomerToken(loginInfo, cusotmerId)));
     }
 
     private (byte[] passwordHash, byte[] passwordSalt) CreatePasswordHash(string password)
@@ -71,8 +76,27 @@ public class EmployeeController : ControllerBase
             new Claim(ClaimTypes.SerialNumber, employee.Guid.ToString())
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            _config["JwtSettings:SigningKey"]));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:SigningKey"]));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            signingCredentials: creds,
+            expires: DateTime.Now.AddDays(1));
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private string CreateCustomerToken(string loginInfo, string cusotmerId)
+    {
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Role, "Customer"),
+            new Claim(ClaimTypes.Email, loginInfo),
+            new Claim(ClaimTypes.SerialNumber, cusotmerId),
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:SigningKey"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
         var token = new JwtSecurityToken(

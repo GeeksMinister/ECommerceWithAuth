@@ -1,6 +1,9 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Cart";
+}
 
-<div class="oi oi-cart ">
+<div>
     @(await Html.RenderComponentAsync<CartComponent>(RenderMode.Server))
 </div>
+
 

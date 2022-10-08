@@ -1,6 +1,3 @@
-using BlazorServer.Hubs;
-using Microsoft.AspNetCore.ResponseCompression;
-
 var builder = WebApplication.CreateBuilder(args);
 
 var apiLocation = builder.Configuration["ApiLocation"]!;
@@ -13,6 +10,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ECommerceWithAuthMVCContext>();
 
 builder.Services.AddServerSideBlazor();
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddBlazoredToast();
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddAutoMapper(typeof(MapperInitializer));
 builder.Services.AddRefitClient<IEmployeeClientData>().ConfigureHttpClient(client => client.BaseAddress = new Uri(apiLocation));
 builder.Services.AddRefitClient<IProductClientData>().ConfigureHttpClient(client => client.BaseAddress = new Uri(apiLocation));

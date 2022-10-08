@@ -1,0 +1,156 @@
+﻿@inject IHttpContextAccessor httpContextAccessor
+@inject IProductClientData _productData
+
+
+<style>
+    .discountRateModal:hover, .discountUntilModal:hover {
+        cursor: pointer;
+    }
+</style>
+
+@if (_products is null)
+{
+    <em class="h4 text-success">Loading ......</em>
+
+}
+else if (_products!.Any() is false)
+{
+    <h4>No Registered product Was Returned From the Database</h4>
+}
+else
+{
+    <div class="row pt-5 pe-3 ps-3 gy-5 me-0">
+        <h3 class="text-secondary font-monospace fw-bold col-6">
+            Products [<span class="text-primary opacity-75 small">@_products?.Count</span>]
+        </h3>
+        <div class="start-0">
+            <select @bind-value="_currency" @onchange="(async () => await Exchange())" @bind-value:event="oninput"
+                class="bg-white bg-opacity-100 text-success fw-bold border-2 rounded-pill
+                        form-select w-auto border-secondary shadow-sm">
+                <option value="SEK">SEK</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="CAD">CAD</option>
+                <option value="CHF">CHF</option>
+                <option value="JPY">JPY</option>
+                <option value="NOK">NOK</option>
+                <option value="DKK">DKK</option>
+            </select>
+        </div>
+        <div class="text-end mb-4 pe-2 pb-3">
+            <a asp-action="AddProduct" class="btn btn-success fw-bold">Add Product</a>
+        </div>
+    </div>
+
+
+    <div class="container-fluid overflow-auto mb-3 m-0 pe-3 ps-3 pb-3">
+        <table class="table table-bordered table-striped text-center align-middle ">
+            <thead class="border-dark bg-success text-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Available</th>
+                    <th>Discount</th>
+                    <th>On Sale</th>
+                    <th>Price</th>
+                    <th>Changes</th>
+                </tr>
+            </thead>
+            <tbody class="border-1 border-dark">
+                @foreach (var product in _products!)
+                {
+
+                    <tr>
+                        <td class="col-3 fw-bold">@product.Name</td>
+                        <td class="col-2 fw-bold  text-success">@product.Category!.Name</td>
+                        <td class="col-1 text-secondary fw-bold  @(product.Quantity <= 10 ? "bg-warning" : "")
+                            bg-opacity-25">
+                            @product.Quantity
+                        </td>
+
+                        @if (product.OnSale)
+                        {
+                            <td class="col-1 fw-bold text-danger text-opacity-75">
+                                @($"{(int)product.DiscountRate}%")
+                            </td>
+                            <td class="col-2 fw-bold bg-danger bg-opacity-10">
+                                Sales !
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col-1 fw-bold text-center"> -- -- </td>
+                            <td class="col-1 fw-bold text-center"> -- -- </td>
+                        }
+
+                        <td class="col-2">
+                            <span class="text-center ms-2 ps-2 font-monospace fw-bold" style="font-size:1.1rem;">
+                                @($"{product.GetCurrentPrice():#.##}")
+                            </span>
+                            <sub class="text-end m-0 p-0 text-success text-opacity-100 fw-bold" style="font-size:0.8rem;">
+                                @_currency
+                            </sub>
+                        </td>
+                        <td class=" col-sm-3 col-lg-2 col-xxl-1">
+                            //Select
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+
+
+
+
+
+@code {
+    List<Product>? _products;
+    Currency _currency;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = httpContextAccessor?.HttpContext?.Request.Cookies["token"]!;
+        _products = await _productData.GetAllProducts("Bearer " + token);
+
+    }
+
+    private async Task Exchange()
+    {
+        var exchangeRate = await SetUpPrice(_currency);
+        var token = httpContextAccessor?.HttpContext?.Request.Cookies["token"]!;
+        _products = await _productData.GetAllProducts("Bearer " + token);
+        if (exchangeRate > 0) _products!.ForEach(prod => prod.Price /= exchangeRate);
+        if (exchangeRate == 0) _currency = Currency.SEK;
+    }
+
+    private async Task<decimal> SetUpPrice(Currency currency)
+    {
+        try
+        {
+            switch (currency)
+            {
+                case Currency.SEK: return 0;
+                case Currency.USD: return await _productData.RequestExchangeRate(Currency.USD);
+                case Currency.EUR: return await _productData.RequestExchangeRate(Currency.EUR);
+                case Currency.GBP: return await _productData.RequestExchangeRate(Currency.GBP);
+                case Currency.CAD: return await _productData.RequestExchangeRate(Currency.CAD);
+                case Currency.CHF: return await _productData.RequestExchangeRate(Currency.CHF);
+                case Currency.JPY: return await _productData.RequestExchangeRate(Currency.JPY);
+                case Currency.NOK: return await _productData.RequestExchangeRate(Currency.NOK);
+                case Currency.DKK: return await _productData.RequestExchangeRate(Currency.DKK);
+                default: return 0;
+            }
+        }
+        catch (Exception)
+        {
+            return 0;
+        }
+    }
+
+}
+

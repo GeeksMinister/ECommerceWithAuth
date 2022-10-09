@@ -17,10 +17,10 @@ public class CartService : ICartService
     public async Task AddToCart(Product product, int quantity)
     {
         var item = new CartItem();
+        item.Quantity = quantity;
         item.ProductId = product.Guid;
         item.ProductName = product.Name;
         item.Price = product.GetCurrentPrice();
-        item.Quantity = quantity;
 
         var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
         if (cart == null)
@@ -40,7 +40,8 @@ public class CartService : ICartService
 
         await _localStorage.SetItemAsync("cart", cart);
 
-        _toastService.ShowSuccess($"{product.Name}  |  {product.Category!.Name}", "Added to cart:");
+        _toastService.ShowSuccess($"{quantity} {product.Name} | {product.Category!.Name}"
+            , "Added to cart:");
 
         OnChange?.Invoke();
     }

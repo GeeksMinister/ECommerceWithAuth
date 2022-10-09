@@ -40,9 +40,7 @@ public class CartService : ICartService
 
         await _localStorage.SetItemAsync("cart", cart);
 
-        //var product = await _productService.GetProduct(item.ProductId);
-        // Get the product name and category to view in the toast
-        //_toastService.ShowSuccess(product.Title, "Added to cart:");
+        _toastService.ShowSuccess($"{product.Name}  |  {product.Category!.Name}", "Added to cart:");
 
         OnChange?.Invoke();
     }

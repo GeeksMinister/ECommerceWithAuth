@@ -1,16 +1,17 @@
 ﻿@inject IHttpContextAccessor httpContextAccessor
 @inject IProductClientData _productData
+@inject ICartService _cartService
 
-
-<style>
-    .discountRateModal:hover, .discountUntilModal:hover {
-        cursor: pointer;
-    }
-</style>
+@if (error != string.Empty)
+{
+    <em>@error</em>
+} 
 
 @if (_products is null)
 {
-    <em class="h4 text-success">Loading ......</em>
+    <div class="row justify-content-center align-content-center w-100 d-flex" style="min-height:40vh">
+        <div class="text-success spinner-border text-center m-auto" ></div>
+    </div>
 
 }
 else if (_products!.Any() is false)
@@ -19,14 +20,14 @@ else if (_products!.Any() is false)
 }
 else
 {
-    <div class="row pt-5 pe-3 ps-3 gy-5 me-0">
+    <div class="row pt-5 pb-5 pe-3 ps-3 gy-5 mb-5 me-0">
         <h3 class="text-secondary font-monospace fw-bold col-6">
             Products [<span class="text-primary opacity-75 small">@_products?.Count</span>]
         </h3>
-        <div class="start-0">
-            <select @bind-value="_currency" @onchange="(async () => await Exchange())" @bind-value:event="oninput"
-                class="bg-white bg-opacity-100 text-success fw-bold border-2 rounded-pill
-                        form-select w-auto border-secondary shadow-sm">
+        <div class="start-0 d-flex justify-content-start">
+            <select @bind-value="_currency" @bind-value:event="oninput" @onchange="(async () => await Exchange())"
+                class="bg-white text-primary fw-bold border-2 rounded-pill
+                        form-select w-auto border-secondary shadow-sm ">
                 <option value="SEK">SEK</option>
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
@@ -37,24 +38,23 @@ else
                 <option value="NOK">NOK</option>
                 <option value="DKK">DKK</option>
             </select>
-        </div>
-        <div class="text-end mb-4 pe-2 pb-3">
-            <a asp-action="AddProduct" class="btn btn-success fw-bold">Add Product</a>
+            @if (loadingPrice)
+            {
+                <span class="ms-3 mt-1 spinner-border text-primary"></span>
+            }
         </div>
     </div>
-
-
-    <div class="container-fluid overflow-auto mb-3 m-0 pe-3 ps-3 pb-3">
+    <BlazoredToasts />
+    <div class="container-fluid overflow-auto mb-3 m-0 pe-3 ps-3 pb-3" style="max-width:150rem;">
         <table class="table table-bordered table-striped text-center align-middle ">
             <thead class="border-dark bg-success text-light">
                 <tr>
                     <th>Name</th>
                     <th>Category</th>
                     <th>Available</th>
-                    <th>Discount</th>
                     <th>On Sale</th>
                     <th>Price</th>
-                    <th>Changes</th>
+                    <th style="max-width:9rem;">Add to Cart</th>
                 </tr>
             </thead>
             <tbody class="border-1 border-dark">
@@ -62,8 +62,8 @@ else
                 {
 
                     <tr>
-                        <td class="col-3 fw-bold">@product.Name</td>
-                        <td class="col-2 fw-bold  text-success">@product.Category!.Name</td>
+                        <td class="col-3  col-lg-4 fw-bold">@product.Name</td>
+                        <td class="col-3 fw-bold  text-success">@product.Category!.Name</td>
                         <td class="col-1 text-secondary fw-bold  @(product.Quantity <= 10 ? "bg-warning" : "")
                             bg-opacity-25">
                             @product.Quantity
@@ -74,26 +74,42 @@ else
                             <td class="col-1 fw-bold text-danger text-opacity-75">
                                 @($"{(int)product.DiscountRate}%")
                             </td>
-                            <td class="col-2 fw-bold bg-danger bg-opacity-10">
-                                Sales !
+                            <td class="col-2 ">
+                                <span class="text-center p-2 ps-4 pe-2 font-monospace fw-bold text-danger text-opacity-75 
+                                        bg-danger bg-opacity-10 rounded-pill" style="font-size:1.1rem;">
+                                    @($"{product.GetCurrentPrice():#.##}")
+                                </span>
+                                <sub class="text-end m-0 p-0 text-primary small text-opacity-75 fw-bold" style="font-size:0.8rem;">
+                                    @_currency
+                                </sub>
                             </td>
                         }
                         else
                         {
                             <td class="col-1 fw-bold text-center"> -- -- </td>
-                            <td class="col-1 fw-bold text-center"> -- -- </td>
+                            <td class="col-2">
+                                <span class="text-center ps-4 pe-2 font-monospace fw-bold" style="font-size:1.1rem;">
+                                    @($"{product.GetCurrentPrice():#.##}")
+                                </span>
+                                <sub class="text-end m-0 p-0 text-primary small text-opacity-75 fw-bold" style="font-size:0.8rem;">
+                                    @_currency
+                                </sub>
+                            </td>
                         }
 
-                        <td class="col-2">
-                            <span class="text-center ms-2 ps-2 font-monospace fw-bold" style="font-size:1.1rem;">
-                                @($"{product.GetCurrentPrice():#.##}")
+                        <td class=" col-auto w-100 d-flex justify-content-evenly m-auto" style="min-width:11rem;">
+                            <select @bind="selectedQuantity[product.Name]"
+                            class="form-select w-50 border-secondary shadow-sm fw-bold rounded-3">
+                                @for (int i = product.Quantity; i >= 2; i--)
+                                {
+                                    <option class="fw-bold dropdown-item text-secondary">@i</option>
+                                }
+                                <option value="1" selected class="fw-bold dropdown-item text-secondary">1</option>
+                            </select>
+                            <span class="btn btn-success btn-outline-info text-white p-0 ps-1 pe-2 m-0" 
+                                @onclick="(async () => await _cartService.AddToCart(product, selectedQuantity[product.Name]))">
+                                <span class="oi oi-cart " style="font-size: 1.8rem"></span>
                             </span>
-                            <sub class="text-end m-0 p-0 text-success text-opacity-100 fw-bold" style="font-size:0.8rem;">
-                                @_currency
-                            </sub>
-                        </td>
-                        <td class=" col-sm-3 col-lg-2 col-xxl-1">
-                            //Select
                         </td>
                     </tr>
                 }
@@ -102,30 +118,52 @@ else
     </div>
 }
 
-
-
-
-
-
-
 @code {
     List<Product>? _products;
     Currency _currency;
+    bool loadingPrice = false;
+    string? error = string.Empty;
+    Dictionary<string, int> selectedQuantity = new Dictionary<string, int>();
+
 
     protected override async Task OnInitializedAsync()
     {
-        var token = httpContextAccessor?.HttpContext?.Request.Cookies["token"]!;
-        _products = await _productData.GetAllProducts("Bearer " + token);
-
+        _products = await GetProducts();
+        selectedQuantity = _products.ToDictionary(prod => prod.Name, prod => prod.Quantity);
+        ResetSelectionToOne();
     }
+
+    private void ResetSelectionToOne()
+    {
+        foreach (var key in selectedQuantity.Keys.ToList())
+        {
+            selectedQuantity[key] = 1;
+        }
+    }
+
+    private async Task<List<Product>> GetProducts() 
+    {
+        var token = httpContextAccessor?.HttpContext?.Request.Cookies["token"]!;
+        return await _productData.GetAllProducts("Bearer " + token);
+    }
+
 
     private async Task Exchange()
     {
-        var exchangeRate = await SetUpPrice(_currency);
-        var token = httpContextAccessor?.HttpContext?.Request.Cookies["token"]!;
-        _products = await _productData.GetAllProducts("Bearer " + token);
-        if (exchangeRate > 0) _products!.ForEach(prod => prod.Price /= exchangeRate);
-        if (exchangeRate == 0) _currency = Currency.SEK;
+        try
+        {
+            loadingPrice = true;
+            var exchangeRate = await SetUpPrice(_currency);
+            _products = await GetProducts();
+            if (exchangeRate > 0) _products!.ForEach(prod => prod.Price /= exchangeRate);
+            if (exchangeRate == 0) _currency = Currency.SEK;
+            loadingPrice = false;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            loadingPrice = false;
+        }
     }
 
     private async Task<decimal> SetUpPrice(Currency currency)
@@ -146,8 +184,9 @@ else
                 default: return 0;
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            error = ex.Message;
             return 0;
         }
     }

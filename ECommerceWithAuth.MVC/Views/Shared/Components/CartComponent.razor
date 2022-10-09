@@ -1,5 +1,16 @@
 ﻿@inject ICartService CartService
 
+<style>
+
+    .link-danger:hover{
+        cursor: pointer;
+    }
+    .link-danger{
+        font-size: 1rem;
+        
+    }
+</style>
+
 @if (orderPlaced == false)
 {
     <h3 class="m-4 ps-4 pb-5 text-success">Your Shopping Cart</h3>
@@ -11,31 +22,40 @@
     }
     else
     {
-        <div>
+        <div class="mb-5 pb-3 w-75 m-auto">
             @foreach (var item in cartItems)
             {
-                <div class="container pt-4 mt-3 mb-3">
-                    <div class=" ">
-                        @item.ProductName
-                    </div>
-                    <div class="text-end fw-bold">
-                        @($"{item.Price * item.Quantity:#.##}")
-                    </div>
-                    <button class=" " @onclick="@(async () => await DeleteItem(item))">
-                        Delete
-                    </button>
-                    <input type="number" @bind="item.Quantity" class="form-control" 
-                        style="width: 70px" min="1" />                                        
-                </div>
+                <ul class="list-group h5 p-3 mb-4 list-group-item border-0 text-success 
+                            m-auto w-100" style="border-bottom: rgb(17, 70, 20) solid 2px !important;">
+                    <li class="d-flex justify-content-between">
+                        <span>@item.ProductName</span>
+                        <span class="text-primary font-monospace">@($"{item.Price * item.Quantity:#.##}") kr</span>
+                    </li>
+                    <li class="d-flex justify-content-between">
+                        <span class="link-danger ps-2 pb-0 mb-0 mt-4 " @onclick="@(async () => await DeleteItem(item))">
+                            Remove
+                        </span>
+                        <input type="number" @bind-value="item.Quantity" @bind-value:event="oninput" @onchange="@(()=>item.GetValidQuantity())" 
+                            class="form-control text-center p-1 mt-4 me-2 border border-2 border-success"
+                            style="width: 70px" min="1" max="@item.MaxQuantity"/>
+                    </li>
+                </ul>                                       
             }
-            <div class="item-price">
-                Total (@cartItems.Count): @cartItems.Sum(item => item.Price * item.Quantity)
-            </div>
-            <div class="w-100 pt-5 mt-5 text-center" style="min-height:25vh">
-                <button class="btn btn-success btn-outline-info text-white btn-lg col-4 col-sm-4
-                    col-lg-3 col-xxl-2 mt-4 mb-5 m-auto" @onclick="PlaceOrder">Place Order
-                </button>
-            </div>
+        </div>
+        <div class="d-flex justify-content-evenly h5 fw-normal m-3 pt-3 ps-4 pb-5"
+                    style="color:rgb(17, 80, 40);">
+            <p>Order Items: [ <span class="text-primary fw-bold small">@cartItems.Count</span> ]</p>
+            <p>To Pay: 
+                <span class="text-primary font-monospace">
+                    @($"{cartItems.Sum(item => item.Price * item.Quantity):#.##}") kr
+                </span>
+            </p>
+        </div>
+
+        <div class="w-100 pt-3 mt-3 text-center" style="min-height:14vh">
+            <button class="btn btn-success btn-outline-info text-white btn-lg col-4 col-sm-4
+                col-lg-3 col-xxl-2 mt-4 mb-3 m-auto shadow" @onclick="PlaceOrder">Place Order
+            </button>
         </div>
     }
 }
@@ -46,12 +66,14 @@ else
         @foreach (var item in cartItems)
         {
             <ul class="list-group h5 p-3 ">
-                <li class="list-group-item border-0 text-success text-center d-flex
-                            justify-content-between m-auto w-75"
-                            style=" border-bottom: rgb(17, 70, 20) solid 2px !important; ">
-                    <span>@item.Quantity - @item.ProductName </span>
+                <li class="list-group-item border-0 text-success text-center d-flex justify-content-between
+                    m-auto w-75" style="border-bottom: rgb(17, 70, 20) solid 2px !important; ">
+                    <span>
+                        @item.ProductName &nbsp;[ 
+                        <span class="text-primary font-monospace small fw-bold">@item.Quantity</span> ]
+                    </span>
                     <span class="text-primary font-monospace fw-bold small">
-                        @($"{item.Price * item.Quantity:#.##}")
+                        @($"{item.Price * item.Quantity:#.##}") kr
                     </span>
                 </li>
             </ul>
@@ -62,14 +84,14 @@ else
         <p>Order Items: [ <span class="text-primary fw-bold small ">@cartItems.Count</span> ]</p>
         <p>
             To Pay: <span class="text-primary font-monospace">
-                @($"{cartItems.Sum(item => item.Price * item.Quantity):#.##}")
+                @($"{cartItems.Sum(item => item.Price * item.Quantity):#.##}") kr
             </span>
         </p>
     </div>
 }
 
-<div class="w-75 m-auto pt-2 pb-5  mt-3 text-end">
-    <a class="btn btn-primary btn-outline-info text-white shadow" style="min-width: 10rem; font-weight:500;"
+<div class="w-75 m-auto mt-1 pt-1 pb-5 text-end">
+    <a class="btn btn-primary btn-outline-info text-white shadow mb-5 " style="min-width: 10rem; font-weight:500;"
        href="./Shop">Back to Shop
     </a>
 </div>
@@ -81,6 +103,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         cartItems = await CartService.GetCartItems();
+        cartItems.ForEach(item => item.GetValidQuantity());
     }
 
     private async Task DeleteItem(CartItem item)
@@ -94,4 +117,6 @@ else
         orderPlaced = true;
         await CartService.EmptyCart();
     }
+
+
 }

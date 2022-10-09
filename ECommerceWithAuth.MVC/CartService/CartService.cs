@@ -14,12 +14,13 @@ public class CartService : ICartService
         _toastService = toastService;
     }
 
-    public async Task AddToCart(Product product, int quantity)
+    public async Task AddToCart(Product product, int quantity, int maxQuantity)
     {
         var item = new CartItem();
         item.Quantity = quantity;
         item.ProductId = product.Guid;
         item.ProductName = product.Name;
+        item.MaxQuantity = maxQuantity;
         item.Price = product.GetCurrentPrice();
 
         var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");

@@ -14,6 +14,10 @@ public class CartItem
         {
             Quantity = MaxQuantity;
         }
+        if (Quantity <= 0)
+        {
+            Quantity = 1;
+        }
 
         return Quantity;
     }

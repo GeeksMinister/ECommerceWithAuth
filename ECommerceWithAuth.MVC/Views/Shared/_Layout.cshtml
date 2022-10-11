@@ -22,7 +22,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1 nav-list">
                         @if (((User?.Identity?.IsAuthenticated) ?? false) && (User?.IsInRole("Administration") ?? false))
                         {
                             <li class="nav-item">
@@ -47,9 +47,9 @@
                     @if (((User?.Identity?.IsAuthenticated) ?? false) && (User?.IsInRole("Customer") ?? false))
                     {
                         <a class="nav-link navbar-brand text-white btn-outline-info rounded-pill" asp-controller="Cart" asp-action="Index">
-                            Cart <span class="h4 p-0 m-0 oi oi-cart fw-bold"></span>
+                            Cart<span class="h4 p-0 m-0 oi oi-cart fw-bold"></span>
                         </a>
-                        <span class="fw-bold text-white">&nbsp;&nbsp;&nbsp;-&nbsp;</span>
+                        <span class="fw-bold text-white nav-cart-margin">&nbsp;&nbsp;&nbsp;-&nbsp;</span>
                     }
                     <span class="text-white"><partial name="_LoginPartial" /></span>
 

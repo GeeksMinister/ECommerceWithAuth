@@ -2,13 +2,18 @@
 
 <style>
 
-    .link-danger:hover{
+    .link-danger:hover {
         cursor: pointer;
     }
-    .link-danger{
+
+    .link-danger {
         font-size: 1rem;
-        
     }
+
+    input[type=number]::-webkit-inner-spin-button {
+        opacity: 1
+    }
+
 </style>
 
 @if (orderPlaced == false)
@@ -22,10 +27,10 @@
     }
     else
     {
-        <div class="mb-5 pb-3 w-75 m-auto">
+        <div class="mb-5 pb-3 w-75 m-auto" style="min-height:35vh ">
             @foreach (var item in cartItems)
             {
-                <ul class="list-group h5 p-3 mb-4 list-group-item border-0 text-success 
+                <ul class="list-group h5 p-3 mb-4 list-group-item border-0 text-success
                             m-auto w-100" style="border-bottom: rgb(17, 70, 20) solid 2px !important;">
                     <li class="d-flex justify-content-between">
                         <span>@item.ProductName</span>
@@ -35,17 +40,19 @@
                         <span class="link-danger ps-2 pb-0 mb-0 mt-4 " @onclick="@(async () => await DeleteItem(item))">
                             Remove
                         </span>
-                        <input type="number" @bind-value="item.Quantity" @bind-value:event="oninput" @onchange="@(()=>item.GetValidQuantity())" 
-                            class="form-control text-center p-1 mt-4 me-2 border border-2 border-success"
-                            style="width: 70px" min="1" max="@item.MaxQuantity"/>
+                        <input type="number" @bind-value="item.Quantity" @bind-value:event="oninput"
+                            @onchange="@(()=>item.GetValidQuantity())"
+                   class="form-control text-center p-1 mt-4 me-2 border border-2 border-success"
+                   style="width: 70px" min="1" max="@item.MaxQuantity" />
                     </li>
-                </ul>                                       
+                </ul>
             }
         </div>
         <div class="d-flex justify-content-evenly h5 fw-normal m-3 pt-3 ps-4 pb-5"
-                    style="color:rgb(17, 80, 40);">
+     style="color:rgb(17, 80, 40);">
             <p>Order Items: [ <span class="text-primary fw-bold small">@cartItems.Count</span> ]</p>
-            <p>To Pay: 
+            <p>
+                To Pay:
                 <span class="text-primary font-monospace">
                     @($"{cartItems.Sum(item => item.Price * item.Quantity):#.##}") kr
                 </span>
@@ -54,22 +61,28 @@
 
         <div class="w-100 pt-3 mt-3 text-center" style="min-height:14vh">
             <button class="btn btn-success btn-outline-info text-white btn-lg col-4 col-sm-4
-                col-lg-3 col-xxl-2 mt-4 mb-3 m-auto shadow" @onclick="PlaceOrder">Place Order
+                col-lg-3 col-xxl-2 mt-4 mb-3 m-auto shadow" @onclick="PlaceOrder">
+                Place Order
             </button>
         </div>
     }
 }
 else
 {
-    <h3 class="display-6 m-4 ps-4 pb-5 " style="color:rgb(17, 100, 29);">Thank you for your order!</h3>
-    <div class="mb-5">
+    <div class="d-flex justify-content-center">
+        <h3 class="display-6 m-4 ps-4 pb-5" style="color:rgb(17, 100, 29);">
+            Thanks for your order &nbsp; &nbsp;
+        </h3>
+        <span class="h4 mt-4 pt-2  ">🍅🍖🥕🥔🍄🌽🥑🍇🍎🍒🍠🍓🍋🥩</span>
+    </div>
+    <div class="mb-5 mt-5">
         @foreach (var item in cartItems)
         {
             <ul class="list-group h5 p-3 ">
                 <li class="list-group-item border-0 text-success text-center d-flex justify-content-between
                     m-auto w-75" style="border-bottom: rgb(17, 70, 20) solid 2px !important; ">
                     <span>
-                        @item.ProductName &nbsp;[ 
+                        @item.ProductName &nbsp;[
                         <span class="text-primary font-monospace small fw-bold">@item.Quantity</span> ]
                     </span>
                     <span class="text-primary font-monospace fw-bold small">
@@ -80,7 +93,7 @@ else
         }
     </div>
     <div class="d-flex justify-content-evenly h5 fw-normal m-3 pt-3 ps-4 pb-5"
-            style="color:rgb(17, 80, 40);">
+     style="color:rgb(17, 80, 40);">
         <p>Order Items: [ <span class="text-primary fw-bold small ">@cartItems.Count</span> ]</p>
         <p>
             To Pay: <span class="text-primary font-monospace">
@@ -92,7 +105,8 @@ else
 
 <div class="w-75 m-auto mt-1 pt-1 pb-5 text-end">
     <a class="btn btn-primary btn-outline-info text-white shadow mb-5 " style="min-width: 10rem; font-weight:500;"
-       href="./Shop">Back to Shop
+       href="./Shop">
+        Back to Shop
     </a>
 </div>
 

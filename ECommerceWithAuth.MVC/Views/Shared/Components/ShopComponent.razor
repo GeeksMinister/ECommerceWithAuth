@@ -2,15 +2,24 @@
 @inject IProductClientData _productData
 @inject ICartService _cartService
 
+
+<style>
+    .blazored-toast {
+        background-color: lightseagreen;
+        top: 5.5rem;
+        right: 6rem;
+    }
+</style>
+
 @if (error != string.Empty)
 {
     <em>@error</em>
-} 
+}
 
 @if (_products is null)
 {
     <div class="row justify-content-center align-content-center w-100 d-flex" style="min-height:40vh">
-        <div class="text-success spinner-border text-center m-auto" ></div>
+        <div class="text-success spinner-border text-center m-auto"></div>
     </div>
 
 }
@@ -26,7 +35,7 @@ else
         </h3>
         <div class="start-0 d-flex justify-content-start">
             <select @bind-value="_currency" @bind-value:event="oninput" @onchange="(async () => await Exchange())"
-                class="bg-white text-primary fw-bold border-2 rounded-pill
+                class="bg-white text-primary text-center fw-bold border-2 rounded-pill
                         form-select w-auto border-secondary shadow-sm ">
                 <option value="SEK">SEK</option>
                 <option value="USD">USD</option>
@@ -44,7 +53,9 @@ else
             }
         </div>
     </div>
+
     <BlazoredToasts />
+
     <div class="container-fluid overflow-auto mb-3 m-0 pe-3 ps-3 pb-3" style="max-width:150rem;">
         <table class="table table-bordered table-striped text-center align-middle ">
             <thead class="border-dark bg-success text-light">
@@ -75,12 +86,12 @@ else
                                 @($"{(int)product.DiscountRate}%")
                             </td>
                             <td class="col-2 ">
-                                <span class="text-center p-2 ps-4 pe-2 font-monospace fw-bold text-danger text-opacity-75 
+                                <span class="text-center p-2 ps-4 pe-2 font-monospace fw-bold text-danger text-opacity-75
                                         bg-danger bg-opacity-10 rounded-pill" style="font-size:1.1rem;">
                                     @if (loadingPrice)
                                     {
-                                        <span class="spinner-border text-primary" 
-                                            style="max-width: 24px; max-height: 24px;"></span>
+                                        <span class="spinner-border text-primary"
+                              style="max-width: 24px; max-height: 24px;"></span>
                                     }
                                     else
                                     {
@@ -101,7 +112,7 @@ else
                                     @if (loadingPrice)
                                     {
                                         <span class="spinner-border text-primary"
-                                            style="max-width: 24px; max-height: 24px;"></span>
+                              style="max-width: 24px; max-height: 24px;"></span>
                                     }
                                     else
                                     {
@@ -124,8 +135,8 @@ else
                                 }
                                 <option value="1" selected class="fw-bold dropdown-item text-secondary">1</option>
                             </select>
-                            <span class="btn btn-success btn-outline-info text-white p-0 ps-1 pe-2 m-0" 
-                                @onclick="(async () => await _cartService.AddToCart(product, selectedQuantity[product.Name], product.Quantity))">
+                            <span class="btn btn-success btn-outline-info text-white p-0 ps-1 pe-2 m-0"
+                          @onclick="(async () => await _cartService.AddToCart(product, selectedQuantity[product.Name], product.Quantity))">
                                 <span class="oi oi-cart " style="font-size: 1.8rem"></span>
                             </span>
                         </td>
@@ -159,7 +170,7 @@ else
         }
     }
 
-    private async Task<List<Product>> GetProducts() 
+    private async Task<List<Product>> GetProducts()
     {
         var token = httpContextAccessor?.HttpContext?.Request.Cookies["token"]!;
         return await _productData.GetAllProducts("Bearer " + token);

@@ -43,3 +43,10 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 70px;
 }
+
+
+@media (max-width: 615px) {
+    .nav-cart-margin {
+        display: none;
+    }
+}

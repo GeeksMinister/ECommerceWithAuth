@@ -1,5 +1,6 @@
 ﻿using ECommerceWithAuth.MVC.Models;
 using System.Diagnostics;
+using System.Net;
 
 namespace ECommerceWithAuth.MVC.Controllers;
 
@@ -33,6 +34,10 @@ public class HomeController : Controller
                     token = _employeeData.RequestCustomerToken(loginInfo, userId).Result;
                 }
                 Response.Cookies.Append("token", token);
+            }
+            else if ((User?.Identity?.IsAuthenticated ?? true) == false)
+            {
+                Response.Cookies.Delete("token");                
             }
             return View();
         }

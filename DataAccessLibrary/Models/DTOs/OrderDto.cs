@@ -2,7 +2,7 @@
 
 public class OrderDto
 {
-    public Guid? OrderId { get; set; }
+    public Guid OrderId { get; set; } = Guid.NewGuid();
 
     [Required]
     [DisplayName("First Name")]
@@ -45,7 +45,7 @@ public class OrderDto
 
     public List<OrderItemsDto>? OrderItems { get; set; } = new();
 
-    public string Customername() => FirstName + " " + LastName;
+    public string Customername() => FirstName + ' ' + LastName;
 
     public OrderDto()
     {

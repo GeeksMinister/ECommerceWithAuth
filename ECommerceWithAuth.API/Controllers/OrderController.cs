@@ -49,9 +49,16 @@ public class OrderController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddNewOrder(OrderDto orderDto)
     {
-        var order = _mapper.Map<Order>(orderDto);
-        var result = await _orderRepository.AddNewOrder(order);
-        return Ok(result);
+        try
+        {
+            var order = _mapper.Map<Order>(orderDto);
+            var result = await _orderRepository.AddNewOrder(order);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 
 

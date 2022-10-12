@@ -2,7 +2,7 @@
 
 public class Order
 {
-    public Guid OrderId { get; set; } = Guid.NewGuid();
+    public Guid OrderId { get; set; }
 
     [Required]
     [DisplayName("First Name")]
@@ -40,13 +40,16 @@ public class Order
     [DataType(DataType.Date)]
     public string OrderPlaced { get; set; } = DateTime.Now.ToShortDateString();
 
-    [Ignore]
-    private decimal? _totalToPay;
-    public decimal? TotalToPay { set => OrderItems.ForEach(item => _totalToPay += item.Price); get => _totalToPay; }
+    //[Ignore]
+    //private decimal? _totalToPay;
+    public decimal? TotalToPay { get; set; }
 
     public List<OrderItems> OrderItems { get; set; } = new();
 
     public string Customername() => FirstName + ' ' + LastName;
+
+    //public decimal? GetCurrentValue() => OrderItems.ForEach(item => _totalToPay += item.Price); 
+
 
     public Order()
     {

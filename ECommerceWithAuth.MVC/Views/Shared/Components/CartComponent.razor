@@ -1,6 +1,6 @@
 ﻿@inject ICartService _cartService
-@inject IProductClientData _orderClientData
-
+@inject IOrderClientData _orderClientData
+@inject IMapper _mapper
 
 <style>
 
@@ -55,7 +55,7 @@
             }
         </div>
         <div class="d-flex justify-content-evenly h5 fw-normal m-3 pt-3 ps-4 pb-5"
-     style="color:rgb(17, 80, 40);">
+             style="color:rgb(17, 80, 40);">
             <p>Order Items: [ <span class="text-primary fw-bold small">@cartItems.Count</span> ]</p>
             <p>
                 To Pay:
@@ -67,7 +67,7 @@
 
         <div class="w-100 pt-3 mt-3 text-center" style="min-height:14vh">
             <button class="btn btn-success btn-outline-info text-white btn-lg col-4 col-sm-4
-                col-lg-3 col-xxl-2 mt-4 mb-3 m-auto shadow" @onclick="@(() =>  ConfirmOrder())">
+                col-lg-3 col-xxl-2 mt-4 mb-3 m-auto shadow" @onclick="@(() => orderConfirmed = true)">
                 Place Order
             </button>
         </div>
@@ -166,7 +166,6 @@ else
     bool orderConfirmed = false;
     OrderDto newOrder = new OrderDto();
 
-
     protected override async Task OnInitializedAsync()
     {
         cartItems = await _cartService.GetCartItems();
@@ -179,21 +178,32 @@ else
         cartItems = await _cartService.GetCartItems();
     }
 
-    //private Task AddNewOrder()
-    //{
-
-    //}
 
     private async Task PlaceOrder()
     {
-        orderPlaced = true;
-        await _cartService.EmptyCart();
+        try
+        {
+            await CreateNewOrder();
+            orderPlaced = true;
+            await _cartService.EmptyCart();
+        }
+        catch (Exception ex)
+        {
+            var s = ex.Message;
+
+        }
+
     }
 
-    private void ConfirmOrder()
+    private async Task CreateNewOrder()
     {
-        orderConfirmed = true;
+        List<OrderItemsDto> orderItems = _mapper.Map<List<OrderItemsDto>>(cartItems);
+        orderItems.ForEach(item => item.OrderId = newOrder.OrderId);
 
+        newOrder.OrderItems = orderItems;
+        newOrder.TotalToPay = cartItems.Sum(item => item.Price * item.Quantity);
+
+        await _orderClientData.AddNewOrder(newOrder);
     }
 
 }

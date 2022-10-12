@@ -7,7 +7,7 @@ public class CartItem
     public int Quantity { get; set; }
     public int MaxQuantity { get; set; }
     public decimal Price { get; set; }
-   
+    
     public int GetValidQuantity()
     {
         if (Quantity > MaxQuantity)

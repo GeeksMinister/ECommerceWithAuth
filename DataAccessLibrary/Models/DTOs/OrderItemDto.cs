@@ -8,8 +8,8 @@ public class OrderItemsDto
     public decimal Price { get; set; }
     public int Quantity { get; set; }
     //[JsonIgnore]
-    //public Guid ProductId { get; set; }
-    public ProductDto Product { get; set; } = new();
+    public Guid ProductId { get; set; }
+    public ProductDto? Product { get; set; }
 
     public OrderItemsDto()
     {

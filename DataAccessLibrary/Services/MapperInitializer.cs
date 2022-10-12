@@ -10,5 +10,6 @@ public class MapperInitializer : Profile
 		CreateMap<OrderItems, OrderItemsDto>().ReverseMap();
         CreateMap<string, string>().ConvertUsing(str => (str ?? "").Trim());
 
+		CreateMap<CartItem, OrderItemsDto>().ReverseMap();
     }   
 }

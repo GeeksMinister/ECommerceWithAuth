@@ -19,9 +19,9 @@
         <div class="text-end pe-5 me-5">
             <h5>
                 Paid Net Price:
-                @if (Model.TotalToPay < Model.OrderItems.Sum(item => item.Price))
+                @if (Model.TotalToPay < Model.OrderItems!.Sum(item => item.Price))
                 {
-                    <del class="ps-1 text-primary small">@($"{Model.OrderItems.Sum(item => item.Price):#.##}")</del>
+                    <del class="ps-1 text-primary small">@($"{Model.OrderItems!.Sum(item => item.Price):#.##}")</del>
                     <span class="text-primary fw-bold text-danger small">@($"{Model.TotalToPay:#.##}")</span>
                 }
                 else
@@ -52,8 +52,8 @@
                 {
                     <tr>
                         <td class="col-1 font-monospace">@(Model.OrderItems.IndexOf(item) + 1)</td>
-                        <td class="col-3 text-center">@item.Product!.Name</td>
-                        <td class="col-1 text-success">@item.Quantity</td>
+                        <td class="col-3 text-center">@item?.Product?.Name</td>
+                        <td class="col-1 text-success">@item!.Quantity</td>
                         <td class="col-2 text-primary small">@($"{item.Price:#.##}")</td>
                     </tr>
                 }

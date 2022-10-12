@@ -11,4 +11,5 @@ public interface IOrderRepository
     Task<Dictionary<string, object>> GetExchangeRates(Currency code);
     Task<decimal> RequestLiveExchangeRate(Currency code);
     Task<Order?> GetOrderById(Guid guid);
+    Task<Order> AddNewOrder(Order order);
 }

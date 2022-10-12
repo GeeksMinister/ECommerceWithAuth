@@ -27,6 +27,13 @@ public class OrderRepository : IOrderRepository
             .ThenInclude(item => item.Product).FirstOrDefaultAsync(order => order.OrderId.Equals(guid));
     }
 
+    public async Task<Order> AddNewOrder(Order order)
+    {
+        var result = await _dbContext.Order.AddAsync(order);
+        await _dbContext.SaveChangesAsync();
+        return result.Entity;
+    }
+
     public async Task<object> GetSalesSummary()
     {
         var orders = await GetAllOrders();
@@ -149,13 +156,13 @@ public class OrderRepository : IOrderRepository
     {
         var targetProperty = new ExchangeRate().GetType().GetProperty(code.ToString());
         var rates = await _dbContext.ExchangeRate.ToListAsync();
-                                                                            //Remove RemoveAll after October
+        //Remove RemoveAll after October
         rates.RemoveAll(rate => DateTime.Parse(rate.Date) > DateTime.Now);
 
         var values = rates.Select(rate => new
         {
             Date = rate.Date,
-            Value =  targetProperty!.GetValue(rate)
+            Value = targetProperty!.GetValue(rate)
         }).ToDictionary(date => date.Date, date => date.Value);
 
         return values!;
@@ -181,15 +188,15 @@ public class OrderRepository : IOrderRepository
         List<string> exchangeRateRecords = new List<string>();
         var orders = await _dbContext.Order.Select(order => order.OrderPlaced).Distinct()
             .OrderBy(date => date).ToListAsync();
-        
+
         return orders;
     }
 
     private async Task UpdateRatesIfNull()
-    {                                      
+    {
         var exchangeRates = await _dbContext.ExchangeRate.ToListAsync();
-                                                                                    //Remove RemoveAll after October
-        exchangeRates.RemoveAll(rate => DateTime.Parse(rate.Date) > DateTime.Now );
+        //Remove RemoveAll after October
+        exchangeRates.RemoveAll(rate => DateTime.Parse(rate.Date) > DateTime.Now);
         foreach (var rate in exchangeRates)
         {
             if (rate.USD == 0) rate.USD = await RequestOldExchangeRate(Currency.USD, rate.Date);

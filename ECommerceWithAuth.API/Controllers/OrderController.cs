@@ -4,19 +4,19 @@
 [ApiController]
 public class OrderController : ControllerBase
 {
-	private readonly IOrderRepository _orderRepository;
-	private readonly IMapper _mapper;
+    private readonly IOrderRepository _orderRepository;
+    private readonly IMapper _mapper;
 
-	public OrderController(IOrderRepository orderRepository, IMapper mapper)
-	{
-		_orderRepository = orderRepository;
-		_mapper = mapper;
-	}
+    public OrderController(IOrderRepository orderRepository, IMapper mapper)
+    {
+        _orderRepository = orderRepository;
+        _mapper = mapper;
+    }
 
-	[HttpGet]
+    [HttpGet]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllOrders()
-	{
+    {
         try
         {
             var result = await _orderRepository.GetAllOrders();
@@ -29,11 +29,11 @@ public class OrderController : ControllerBase
         {
             return Problem(ex.Message);
         }
-	}
+    }
 
-	[HttpGet("{guid}")]
-	public async Task<IActionResult> GetOrderById(Guid guid)
-	{
+    [HttpGet("{guid}")]
+    public async Task<IActionResult> GetOrderById(Guid guid)
+    {
         try
         {
             var result = await _orderRepository.GetOrderById(guid);
@@ -44,15 +44,24 @@ public class OrderController : ControllerBase
         {
             return Problem(ex.Message);
         }
-	}
+    }
 
-	[HttpGet("SalesSummary")]
-	public async Task<IActionResult> GetSalesSummary()
-	{
-		var result = await _orderRepository.GetSalesSummary();
+    [HttpPost]
+    public async Task<IActionResult> AddNewOrder(OrderDto orderDto)
+    {
+        var order = _mapper.Map<Order>(orderDto);
+        var result = await _orderRepository.AddNewOrder(order);
+        return Ok(result);
+    }
+
+
+    [HttpGet("SalesSummary")]
+    public async Task<IActionResult> GetSalesSummary()
+    {
+        var result = await _orderRepository.GetSalesSummary();
         if (result is null) return Problem("No Data was Received From the Provider");
         return Ok(result);
-	}
+    }
 
     [HttpGet("TopSold")]
     public async Task<IActionResult> GetTopSold()
@@ -72,18 +81,18 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("WeatherAndSalesRelation")]
-	public async Task<IActionResult> WeatherAndSalesRelation()
-	{
-		var result = await _orderRepository.GetWeatherAndSalesRelation();
+    public async Task<IActionResult> WeatherAndSalesRelation()
+    {
+        var result = await _orderRepository.GetWeatherAndSalesRelation();
         if (result is null) return Problem("No Data was received From the Provider");
         return Ok(result);
-	}
+    }
 
     [HttpGet("DistanceMatrix/{destination}")]
     public async Task<IActionResult> GetDistance(string destination = "London")
     {
-		try
-		{
+        try
+        {
             var result = await _orderRepository.GetDistance(destination);
             if (result is null) return Problem("No Data was received From the Provider");
             return Ok(result);
@@ -100,7 +109,7 @@ public class OrderController : ControllerBase
         try
         {
             if (currency is Currency.SEK) return Ok(1);
-            var result =  await _orderRepository.GetExchangeRates(currency);
+            var result = await _orderRepository.GetExchangeRates(currency);
             if (result is null) return Problem("No Data was received From the Provider");
             Response.Headers.Append("Total-dates-Requested", result.Count.ToString());
             return Ok(result);
@@ -117,7 +126,7 @@ public class OrderController : ControllerBase
         try
         {
             if (currency == Currency.SEK) return Ok(1);
-            var result =  await _orderRepository.RequestLiveExchangeRate(currency);
+            var result = await _orderRepository.RequestLiveExchangeRate(currency);
             if (result == 0) return Problem("No Data was received From the Provider");
 
             return Ok(result);

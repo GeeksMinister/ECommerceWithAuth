@@ -1,4 +1,6 @@
-﻿@inject ICartService CartService
+﻿@inject ICartService _cartService
+@inject IProductClientData _orderClientData
+
 
 <style>
 
@@ -14,9 +16,13 @@
         opacity: 1
     }
 
+    .validation-message{
+        color: firebrick;
+    }
+
 </style>
 
-@if (orderPlaced == false)
+@if (orderConfirmed == false)
 {
     <h3 class="m-4 ps-4 pb-5 text-success">Your Shopping Cart</h3>
     @if (cartItems == null || cartItems.Count <= 0)
@@ -37,11 +43,11 @@
                         <span class="text-primary font-monospace">@($"{item.Price * item.Quantity:#.##}") kr</span>
                     </li>
                     <li class="d-flex justify-content-between">
-                        <span class="link-danger ps-2 pb-0 mb-0 mt-4 " @onclick="@(async () => await DeleteItem(item))">
+                        <span class="link-danger ps-2 pb-0 mb-0 mt-4" @onclick="@(async () => await DeleteItem(item))">
                             Remove
                         </span>
                         <input type="number" @bind-value="item.Quantity" @bind-value:event="oninput"
-                            @onchange="@(()=>item.GetValidQuantity())"
+                   @onchange="@(()=>item.GetValidQuantity())"
                    class="form-control text-center p-1 mt-4 me-2 border border-2 border-success"
                    style="width: 70px" min="1" max="@item.MaxQuantity" />
                     </li>
@@ -61,11 +67,55 @@
 
         <div class="w-100 pt-3 mt-3 text-center" style="min-height:14vh">
             <button class="btn btn-success btn-outline-info text-white btn-lg col-4 col-sm-4
-                col-lg-3 col-xxl-2 mt-4 mb-3 m-auto shadow" @onclick="PlaceOrder">
+                col-lg-3 col-xxl-2 mt-4 mb-3 m-auto shadow" @onclick="@(() =>  ConfirmOrder())">
                 Place Order
             </button>
         </div>
     }
+}
+else if (orderPlaced == false)
+{
+    <div class="container w-100 d-flex justify-content-center align-items-center fw-bold mb-4 pb-3" 
+        style="min-height: 60vh; max-width: 55rem;">
+        <EditForm Model="newOrder" OnValidSubmit="@(async () => await PlaceOrder())">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger"/>
+            <h3 class="text-success">Please fill out the order details </h3>
+            <div class="row w-100 m-auto  card card-body bg-light mt-3">
+
+                <div class="row row-cols-2 justify-content-evenly ">
+                    <label class="col col-md-4 col-xxl-3 form-label gy-1 p-3 w-50">
+                        First Name:
+                        <InputText @bind-Value="newOrder.FirstName" class="form-control "/>
+                    </label>
+                    <label class="col col-md-4 col-xxl-3 form-label gy-1 p-3 w-50">
+                        Last Name:
+                        <InputText @bind-Value="newOrder.LastName" class="form-control" />
+                    </label>
+                    <label class="col col-md-4 col-xxl-3 form-label gy-1 p-3 w-50">
+                        City:
+                        <InputText @bind-Value="newOrder.City" class="form-control "/>
+                    </label>
+                    <label class="col col-md-4 col-xxl-3 form-label gy-1 p-3 w-50">
+                        Postal Code:
+                        <InputText @bind-Value="newOrder.PostalCode" class="form-control" />
+                    </label>
+                    <label class="col col-md-4 col-xxl-3 form-label gy-1 p-3 w-50">
+                        Phone:
+                        <InputText @bind-Value="newOrder.Phone" class="form-control "/>
+                    </label>
+                    <label class="col col-md-4 col-xxl-3 form-label gy-1 p-3 w-50">
+                        Address:
+                        <InputText @bind-Value="newOrder.Address" class="form-control" />
+                    </label>
+
+                   <div class="w-100 text-center g-5 p-5">
+                       <button class="btn btn-success btn-outline-info text-white col-4" type="submit">Place Order</button>
+                   </div> 
+                </div>
+            </div>
+        </EditForm>
+    </div>
 }
 else
 {
@@ -113,24 +163,37 @@ else
 @code {
     List<CartItem> cartItems = new List<CartItem>();
     bool orderPlaced = false;
+    bool orderConfirmed = false;
+    OrderDto newOrder = new OrderDto();
+
 
     protected override async Task OnInitializedAsync()
     {
-        cartItems = await CartService.GetCartItems();
+        cartItems = await _cartService.GetCartItems();
         cartItems.ForEach(item => item.GetValidQuantity());
     }
 
     private async Task DeleteItem(CartItem item)
     {
-        await CartService.DeleteItem(item);
-        cartItems = await CartService.GetCartItems();
+        await _cartService.DeleteItem(item);
+        cartItems = await _cartService.GetCartItems();
     }
+
+    //private Task AddNewOrder()
+    //{
+
+    //}
 
     private async Task PlaceOrder()
     {
         orderPlaced = true;
-        await CartService.EmptyCart();
+        await _cartService.EmptyCart();
     }
 
+    private void ConfirmOrder()
+    {
+        orderConfirmed = true;
+
+    }
 
 }

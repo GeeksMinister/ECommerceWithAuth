@@ -2,7 +2,7 @@
 
 public class OrderDto
 {
-    public Guid OrderId { get; set; }
+    public Guid? OrderId { get; set; }
 
     [Required]
     [DisplayName("First Name")]
@@ -43,7 +43,7 @@ public class OrderDto
     //[Ignore]    
     public decimal TotalToPay { get; set; }
 
-    public List<OrderItemsDto> OrderItems { get; set; } = new();
+    public List<OrderItemsDto>? OrderItems { get; set; } = new();
 
     public string Customername() => FirstName + " " + LastName;
 

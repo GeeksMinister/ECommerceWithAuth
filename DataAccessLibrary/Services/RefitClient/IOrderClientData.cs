@@ -11,5 +11,6 @@ public interface IOrderClientData
     [Get("/Order/DistanceMatrix/{destination}")]
     Task<Destination> RequestDistanceMatrix(string destination);
 
-
+    [Post("/Order")]
+    Task AddNewOrder(OrderDto orderDto);
 }

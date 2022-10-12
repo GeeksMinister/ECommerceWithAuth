@@ -10,6 +10,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ECommerceWithAuthMVCContext>();
 
 builder.Services.AddServerSideBlazor();
+//builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredToast();
 builder.Services.AddScoped<ICartService, CartService>();

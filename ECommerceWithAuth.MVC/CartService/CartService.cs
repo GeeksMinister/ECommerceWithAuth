@@ -3,8 +3,7 @@
 public class CartService : ICartService
 {
     private readonly ILocalStorageService _localStorage;
-    private readonly IToastService _toastService;
-    
+    private readonly IToastService _toastService;    
 
     public event Action? OnChange;
 

@@ -16,15 +16,22 @@ public class ProductController : Controller
 
     public async Task<IActionResult> Index(Currency currency)
     {
-        var token = Request.Cookies["token"]!;
-        var products = await _productClientData.GetAllProducts("Bearer " + token);
+        try
+        {
+            var token = Request.Cookies["token"]!;
+            var products = await _productClientData.GetAllProducts("Bearer " + token);
 
-        decimal exchangeRate = 0;
-        exchangeRate = await SetUpPrice(currency);
-        if (exchangeRate > 0) products.ForEach(prod => prod.Price /= exchangeRate);
-        if (exchangeRate == 0) currency = Currency.SEK;
+            decimal exchangeRate = 0;
+            exchangeRate = await SetUpPrice(currency);
+            if (exchangeRate > 0) products.ForEach(prod => prod.Price /= exchangeRate);
+            if (exchangeRate == 0) currency = Currency.SEK;
 
-        return View((products, currency));
+            return View((products, currency));
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 
     private async Task<decimal> SetUpPrice(Currency currency)
@@ -137,22 +144,36 @@ public class ProductController : Controller
 
     public async Task<IActionResult> PatchProductDiscountRate(Guid id, string value, string path = "discountRate")
     {
-        var product = await _productClientData.GetProductById(id);
-        var productDto = _mapper.Map<ProductDto>(product);
-        productDto.DiscountRate = decimal.Parse(value);
-         await _productClientData.UpdateProduct(id, productDto);
+        try
+        {
+            var product = await _productClientData.GetProductById(id);
+            var productDto = _mapper.Map<ProductDto>(product);
+            productDto.DiscountRate = decimal.Parse(value);
+             await _productClientData.UpdateProduct(id, productDto);
 
-        return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 
     public async Task<IActionResult> PatchProductDiscountUntil(Guid id, string value, string path = "discountUntil")
     {
-        var product = await _productClientData.GetProductById(id);
-        var productDto = _mapper.Map<ProductDto>(product);
-        productDto.DiscountUntil = DateTime.Parse(value);
-        await _productClientData.UpdateProduct(id, productDto);
+        try
+        {
+            var product = await _productClientData.GetProductById(id);
+            var productDto = _mapper.Map<ProductDto>(product);
+            productDto.DiscountUntil = DateTime.Parse(value);
+            await _productClientData.UpdateProduct(id, productDto);
 
-        return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 
 
@@ -178,14 +199,6 @@ public class ProductController : Controller
     //    var patchObject =  new  { Path = path, Value = value, Op = "replace"}; 
     //    await _productData.PatchProduct(guid, patchObject);        
     //}
-
-
-
-
-
-
-
-
 
 
 

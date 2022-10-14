@@ -22,6 +22,11 @@
 
 </style>
 
+@if(error is not null )
+{
+    <em class="h4 text-danger">@error</em>
+}
+
 @if (orderConfirmed == false)
 {
     <h3 class="m-4 ps-4 pb-5 text-success">Your Shopping Cart</h3>
@@ -165,6 +170,7 @@ else
     bool orderPlaced = false;
     bool orderConfirmed = false;
     OrderDto newOrder = new OrderDto();
+    string error = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -181,29 +187,26 @@ else
 
     private async Task PlaceOrder()
     {
-        try
-        {
-            await CreateNewOrder();
-            orderPlaced = true;
-            await _cartService.EmptyCart();
-        }
-        catch (Exception ex)
-        {
-            var s = ex.Message;
-
-        }
-
+        await CreateNewOrder();
+        orderPlaced = true;
+        await _cartService.EmptyCart();
     }
 
     private async Task CreateNewOrder()
     {
-        List<OrderItemsDto> orderItems = _mapper.Map<List<OrderItemsDto>>(cartItems);
-        orderItems.ForEach(item => item.OrderId = newOrder.OrderId);
+        try
+        {
+            List<OrderItemsDto> orderItems = _mapper.Map<List<OrderItemsDto>>(cartItems);
+            orderItems.ForEach(item => item.OrderId = newOrder.OrderId);
 
-        newOrder.OrderItems = orderItems;
-        newOrder.TotalToPay = cartItems.Sum(item => item.Price * item.Quantity);
+            newOrder.OrderItems = orderItems;
+            newOrder.TotalToPay = cartItems.Sum(item => item.Price * item.Quantity);
 
-        await _orderClientData.AddNewOrder(newOrder);
+            await _orderClientData.AddNewOrder(newOrder);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
     }
-
 }

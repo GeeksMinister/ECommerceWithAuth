@@ -7,7 +7,6 @@ public class OrderItemsDto
     public Guid OrderId { get; set; }
     public decimal Price { get; set; }
     public int Quantity { get; set; }
-    //[JsonIgnore]
     public Guid ProductId { get; set; }
     public ProductDto? Product { get; set; }
 

@@ -1,8 +1,4 @@
-﻿using ECommerceWithAuth.MVC.Models;
-using System.Diagnostics;
-using System.Net;
-
-namespace ECommerceWithAuth.MVC.Controllers;
+﻿namespace ECommerceWithAuth.MVC.Controllers;
 
 public class HomeController : Controller
 {

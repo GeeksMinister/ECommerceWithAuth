@@ -11,7 +11,6 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
 });
 
 builder.Services.AddEndpointsApiExplorer();

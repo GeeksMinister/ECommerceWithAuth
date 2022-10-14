@@ -65,34 +65,62 @@ public class OrderController : ControllerBase
     [HttpGet("SalesSummary")]
     public async Task<IActionResult> GetSalesSummary()
     {
-        var result = await _orderRepository.GetSalesSummary();
-        if (result is null) return Problem("No Data was Received From the Provider");
-        return Ok(result);
+        try
+        {
+            var result = await _orderRepository.GetSalesSummary();
+            if (result is null) return Problem("No Data was Received From the Provider");
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 
     [HttpGet("TopSold")]
     public async Task<IActionResult> GetTopSold()
     {
-        var result = await _orderRepository.GetTopSold();
-        if (result is null) return Problem("No Data was received From the Provider");
-        return Ok(result);
+        try
+        {
+            var result = await _orderRepository.GetTopSold();
+            if (result is null) return Problem("No Data was received From the Provider");
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 
     [HttpGet("ProductShortages")]
     public async Task<IActionResult> GetProductShortages()
     {
-        var result = await _orderRepository.GetProductShortages();
-        if (result is null) return Problem("No Data was received From the Provider");
-        Response.Headers.Append("Total-Products", result.Count.ToString());
-        return Ok(result);
+        try
+        {
+            var result = await _orderRepository.GetProductShortages();
+            if (result is null) return Problem("No Data was received From the Provider");
+            Response.Headers.Append("Total-Products", result.Count.ToString());
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 
     [HttpGet("WeatherAndSalesRelation")]
     public async Task<IActionResult> WeatherAndSalesRelation()
     {
-        var result = await _orderRepository.GetWeatherAndSalesRelation();
-        if (result is null) return Problem("No Data was received From the Provider");
-        return Ok(result);
+        try
+        {
+            var result = await _orderRepository.GetWeatherAndSalesRelation();
+            if (result is null) return Problem("No Data was received From the Provider");
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 
     [HttpGet("DistanceMatrix/{destination}")]

@@ -35,14 +35,14 @@
 
                 <div class=" col-md-3 col-lg-2 mb-3 m-auto">
                     <label asp-for="DiscountRate">Set Discount&nbsp;&nbsp;&nbsp;<span class="text-danger">%</span> </label>
-                    <input asp-for="DiscountRate" type="number" class="form-control text-danger fw-bold" min="1" max="99" />
+                    <input asp-for="DiscountRate" type="number" class="form-control text-danger fw-bold" min="0" max="99" />
                     <span asp-validation-for="DiscountRate" class="text-danger"></span>
                 </div>
 
                 <div class=" col-md-3 col-lg-2 mb-3 m-auto">
                     <label asp-for="DiscountUntil">Discount until</label>
                     <input asp-for="DiscountUntil" type="date"
-                           class="form-control" min="1" max="99" />
+                           class="form-control" />
                     <span asp-validation-for="DiscountUntil" class="text-danger"></span>
                 </div>
 
@@ -77,6 +77,5 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $("input[type='date']").keydown(function (event) { event.preventDefault(); });
-
     </script>
 }

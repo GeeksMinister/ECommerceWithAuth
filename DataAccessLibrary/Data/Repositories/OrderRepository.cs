@@ -1,8 +1,4 @@
-﻿
-using DataAccessLibrary.Models;
-using System.Reflection;
-
-namespace DataAccessLibrary.Data.Repositories;
+﻿namespace DataAccessLibrary.Data.Repositories;
 
 public class OrderRepository : IOrderRepository
 {
@@ -29,18 +25,9 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order> AddNewOrder(Order order)
     {
-        try
-        {
-            var result = await _dbContext.Order.AddAsync(order);
-            await _dbContext.SaveChangesAsync();
-            return result.Entity;
-
-        }
-        catch (Exception ex)
-        {
-            var error = ex.Message;
-            throw;
-        }
+        var result = await _dbContext.Order.AddAsync(order);
+        await _dbContext.SaveChangesAsync();
+        return result.Entity;
     }
 
     public async Task<object> GetSalesSummary()

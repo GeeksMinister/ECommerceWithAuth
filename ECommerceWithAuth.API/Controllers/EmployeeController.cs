@@ -16,39 +16,60 @@ public class EmployeeController : ControllerBase
     [HttpPost("Login")]
     public async Task<IActionResult> Login(AuthenticationUserModel authentication)
     {
-        var employee = await _employeeRepository.GetEmployeeByIdOrEmail(authentication.LoginInfo);
-        if (employee == null) return NotFound("Login Info Wasn't Found");
-
-        (var passwordHash, var passwordSalt) = (employee.PasswordHash!, employee.PasswordSalt!);
-        if (VerifyPassword(authentication.Password, passwordHash, passwordSalt) == false)
+        try
         {
-            return BadRequest("Wrong Password");
+            var employee = await _employeeRepository.GetEmployeeByIdOrEmail(authentication.LoginInfo);
+            if (employee == null) return NotFound("Login Info Wasn't Found");
+
+            (var passwordHash, var passwordSalt) = (employee.PasswordHash!, employee.PasswordSalt!);
+            if (VerifyPassword(authentication.Password, passwordHash, passwordSalt) == false)
+            {
+                return BadRequest("Wrong Password");
+            }
+            var authenticatedUser = new AuthenticatedUserModel
+            {
+                Username = employee.FirstName + ' ' + employee.LastName,
+                Email = employee.Email,
+                Access_Token = CreateToken(employee)
+            };
+
+            return Ok(authenticatedUser);
         }
-        var authenticatedUser = new AuthenticatedUserModel
+        catch (Exception ex)
         {
-            Username = employee.FirstName + ' ' + employee.LastName,
-            Email = employee.Email,
-            Access_Token = CreateToken(employee)
-        };
-
-        return Ok(authenticatedUser);
+            return Problem(ex.Message);
+        }
     }
     
     [HttpPost("RequestToken")]
     public async Task<IActionResult> RequestToken(string loginInfo, string employeeId)
     {
-        var employee = await _employeeRepository.GetEmployeeByIdOrEmail(loginInfo);
+        try
+        {
+            var employee = await _employeeRepository.GetEmployeeByIdOrEmail(loginInfo);
 
-        if (employee == null) return NotFound("Login Info Wasn't Found");
-        if (employee.Guid.ToString() != employeeId) return BadRequest("Wrong employeeId");        
+            if (employee == null) return NotFound("Login Info Wasn't Found");
+            if (employee.Guid.ToString() != employeeId) return BadRequest("Wrong employeeId");        
 
-        return Ok(CreateToken(employee));
+            return Ok(CreateToken(employee));
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }    
 
     [HttpPost("RequestCustomerToken")]
     public async Task<IActionResult> RequestCustomerToken(string loginInfo, string cusotmerId)
     {
-        return Ok(await Task.Run (() => CreateCustomerToken(loginInfo, cusotmerId)));
+        try
+        {
+            return Ok(await Task.Run (() => CreateCustomerToken(loginInfo, cusotmerId)));
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 
     private (byte[] passwordHash, byte[] passwordSalt) CreatePasswordHash(string password)

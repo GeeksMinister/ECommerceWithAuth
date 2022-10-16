@@ -46,8 +46,10 @@
                     </ul>
                     @if (((User?.Identity?.IsAuthenticated) ?? false) && (User?.IsInRole("Customer") ?? false))
                     {
-                        <a class="nav-link navbar-brand text-white btn-outline-info rounded-pill" asp-controller="Cart" asp-action="Index">
-                            Cart<span class="h4 p-0 m-0 oi oi-cart fw-bold"></span>
+                        <a class="nav-link navbar-brand text-white btn-outline-info rounded-pill position-relative" asp-controller="Cart" asp-action="Index">
+                            Cart&nbsp;<i class="h4 p-0 m-0 oi oi-cart fw-bold"></i>
+                            <span id="cart-count" class="position-absolute top-0 text-center small bg-info
+                                rounded-pill fw-bold text-primary ps-2 pe-2 m-auto"></span>
                         </a>
                         <span class="fw-bold text-white nav-cart-margin">&nbsp;&nbsp;&nbsp;-&nbsp;</span>
                     }
@@ -74,3 +76,12 @@
 
 <base href="~/" />
 <script src="_framework/blazor.server.js"></script>
+<script>
+    function getCartItemsCount() {
+        let cartCount = JSON.parse(localStorage.getItem('cart')).length;
+        if (cartCount > 0) {
+            document.getElementById('cart-count').innerHTML = cartCount;
+        }
+    }
+    getCartItemsCount();
+</script>

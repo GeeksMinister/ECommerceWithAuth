@@ -48,8 +48,8 @@
                         <span class="text-primary font-monospace">@($"{item.Price * item.Quantity:#.##}") kr</span>
                     </li>
                     <li class="d-flex justify-content-between">
-                        <span class="link-danger ps-2 pb-0 mb-0 mt-4" @onclick="@(async () => await DeleteItem(item))">
-                            Remove
+                        <span class="link-danger ps-2 pb-0 mb-0 mt-4" @onclick="@(async () => await DeleteItem(item))"
+                            onmouseout="getCartItemsCount()" onmousemove="getCartItemsCount()">Remove
                         </span>
                         <input type="number" @bind-value="item.Quantity" @bind-value:event="oninput"
                    @onchange="@(()=>item.GetValidQuantity())"

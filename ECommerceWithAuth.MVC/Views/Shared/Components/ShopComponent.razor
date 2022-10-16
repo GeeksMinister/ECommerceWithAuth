@@ -21,8 +21,8 @@
     <div class="row justify-content-center align-content-center w-100 d-flex" style="min-height:40vh">
         <div class="text-success spinner-border text-center m-auto"></div>
     </div>
-
 }
+
 else if (_products!.Any() is false)
 {
     <h4>No Registered product Was Returned From the Database</h4>
@@ -95,7 +95,6 @@ else
                                     }
                                     else
                                     {
-
                                         @($"{product.GetCurrentPrice():#.##}")
                                     }
                                 </span>
@@ -137,7 +136,7 @@ else
                             </select>
                             <span class="btn btn-success btn-outline-info text-white p-0 ps-1 pe-2 m-0"
                           @onclick="(async () => await _cartService.AddToCart(product, selectedQuantity[product.Name], product.Quantity))">
-                                <span class="oi oi-cart " style="font-size: 1.8rem"></span>
+                                <span onmouseout="getCartItemsCount()" onmousemove="getCartItemsCount()" class="oi oi-cart " style="font-size: 1.8rem"></span>
                             </span>
                         </td>
                     </tr>
@@ -153,7 +152,6 @@ else
     bool loadingPrice = false;
     string? error = string.Empty;
     Dictionary<string, int> selectedQuantity = new Dictionary<string, int>();
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -175,7 +173,6 @@ else
         var token = httpContextAccessor?.HttpContext?.Request.Cookies["token"]!;
         return await _productData.GetAllProducts("Bearer " + token);
     }
-
 
     private async Task Exchange()
     {

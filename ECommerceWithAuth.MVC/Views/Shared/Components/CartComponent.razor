@@ -1,6 +1,8 @@
 ﻿@inject ICartService _cartService
 @inject IOrderClientData _orderClientData
 @inject IMapper _mapper
+@inject NavigationManager _navigation
+
 
 <style>
 
@@ -128,7 +130,7 @@ else
         <h3 class="display-6 m-4 ps-4 pb-5" style="color:rgb(17, 100, 29);">
             Thanks for your order &nbsp; &nbsp;
         </h3>
-        <span class="h4 mt-4 pt-2  ">🍅🍖🥕🥔🍄🌽🥑🍇🍎🍒🍠🍓🍋🥩</span>
+        <span class="h4 mt-4 pt-2">🍅🍖🥕🥔🍄🌽🥑🍇🍎🍒🍠🍓🍋🥩</span>
     </div>
     <div class="mb-5 mt-5">
         @foreach (var item in cartItems)
@@ -182,8 +184,9 @@ else
     {
         await _cartService.DeleteItem(item);
         cartItems = await _cartService.GetCartItems();
+        await InvokeAsync(StateHasChanged);
+        if (cartItems.Count == 0) _navigation.NavigateTo(_navigation.Uri, forceLoad: true);
     }
-
 
     private async Task PlaceOrder()
     {

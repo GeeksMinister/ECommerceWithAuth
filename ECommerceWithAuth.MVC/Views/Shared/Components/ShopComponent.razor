@@ -75,10 +75,22 @@ else
                     <tr>
                         <td class="col-3  col-lg-4 fw-bold">@product.Name</td>
                         <td class="col-3 fw-bold  text-success">@product.Category!.Name</td>
-                        <td class="col-1 text-secondary fw-bold  @(product.Quantity <= 10 ? "bg-warning" : "")
-                            bg-opacity-25">
-                            @product.Quantity
-                        </td>
+                        @if(product.Quantity == 0 )
+                        {
+                            <td class="col-1 text-secondary fw-bold bg-danger bg-opacity-25">
+                                Out of Stock
+                            </td>
+                        }
+                        else if (product.Quantity <= 10)
+                        {
+                            <td class="col-1 text-secondary fw-bold bg-warning bg-opacity-25">
+                                @product.Quantity
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col-1 text-secondary fw-bold bg-opacity-25">@product.Quantity</td>
+                        }
 
                         @if (product.OnSale)
                         {
@@ -124,21 +136,30 @@ else
                                 </sub>
                             </td>
                         }
-
-                        <td class=" col-auto w-100 d-flex justify-content-evenly m-auto" style="min-width:11rem;">
-                            <select @bind="selectedQuantity[product.Name]"
-                            class="form-select w-50 border-secondary shadow-sm fw-bold rounded-3">
-                                @for (int i = product.Quantity; i >= 2; i--)
-                                {
-                                    <option class="fw-bold dropdown-item text-secondary">@i</option>
-                                }
-                                <option value="1" selected class="fw-bold dropdown-item text-secondary">1</option>
-                            </select>
-                            <span class="btn btn-success btn-outline-info text-white p-0 ps-1 pe-2 m-0"
+                        @if(product.Quantity > 0)
+                        {
+                            <td class=" col-auto w-100 d-flex justify-content-evenly m-auto" style="min-width:11rem;">
+                                <select @bind="selectedQuantity[product.Name]"
+                                class="form-select w-50 border-secondary shadow-sm fw-bold rounded-3">
+                                    @for (int i = product.Quantity; i >= 2; i--)
+                                    {
+                                        <option class="fw-bold dropdown-item text-secondary">@i</option>
+                                    }
+                                    <option value="1" selected class="fw-bold dropdown-item text-secondary">1</option>
+                                </select>
+                                <span class="btn btn-success btn-outline-info text-white p-0 ps-1 pe-2 m-0"
                           @onclick="(async () => await _cartService.AddToCart(product, selectedQuantity[product.Name], product.Quantity))">
-                                <span onmouseout="getCartItemsCount()" onmousemove="getCartItemsCount()" class="oi oi-cart " style="font-size: 1.8rem"></span>
-                            </span>
-                        </td>
+                                    <span onmouseout="getCartItemsCount()" onmousemove="getCartItemsCount()" class="oi oi-cart " style="font-size: 1.8rem"></span>
+                                </span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col-1 text-secondary fw-bold bg-danger bg-opacity-25">
+                                Out of Stock
+                            </td>
+                        }
+
                     </tr>
                 }
             </tbody>

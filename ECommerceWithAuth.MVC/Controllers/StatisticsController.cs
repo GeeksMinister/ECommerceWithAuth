@@ -8,8 +8,13 @@ public class StatisticsController : Controller
 {
     public IActionResult Index()
     {
-        return View();
+        try
+        {
+            return View();
+        }
+        catch (Exception)
+        {
+            return LocalRedirect("~/Identity/Account/Login");
+        }
     }
-
-
 }

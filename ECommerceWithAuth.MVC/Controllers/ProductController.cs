@@ -28,9 +28,9 @@ public class ProductController : Controller
 
             return View((products, currency));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return Problem(ex.Message);
+            return LocalRedirect("~/Identity/Account/Login");
         }
     }
 

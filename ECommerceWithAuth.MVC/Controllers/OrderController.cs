@@ -16,15 +16,23 @@ public class OrderController : Controller
 
     public async Task<IActionResult> Index(Currency currency)
     {
-        var token = Request.Cookies["token"]!;
-        var orders = await _orderClientData.GetAllOrder("Bearer " + token);
-        if (orders == null) return NotFound();
-        if (currency == Currency.SEK) return View((orders, currency));
+        try
+        {
+            var token = Request.Cookies["token"]!;
+            var orders = await _orderClientData.GetAllOrder("Bearer " + token);
+            if (orders == null) return NotFound();
+            if (currency == Currency.SEK) return View((orders, currency));
 
-        var exchangeRatesRecords = await _productClientData.ExchangeRates(currency);
-        orders = ExchangePrices(orders, exchangeRatesRecords);
+            var exchangeRatesRecords = await _productClientData.ExchangeRates(currency);
+            orders = ExchangePrices(orders, exchangeRatesRecords);
 
-        return View((orders, currency));
+            return View((orders, currency));
+        }
+        catch (Exception)
+        {
+            return LocalRedirect("~/Identity/Account/Login");
+        }
+
     }
 
     private List<OrderDto> ExchangePrices(List<OrderDto> orders, Dictionary<string, decimal> records)

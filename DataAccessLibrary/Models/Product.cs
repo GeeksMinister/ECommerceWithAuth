@@ -11,6 +11,7 @@ public class Product
     [StringLength(512, ErrorMessage = "Too long Image-URL")]
     public string ImageURL { get; set; } = "http://dummyimage.com/187x100.png/cc0000/aaaaaa";
 
+    [Range(0, int.MaxValue)]
     public int Quantity { get; set; }
 
     [Ignore]

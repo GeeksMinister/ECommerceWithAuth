@@ -10,7 +10,7 @@ public class ProductDto
     [StringLength(512, ErrorMessage = "Too long Image-URL")]
     public string ImageURL { get; set; } = string.Empty;
 
-    [Range(1, int.MaxValue)]
+    [Range(0, int.MaxValue)]
     public int Quantity { get; set; }
 
     [DataType(DataType.Date)]

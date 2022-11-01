@@ -59,10 +59,22 @@ else
                     <tr>
                         <td class="col-3 fw-bold">@product.Name</td>
                         <td class="col-2 fw-bold  text-success">@product.Category!.Name</td>
-                        <td class="col-1 text-secondary fw-bold  @(product.Quantity <= 10 ? "bg-warning" : "")
-                            bg-opacity-25">
-                            @product.Quantity
-                        </td>
+                        @if(product.Quantity == 0 )
+                        {
+                            <td class="col-1 text-secondary fw-bold bg-danger bg-opacity-25">
+                                Out of Stock
+                            </td>
+                        }
+                        else if (product.Quantity <= 10)
+                        {
+                            <td class="col-1 text-secondary fw-bold bg-warning bg-opacity-25">
+                                @product.Quantity
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col-1 text-secondary fw-bold bg-opacity-25">@product.Quantity</td>
+                        }
 
                         @if (product.OnSale)
                         {

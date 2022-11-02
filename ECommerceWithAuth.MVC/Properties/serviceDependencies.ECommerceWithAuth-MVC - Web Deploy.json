@@ -1,12 +1,14 @@
 {
   "dependencies": {
     "mssql2": {
-      "type": "mssql",
+      "secretStore": "AzureAppSettings",
+      "type": "mssql.onprem",
       "connectionId": "ConnectionStrings:Default",
       "dynamicId": null
     },
     "mssql1": {
-      "type": "mssql",
+      "secretStore": "AzureAppSettings",
+      "type": "mssql.onprem",
       "connectionId": "ConnectionStrings:ECommerceWithAuthMVCContextConnection",
       "dynamicId": null
     }

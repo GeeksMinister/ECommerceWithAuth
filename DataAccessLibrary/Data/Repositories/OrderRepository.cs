@@ -244,7 +244,7 @@ public class OrderRepository : IOrderRepository
     {
         try
         {
-            var date = DateTime.Now.ToShortDateString();
+            var date = DateTime.Now.ToString("yyy-MM-dd");
             string apiLocation = _config["CurrencyExchangeApi:Location"];
             string key = _config["CurrencyExchangeApi:Key"];
             apiLocation = apiLocation.Replace("[Currency]", code.ToString());

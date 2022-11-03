@@ -1,7 +1,6 @@
-﻿@inject IHttpContextAccessor httpContextAccessor
-@inject IProductClientData _productData
+﻿@inject IProductClientData _productData
 @inject ICartService _cartService
-
+@inject NavigationManager _navManager
 
 <style>
     .blazored-toast {
@@ -13,7 +12,7 @@
 
 @if (error != string.Empty)
 {
-    <em>@error</em>
+    <em class="text-danger">@error</em>
 }
 
 @if (_products is null)
@@ -168,17 +167,28 @@ else
 }
 
 @code {
-    List<Product>? _products;
-    Currency _currency;
+    [Parameter]
+    public string Token { get; set; } = string.Empty;
     bool loadingPrice = false;
+    List<Product>? _products;
     string? error = string.Empty;
+    Currency _currency;
     Dictionary<string, int> selectedQuantity = new Dictionary<string, int>();
 
     protected override async Task OnInitializedAsync()
     {
-        _products = await GetProducts();
-        selectedQuantity = _products.ToDictionary(prod => prod.Name, prod => prod.Quantity);
-        ResetSelectionToOne();
+        try
+        {
+            _products = await GetProducts();
+            selectedQuantity = _products.ToDictionary(prod => prod.Name, prod => prod.Quantity);
+            ResetSelectionToOne();
+        }
+        catch (Exception ex)
+        {            
+            error = ex.Message;
+
+            _navManager.NavigateTo("/Identity/Account/Login", true);
+        }
     }
 
     private void ResetSelectionToOne()
@@ -191,8 +201,7 @@ else
 
     private async Task<List<Product>> GetProducts()
     {
-        var token = httpContextAccessor?.HttpContext?.Request.Cookies["token"]!;
-        return await _productData.GetAllProducts("Bearer " + token);
+        return await _productData.GetAllProducts(Token);
     }
 
     private async Task Exchange()

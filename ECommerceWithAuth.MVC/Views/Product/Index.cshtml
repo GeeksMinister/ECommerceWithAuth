@@ -101,7 +101,7 @@ else
                             <span class="text-decoration-none btn-outline-warning link-primary rounded-pill p-2
                                   discountUntilModal" title="Click to update"
                                   onclick="openDiscountUntilModal('@JsonConvert.SerializeObject(product)')">
-                                @product.DiscountUntil.ToShortDateString()
+                                @product.DiscountUntil.ToString("yyy-MM-dd")
                             </span>
                         </td>
 

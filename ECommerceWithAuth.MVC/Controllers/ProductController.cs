@@ -134,7 +134,7 @@ public class ProductController : Controller
         try
         {
             await _productClientData.DeleteProduct(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), "Product");
         }
         catch (Exception ex)
         {

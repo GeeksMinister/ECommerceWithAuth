@@ -9,7 +9,8 @@ public class ShopController : Controller
     {
 		try
 		{
-            return View();
+            var token = Request.Cookies["token"]!;
+            return View("Index", ("bearer " + token));
         }
         catch (Exception)
         {

@@ -260,6 +260,30 @@ public class OrderRepository : IOrderRepository
         }
         catch (Exception)
         {
+            return await RequestLiveExchangeRate_PremiumKey(code);
+        }
+    }
+
+    public async Task<decimal> RequestLiveExchangeRate_PremiumKey(Currency code)
+    {
+        try
+        {
+            var date = DateTime.Now.ToString("yyy-MM-dd");
+            string apiLocation = _config["CurrencyExchangeApi:Location"];
+            string key = _config["CurrencyExchangeApi:PremiumKey"];
+            apiLocation = apiLocation.Replace("[Currency]", code.ToString());
+            apiLocation = apiLocation.Replace("[Date]", date);
+            apiLocation += key;
+
+            using HttpClient client = new HttpClient();
+            var response = await client.GetStringAsync(apiLocation);
+            int startIndex = response.IndexOf(date) + 12;
+            decimal value = decimal.Parse(response.Substring(startIndex).Replace("}", ""));
+
+            return value;
+        }
+        catch (Exception)
+        {
             return 0;
         }
     }

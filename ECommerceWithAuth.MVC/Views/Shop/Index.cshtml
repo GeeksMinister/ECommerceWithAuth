@@ -1,8 +1,10 @@
-﻿@{
+﻿@model string 
+
+@{
     ViewData["Title"] = "Shop";
 }
 
 <div>
-    @(await Html.RenderComponentAsync<ShopComponent>(RenderMode.Server))
+    @(await Html.RenderComponentAsync<ShopComponent>(RenderMode.Server, new {Token = Model}))
 </div>
 

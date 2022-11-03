@@ -16,7 +16,7 @@ public class ProductController : ControllerBase
 	}
 
     [HttpGet("Product")]
-	//[Authorize(Roles = "Admin, Customer")]
+	[Authorize(Roles = "Admin, Customer")]
 	public async Task<IActionResult> GetAllProducts()
 	{
 		try
@@ -120,9 +120,9 @@ public class ProductController : ControllerBase
 	{
 		try
 		{
-			await _productRepository.DeleteProduct(guid);
 			var result = await _productRepository.GetProductById(guid);
 			if (result is null) return NotFound();
+			await _productRepository.DeleteProduct(guid);
 			return Ok($"Product with Id: {guid} Was Successfully Removed.");
 		}
         catch (Exception ex)

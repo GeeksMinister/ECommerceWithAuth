@@ -38,7 +38,7 @@ public class Order
     [Required]
     [MaxLength(10)]
     [DataType(DataType.Date)]
-    public string OrderPlaced { get; set; } = DateTime.Now.ToShortDateString();
+    public string OrderPlaced { get; set; } = DateTime.Now.ToString("yyy-MM-dd");
 
     public decimal? TotalToPay { get; set; }
 

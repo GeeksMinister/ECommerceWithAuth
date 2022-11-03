@@ -10,10 +10,10 @@
     }
 </style>
 
-@if (error != string.Empty)
+@*@if (error != string.Empty)
 {
     <em class="text-danger">@error</em>
-}
+}*@
 
 @if (_products is null)
 {
@@ -55,7 +55,7 @@ else
 
     <BlazoredToasts />
 
-    <div class="container-fluid overflow-auto mb-3 m-0 pe-3 ps-3 pb-3" style="max-width:150rem;">
+    <div class="container-fluid overflow-auto mb-3 m-0 pe-3 ps-3 pb-3" style="max-width:150rem;" onmouseout="getCartItemsCount()" onmousemove="getCartItemsCount()">
         <table class="table table-bordered table-striped text-center align-middle ">
             <thead class="border-dark bg-success text-light">
                 <tr>

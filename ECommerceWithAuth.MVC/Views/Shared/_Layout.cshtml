@@ -78,9 +78,12 @@
 <script src="_framework/blazor.server.js"></script>
 <script>
     function getCartItemsCount() {
-        let cartCount = JSON.parse(localStorage.getItem('cart')).length;
-        if (cartCount > 0) {
-            document.getElementById('cart-count').innerHTML = cartCount;
+        var cart = localStorage.getItem('cart');
+        if (cart != null) {
+            let cartCount = JSON.parse(cart).length;
+            if (cartCount > 0) {
+                document.getElementById('cart-count').innerHTML = cartCount;
+            }
         }
     }
     getCartItemsCount();

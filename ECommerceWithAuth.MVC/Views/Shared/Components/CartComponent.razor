@@ -2,6 +2,7 @@
 @inject IOrderClientData _orderClientData
 @inject IMapper _mapper
 @inject NavigationManager _navigation
+@implements IDisposable
 
 
 <style>
@@ -178,6 +179,7 @@ else
     {
         cartItems = await _cartService.GetCartItems();
         cartItems.ForEach(item => item.GetValidQuantity());
+        _cartService.OnChange += StateHasChanged;
     }
 
     private async Task DeleteItem(CartItem item)
@@ -212,4 +214,6 @@ else
             error = ex.Message;
         }
     }
+
+    public void Dispose() => _cartService.OnChange -= StateHasChanged;
 }

@@ -8,7 +8,7 @@ public class ExchangeRate
 
     [Required]
     [DataType(DataType.Date)]
-    public string Date { get; set; } = DateTime.Now.ToShortDateString();
+    public string Date { get; set; } = DateTime.Now.ToString("yyy-MM-dd");
 
     [Column(TypeName = "money")]
     public decimal USD { get; set; }
